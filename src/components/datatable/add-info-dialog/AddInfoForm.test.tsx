@@ -550,7 +550,7 @@ describe("AddInfoForm", () => {
         renderForm(EDIT_ROW);
 
         const dateInput = within(screen.getByTestId("field-row-Date of Birth")).getByTestId("date-field-row");
-        expect(dateInput).toHaveValue("31.12.1999");
+        expect(dateInput).toHaveValue("1999-12-31");
 
         const parentsRow = within(screen.getByTestId("field-row-Parents Names"));
         expect(parentsRow.getByTestId("multi-values")).toHaveTextContent("Anna|Bob");
@@ -776,7 +776,7 @@ describe("AddInfoForm", () => {
         );
         fireEvent.change(
             within(screen.getByTestId("field-row-Date of Birth")).getByTestId("date-field-row"),
-            { target: { value: "31.12.1999" } }
+            { target: { value: "1999-12-31" } }
         );
 
         fireEvent.click(screen.getByText("change-community"));
@@ -843,7 +843,7 @@ describe("AddInfoForm", () => {
                     row_id: null,
                     field_name: "Date of Birth",
                     old_value: "",
-                    new_value: "31.12.1999",
+                    new_value: "1999-12-31",
                 }),
             ])
         );

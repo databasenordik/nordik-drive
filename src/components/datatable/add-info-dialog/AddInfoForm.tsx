@@ -51,8 +51,7 @@ import {
   estimateTotalBase64Bytes,
   getCommunityArray,
   getTotalBytes,
-  isDdMmYyyy,
-  normalizeIncomingDateToDdMmYyyy,
+  normalizeIncomingDateToIso,
   toApiDate,
   uid,
 } from "./utils";
@@ -263,7 +262,7 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
             .filter((x: string) => x.length > 0);
         }
       } else if (t === "date") {
-        initial[label] = normalizeIncomingDateToDdMmYyyy(raw || "");
+        initial[label] = normalizeIncomingDateToIso(raw || "");
       } else {
         initial[label] = raw ?? "";
       }
@@ -307,7 +306,7 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
     const t = typeOf(field);
 
     if (Array.isArray(value)) normalized = value.join(", ");
-    else if (t === "date") normalized = isDdMmYyyy(value) ? value : "";
+    else if (t === "date") normalized = toApiDate(value);
 
     if ((row as any)[field] !== normalized) {
       setChangedFields((prev) => ({
@@ -336,7 +335,7 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
 
     const original =
       t === "date"
-        ? normalizeIncomingDateToDdMmYyyy(raw || "")
+        ? normalizeIncomingDateToIso(raw || "")
         : t === "multi" || t === "community_multi"
           ? (raw || "")
             .toString()
@@ -378,7 +377,7 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
 
         restored[label] =
           t === "date"
-            ? normalizeIncomingDateToDdMmYyyy(raw || "")
+            ? normalizeIncomingDateToIso(raw || "")
             : t === "multi" || t === "community_multi"
               ? (raw || "")
                 .toString()

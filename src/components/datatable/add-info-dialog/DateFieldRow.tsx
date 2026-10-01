@@ -21,7 +21,7 @@ export default function DateFieldRow({ value, onChange, disabled = false }: Prop
     <Box sx={{ display: "flex", gap: 1.5, alignItems: "center" }}>
       <TextField
         fullWidth
-        label="dd.mm.yyyy"
+        label="yyyy-mm-dd"
         value={value || ""}
         disabled={disabled}
         onChange={(e) => !disabled && onChange(e.target.value)}

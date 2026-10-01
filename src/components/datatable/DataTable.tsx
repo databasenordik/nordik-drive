@@ -664,7 +664,7 @@ export default function DataGrid({ rowData }: DataGridProps) {
   const columnDefs = useMemo(() => {
     if (!rowData || rowData.length === 0) return [];
 
-    const rowKeys = new Set(Object.keys(rowData[0] || {}));
+    const rowKeys = new Set(rowData.flatMap((record: any) => Object.keys(record || {})));
 
     // --- Add Info column (config-driven) ---
     const addInfoCol = addInfoEnabled
@@ -865,7 +865,7 @@ export default function DataGrid({ rowData }: DataGridProps) {
     }
 
     // --- Fallback (NO config): old behavior ---
-    const keys = Object.keys(rowData[0]).filter((k) => k !== "id");
+    const keys = Array.from(rowKeys).filter((k) => k !== "id");
 
     const addInfoColOld = selectedFile?.community_filter
       ? [

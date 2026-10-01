@@ -11,7 +11,7 @@ jest.mock("../DropDownPicker", () => ({
       data-testid="dropdown-date-picker"
       data-value={value}
       data-disabled={disabled ? "true" : "false"}
-      onClick={() => onChange("05.03.2026")}
+      onClick={() => onChange("2026-03-05")}
     >
       Mock picker
     </button>
@@ -20,12 +20,12 @@ jest.mock("../DropDownPicker", () => ({
 
 describe("DateFieldRow", () => {
   it("renders text field with value and passes value to dropdown", () => {
-    render(<DateFieldRow value="12.02.2026" onChange={jest.fn()} />);
+    render(<DateFieldRow value="2026-02-12" onChange={jest.fn()} />);
 
-    expect(screen.getByDisplayValue("12.02.2026")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("2026-02-12")).toBeInTheDocument();
     expect(screen.getByTestId("dropdown-date-picker")).toHaveAttribute(
       "data-value",
-      "12.02.2026"
+      "2026-02-12"
     );
   });
 
@@ -35,11 +35,11 @@ describe("DateFieldRow", () => {
     render(<DateFieldRow value="" onChange={onChange} />);
 
     fireEvent.change(screen.getByRole("textbox"), {
-      target: { value: "15.03.2026" },
+      target: { value: "2026-03-15" },
     });
 
     expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange).toHaveBeenCalledWith("15.03.2026");
+    expect(onChange).toHaveBeenCalledWith("2026-03-15");
   });
 
   it("calls onChange when dropdown date picker changes", () => {
@@ -50,11 +50,11 @@ describe("DateFieldRow", () => {
     fireEvent.click(screen.getByTestId("dropdown-date-picker"));
 
     expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange).toHaveBeenCalledWith("05.03.2026");
+    expect(onChange).toHaveBeenCalledWith("2026-03-05");
   });
 
   it("disables the text field and passes disabled to dropdown", () => {
-    render(<DateFieldRow value="01.01.2026" onChange={jest.fn()} disabled />);
+    render(<DateFieldRow value="2026-01-01" onChange={jest.fn()} disabled />);
 
     expect(screen.getByRole("textbox")).toBeDisabled();
     expect(screen.getByTestId("dropdown-date-picker")).toHaveAttribute(

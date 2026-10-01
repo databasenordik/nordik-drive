@@ -34,10 +34,10 @@ describe("DropdownDatePicker", () => {
     expect(screen.getByLabelText("Year")).toBeInTheDocument();
   });
 
-  it("prefills dropdowns from dd.mm.yyyy value", async () => {
+  it("prefills dropdowns from yyyy-mm-dd value", async () => {
     const onChange = jest.fn();
 
-    render(<DropdownDatePicker value="07.03.2021" onChange={onChange} />);
+    render(<DropdownDatePicker value="2021-03-07" onChange={onChange} />);
 
     await waitFor(() => {
       expect(screen.getByLabelText("Day")).toHaveValue("07");
@@ -45,9 +45,9 @@ describe("DropdownDatePicker", () => {
       expect(screen.getByLabelText("Year")).toHaveValue("2021");
     });
 
-    // current component behavior: once all states are set, it emits the formatted value
+    // Loading a stored date must not create an edit.
     await waitFor(() => {
-      expect(onChange).toHaveBeenCalledWith("07.03.2021");
+      expect(onChange).not.toHaveBeenCalled();
     });
   });
 
@@ -70,7 +70,7 @@ describe("DropdownDatePicker", () => {
       target: { value: "2020" },
     });
     expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange).toHaveBeenCalledWith("09.04.2020");
+    expect(onChange).toHaveBeenCalledWith("2020-04-09");
   });
 
   it("pads month with leading zero when needed", () => {
@@ -88,7 +88,7 @@ describe("DropdownDatePicker", () => {
       target: { value: currentYear },
     });
 
-    expect(onChange).toHaveBeenCalledWith(`01.01.${currentYear}`);
+    expect(onChange).toHaveBeenCalledWith(`${currentYear}-01-01`);
   });
 
   it("leaves dropdowns empty when value is invalid", () => {
@@ -106,7 +106,7 @@ describe("DropdownDatePicker", () => {
     const onChange = jest.fn();
 
     const { rerender } = render(
-      <DropdownDatePicker value="01.01.2020" onChange={onChange} />
+      <DropdownDatePicker value="2020-01-01" onChange={onChange} />
     );
 
     await waitFor(() => {
@@ -115,7 +115,7 @@ describe("DropdownDatePicker", () => {
       expect(screen.getByLabelText("Year")).toHaveValue("2020");
     });
 
-    rerender(<DropdownDatePicker value="15.12.1999" onChange={onChange} />);
+    rerender(<DropdownDatePicker value="1999-12-15" onChange={onChange} />);
 
     await waitFor(() => {
       expect(screen.getByLabelText("Day")).toHaveValue("15");
@@ -123,6 +123,16 @@ describe("DropdownDatePicker", () => {
       expect(screen.getByLabelText("Year")).toHaveValue("1999");
     });
 
-    expect(onChange).toHaveBeenCalledWith("15.12.1999");
+    expect(onChange).not.toHaveBeenCalled();
   });
+  it("clears the dropdowns when the parent resets the date", () => {
+    const onChange = jest.fn();
+    const { rerender } = render(<DropdownDatePicker value="2020-01-01" onChange={onChange} />);
+    rerender(<DropdownDatePicker value="" onChange={onChange} />);
+    expect(screen.getByLabelText("Day")).toHaveValue("");
+    expect(screen.getByLabelText("Month")).toHaveValue("");
+    expect(screen.getByLabelText("Year")).toHaveValue("");
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
 });

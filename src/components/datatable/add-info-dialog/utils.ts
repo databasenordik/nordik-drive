@@ -41,7 +41,22 @@ export const normalizeIncomingDateToDdMmYyyy = (value: string): string => {
   return value;
 };
 
-export const toApiDate = (value: string): string => (isDdMmYyyy(value) ? value : "");
+export const normalizeIncomingDateToIso = (value: string): string => {
+  const text = String(value || "").trim();
+  if (isDdMmYyyy(text)) {
+    const [day, month, year] = text.split(".");
+    return `${year}-${month}-${day}`;
+  }
+  return text;
+};
+
+export const toApiDate = (value: string): string => {
+  const normalized = normalizeIncomingDateToIso(value);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(normalized)) return "";
+  const date = new Date(`${normalized}T00:00:00Z`);
+  return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === normalized
+    ? normalized : "";
+};
 
 // Very rough base64 size estimate to prevent obvious 413
 const estimateBase64Bytes = (rawBytes: number) => Math.ceil((rawBytes * 4) / 3) + 200;
