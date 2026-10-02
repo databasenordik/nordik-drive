@@ -24,6 +24,7 @@ type Props = {
   onAddNewCommunity: (name: string) => Promise<void>;
 
   disabled?: boolean;
+  validateValue?: (value: string) => string;
 
   config?: CommunityMultiConfig;
 };
@@ -34,6 +35,7 @@ export default function CommunityMultiRow({
   onChange,
   onAddNewCommunity,
   disabled = false,
+  validateValue,
   config,
 }: Props) {
   const safe = values?.length ? values : [""];
@@ -52,7 +54,7 @@ export default function CommunityMultiRow({
     next[idx] = cleaned;
     onChange(next);
 
-    if (cleaned && !exists(cleaned)) {
+    if (cleaned && !validateValue?.(cleaned) && !exists(cleaned)) {
       await onAddNewCommunity(cleaned);
     }
   };

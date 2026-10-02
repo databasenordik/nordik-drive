@@ -3,6 +3,12 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import FieldRow from "./FieldRow";
 
+jest.mock("@mui/material", () => ({
+  Box: ({ children, role }: any) => <div role={role}>{children}</div>,
+  Button: ({ children, onClick, disabled }: any) => <button onClick={onClick} disabled={disabled}>{children}</button>,
+}));
+jest.mock("@mui/icons-material", () => ({ RestartAlt: () => null }));
+
 describe("FieldRow", () => {
   it("renders the label and children", () => {
     render(
@@ -121,4 +127,10 @@ describe("FieldRow", () => {
 
     expect(screen.getByRole("button", { name: /reset/i })).toBeEnabled();
   });
+  it("shows configured hint and validation error together", () => {
+    render(<FieldRow label="Name" helperText="Configured hint" errorText="Letters and spaces only"><input /></FieldRow>);
+    expect(screen.getByText("Configured hint")).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent("Letters and spaces only");
+  });
+
 });

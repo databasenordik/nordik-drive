@@ -15,11 +15,11 @@ jest.mock("../../../config/api", () => ({
 }));
 
 jest.mock("@mui/material", () => {
-    const actual = jest.requireActual("@mui/material");
     const React = require("react");
 
     return {
-        ...actual,
+        Box: ({ children }: any) => <div>{children}</div>,
+        Button: ({ children, onClick, disabled }: any) => <button onClick={onClick} disabled={disabled}>{children}</button>,
         useMediaQuery: jest.fn(),
         Dialog: ({ open, children }: any) => (open ? <div data-testid="mui-dialog">{children}</div> : null),
         DialogContent: ({ children }: any) => <div data-testid="dialog-content">{children}</div>,
@@ -27,6 +27,8 @@ jest.mock("@mui/material", () => {
         Typography: ({ children, ...rest }: any) => <div {...rest}>{children}</div>,
     };
 });
+
+jest.mock("@mui/icons-material", () => ({ RestartAlt: () => null }));
 
 jest.mock("react-redux", () => ({
     ...jest.requireActual("react-redux"),
@@ -64,12 +66,14 @@ jest.mock("../../Loader", () => ({
 
 jest.mock("./FieldRow", () => ({
     __esModule: true,
-    default: ({ label, required, onReset, children }: any) => (
+    default: ({ label, required, onReset, helperText, errorText, children }: any) => (
         <div data-testid={`field-row-${label}`}>
             <div data-testid="order-node" data-name={label}>
                 {label}
                 {required ? " *" : ""}
             </div>
+            {helperText && <div>{helperText}</div>}
+            {errorText && <div role="alert">{errorText}</div>}
             {onReset ? <button onClick={onReset}>reset-{label}</button> : null}
             {children}
         </div>
@@ -418,7 +422,7 @@ describe("AddInfoForm", () => {
         mockedEstimateTotalBase64Bytes.mockReturnValue(1024);
     });
 
-    it("dispatches config ensure and communities ensure on mount (with last_modified)", () => {
+    it("dispatches config ensure and communities ensure on mount and refreshes configuration", () => {
         renderForm();
 
         const calls = dispatchMock.mock.calls.map((c) => c[0]);
@@ -431,7 +435,7 @@ describe("AddInfoForm", () => {
                         key: CONFIG_KEY,
                         method: "GET",
                         url: expect.stringContaining(
-                            `http://api.test/config?file_name=${encodeURIComponent(FILE_NAME)}&last_modified=`
+                            `http://api.test/config?file_name=${encodeURIComponent(FILE_NAME)}`
                         ),
                     }),
                 }),
@@ -999,4 +1003,34 @@ describe("AddInfoForm", () => {
         expect(screen.getByTestId("loader")).toHaveTextContent("true|");
         expect(screen.getByTestId("mui-dialog")).toBeInTheDocument();
     });
+    it("blocks saving and submitting invalid fields using configured rules", () => {
+        const config = { ...FORM_CONFIG, columns: FORM_CONFIG.columns.map((column) =>
+            column.name === "Last Names" ? { ...column, validation: {
+                pattern: "^[A-Za-z ]+$", message: "Letters and spaces only",
+            } } : column
+        ) };
+        renderForm(EDIT_ROW, createState({ configData: { config } }));
+        fireEvent.change(within(screen.getByTestId("field-row-Last Names")).getByTestId("text-field-row"), {
+            target: { value: "Doe123" },
+        });
+        expect(screen.getByRole("alert")).toHaveTextContent("Letters and spaces only");
+        fireEvent.click(screen.getByRole("button", { name: "Save" }));
+        expect(screen.queryByTestId("review-dialog")).not.toBeInTheDocument();
+        expect(submitFetchState.fetchData).not.toHaveBeenCalled();
+        fireEvent.change(within(screen.getByTestId("field-row-Last Names")).getByTestId("text-field-row"), {
+            target: { value: "Smith" },
+        });
+        fireEvent.click(screen.getByRole("button", { name: "Save" }));
+        expect(screen.getByTestId("review-dialog")).toBeInTheDocument();
+    });
+
+    it("renders a field hint supplied by configuration", () => {
+        const config = { ...FORM_CONFIG, columns: [...FORM_CONFIG.columns, {
+            name: "Name Comments", type: "textarea", editable: true, hint: "Include nicknames and Indigenous names.",
+        }] };
+        renderForm({ ...EDIT_ROW, "Name Comments": "Nickname" }, createState({ configData: { config } }));
+        expect(screen.getByText("Include nicknames and Indigenous names.")).toBeInTheDocument();
+        expect(within(screen.getByTestId("field-row-Name Comments")).getByTestId("textarea-field-row")).toHaveValue("Nickname");
+    });
+
 });

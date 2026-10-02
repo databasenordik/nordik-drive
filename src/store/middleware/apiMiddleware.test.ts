@@ -192,14 +192,8 @@ describe("apiMiddleware", () => {
       fetchStart({ key: "config_boarding" })
     );
 
-    // immediate seed from IDB
-    expect(store.dispatch).toHaveBeenNthCalledWith(
-      2,
-      fetchSuccess({ key: "config_boarding", data: cached })
-    );
-
     expect(mockApiRequest).toHaveBeenCalledWith(
-      `/config/boarding?last_modified=${encodeURIComponent(cached.updated_at)}`,
+      `/config/boarding?checksum=${cached.checksum}`,
       "GET",
       undefined,
       {},
@@ -208,7 +202,7 @@ describe("apiMiddleware", () => {
 
     // backend says unchanged -> keep cached
     expect(store.dispatch).toHaveBeenNthCalledWith(
-      3,
+      2,
       fetchSuccess({ key: "config_boarding", data: cached })
     );
 
@@ -323,15 +317,9 @@ describe("apiMiddleware", () => {
       fetchStart({ key: "config_boarding" })
     );
 
-    // seeded first
+    // fallback from catch
     expect(store.dispatch).toHaveBeenNthCalledWith(
       2,
-      fetchSuccess({ key: "config_boarding", data: cached })
-    );
-
-    // fallback again from catch
-    expect(store.dispatch).toHaveBeenNthCalledWith(
-      3,
       fetchSuccess({ key: "config_boarding", data: cached })
     );
 
@@ -392,4 +380,22 @@ describe("apiMiddleware", () => {
       fetchSuccess({ key: "users", data: { fresh: true } })
     );
   });
+  it("revalidates old Redux config and removes duplicate timestamp parameters", async () => {
+    const state = { ...baseState, api: { entries: { config_boarding: {
+      loading: false, data: { config: { old: true } }, lastFetchedAt: 0,
+    } } } };
+    mockIdbGetConfig.mockResolvedValueOnce({ config: { old: true }, checksum: "old-content" } as any);
+    mockApiRequest.mockResolvedValueOnce({ config: { updated: true }, checksum: "new-content" });
+    await run(apiEnsure({ key: "config_boarding", url: "/config?file_name=boarding&last_modified=old&last_modified=older" }), state);
+    expect(mockApiRequest).toHaveBeenCalledWith("/config?file_name=boarding&checksum=old-content", "GET", undefined, {}, "token-123");
+    expect(mockIdbSetConfig).toHaveBeenCalledWith(expect.objectContaining({ config: { updated: true } }));
+  });
+
+  it("forces a full config response without sending a cached checksum", async () => {
+    mockIdbGetConfig.mockResolvedValueOnce({ config: { old: true }, checksum: "old-content" } as any);
+    mockApiRequest.mockResolvedValueOnce({ config: { updated: true } });
+    await run(apiEnsure({ key: "config_boarding", url: "/config?file_name=boarding", force: true }));
+    expect(mockApiRequest).toHaveBeenCalledWith("/config?file_name=boarding", "GET", undefined, {}, "token-123");
+  });
+
 });

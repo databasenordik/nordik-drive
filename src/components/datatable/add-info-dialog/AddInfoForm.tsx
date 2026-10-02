@@ -25,6 +25,7 @@ import {
 } from "./styles";
 
 import FieldRow from "./FieldRow";
+import { validateConfiguredField } from "./validation";
 import TextFieldRow from "./TextFieldRow";
 import DateFieldRow from "./DateFieldRow";
 import MultiValueRow from "./MultiValueRow";
@@ -97,28 +98,10 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
   const configData = configEntry?.data as any;
   const config = configData?.config || localConfig;
 
-  const configUpdatedAt = String(
-    configData?.updated_at || (localConfig as any)?.updated_at || ""
-  );
-
-  const needsForcedConfigFetch =
-    !!configData?.not_modified && !configData?.config && !localConfig;
-
   useEffect(() => {
-    if (!configKey || !baseConfigUrl || needsForcedConfigFetch) return;
-
-    const url = configUpdatedAt
-      ? `${baseConfigUrl}&last_modified=${encodeURIComponent(configUpdatedAt)}`
-      : baseConfigUrl;
-
-    dispatch(
-      apiEnsure({
-        key: configKey,
-        url,
-        method: "GET",
-      })
-    );
-  }, [dispatch, configKey, baseConfigUrl, configUpdatedAt, needsForcedConfigFetch]);
+    if (!configKey || !baseConfigUrl) return;
+    dispatch(apiEnsure({ key: configKey, url: baseConfigUrl, method: "GET", force: true }));
+  }, [dispatch, configKey, baseConfigUrl]);
 
   useEffect(() => {
     const data = configEntry?.data as any;
@@ -219,6 +202,7 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
   const { fetchData: addCommunity } = useFetch(`${API_BASE}/communities`, "POST", false);
 
   const [formValues, setFormValues] = useState<Record<string, any>>({});
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [changedFields, setChangedFields] = useState<Record<string, any>>({});
 
   const [photos, setPhotos] = useState<PhotoItem[]>([]);
@@ -272,6 +256,7 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
       if (!(rf in initial)) initial[rf] = "";
     });
 
+    setFieldErrors({});
     setFormValues(initial);
     setChangedFields({});
   }, [config, fieldColumns, isNewEntry, row, requiredFields]);
@@ -298,6 +283,7 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
   }, [editData, editError, isNewEntry, onClose]);
 
   const updateField = (field: string, value: any) => {
+    setFieldErrors((prev) => ({ ...prev, [field]: validateConfiguredField(value, colMetaByName.get(field)?.validation) }));
     setFormValues((prev) => ({ ...prev, [field]: value }));
 
     if (isNewEntry) return;
@@ -323,6 +309,7 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
   };
 
   const resetField = (label: string) => {
+    setFieldErrors((prev) => ({ ...prev, [label]: "" }));
     const t = typeOf(label);
 
     if (isNewEntry) {
@@ -353,6 +340,7 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
   };
 
   const resetAll = () => {
+    setFieldErrors({});
     if (isNewEntry) {
       const cleared: Record<string, any> = {};
       fieldColumns.forEach((c: any) => {
@@ -525,7 +513,7 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
       const v = formValues[rf];
 
       if (t === "multi" || t === "community_multi") {
-        if (!Array.isArray(v) || v.length === 0) {
+        if (!Array.isArray(v) || !v.some((item) => String(item ?? "").trim())) {
           toast.error(`${rf} is required.`);
           return false;
         }
@@ -539,7 +527,22 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
     return true;
   };
 
+  const validateFields = () => {
+    const errors: Record<string, string> = {};
+    fieldColumns.forEach((column: any) => {
+      const error = validateConfiguredField(formValues[column.name], column.validation);
+      if (error) errors[column.name] = error;
+    });
+    setFieldErrors(errors);
+    if (Object.keys(errors).length) {
+      toast.error("Please correct the highlighted fields before saving.");
+      return false;
+    }
+    return true;
+  };
+
   const handleSaveClick = () => {
+    if (!validateFields()) return;
     if (isNewEntry) {
       if (!validateRequired()) return;
       setReviewOpen(true);
@@ -556,6 +559,7 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
   };
 
   const handleConfirmSubmit = async () => {
+    if (!validateFields() || (isNewEntry && !validateRequired())) return;
     try {
       const allFiles = [...photos.map((p) => p.file), ...additionalDocs.map((d) => d.file)];
       const estimatedB64Bytes = estimateTotalBase64Bytes(allFiles);
@@ -675,7 +679,7 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
     );
   };
 
-  if (!config) return <Loader loading={true} text="Loading configuration..." />;
+  if (configEntry?.loading || !config) return <Loader loading={true} text="Loading configuration..." />;
   if (!addInfoEnabled) return null;
 
 
@@ -734,11 +738,12 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
                     : [];
 
                 return (
-                  <FieldRow key={name} label={name} required={required} onReset={canReset ? () => resetField(name) : undefined}>
+                  <FieldRow key={name} label={name} required={required} helperText={c.hint || c.helper_text} errorText={fieldErrors[name]} onReset={canReset ? () => resetField(name) : undefined}>
                     <CommunityMultiRow
                       values={arr}
                       options={communityOptions}
                       onChange={(next: any) => editableField && updateField(name, next)}
+                      validateValue={(next) => validateConfiguredField(next, c.validation)}
                       onAddNewCommunity={onAddNewCommunity}
                       {...({ disabled: !editableField } as any)}
                     />
@@ -748,7 +753,7 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
 
               if (t === "date") {
                 return (
-                  <FieldRow key={name} label={name} required={required} onReset={canReset ? () => resetField(name) : undefined}>
+                  <FieldRow key={name} label={name} required={required} helperText={c.hint || c.helper_text} errorText={fieldErrors[name]} onReset={canReset ? () => resetField(name) : undefined}>
                     <DateFieldRow
                       value={value || ""}
                       onChange={(v) => editableField && updateField(name, v)}
@@ -767,7 +772,7 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
                 const addLabel = name === "Siblings" ? "Add Sibling" : "Add Name";
 
                 return (
-                  <FieldRow key={name} label={name} required={required} onReset={canReset ? () => resetField(name) : undefined}>
+                  <FieldRow key={name} label={name} required={required} helperText={c.hint || c.helper_text} errorText={fieldErrors[name]} onReset={canReset ? () => resetField(name) : undefined}>
                     <MultiValueRow
                       values={arr}
                       onChange={(next) => editableField && updateField(name, next)}
@@ -780,7 +785,7 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
 
               const multiline = t === "textarea";
               return (
-                <FieldRow key={name} label={name} required={required} onReset={canReset ? () => resetField(name) : undefined}>
+                <FieldRow key={name} label={name} required={required} helperText={c.hint || c.helper_text} errorText={fieldErrors[name]} onReset={canReset ? () => resetField(name) : undefined}>
                   <TextFieldRow
                     value={value || ""}
                     onChange={(v) => editableField && updateField(name, v)}

@@ -32,9 +32,10 @@ export const apiMiddleware: Middleware = (storeAPI) => (next) => async (action) 
 
   // cache hit (redux)
   if (!force && entry?.data != null) {
-    if (!ttlMs) return result;
+    const effectiveTtl = ttlMs ?? (isConfigKey(key) ? 30_000 : undefined);
+    if (!effectiveTtl) return result;
     const last = entry?.lastFetchedAt ?? 0;
-    if (Date.now() - last <= ttlMs) return result;
+    if (Date.now() - last <= effectiveTtl) return result;
   }
 
   storeAPI.dispatch(fetchStart({ key }));
@@ -42,22 +43,16 @@ export const apiMiddleware: Middleware = (storeAPI) => (next) => async (action) 
   try {
     // ---- Special handling for configs ----
     if (isConfigKey(key)) {
-      // try IDB first (fast)
       const cached = await idbGetConfig(key);
-      if (cached?.config && !force) {
-        // seed redux immediately so UI doesn’t wait
-        storeAPI.dispatch(fetchSuccess({ key, data: cached }));
+      // A content checksum catches edits that did not change updated_at.
+      const requestUrl = new URL(url, window.location.origin);
+      requestUrl.searchParams.delete("last_modified");
+      requestUrl.searchParams.delete("checksum");
+      if (!force && cached?.config && cached?.checksum) {
+        requestUrl.searchParams.set("checksum", cached.checksum);
       }
-
-      // call backend with last_modified (if we have cached updated_at)
-      const lm = cached?.updated_at ? encodeURIComponent(cached.updated_at) : "";
-      const finalUrl =
-        url.includes("?")
-          ? `${url}&last_modified=${lm}`
-          : `${url}?last_modified=${lm}`;
-
       const token = state?.auth?.token || undefined;
-
+      const finalUrl = /^https?:\/\//i.test(url) ? requestUrl.toString() : `${requestUrl.pathname}${requestUrl.search}${requestUrl.hash}`;
       const apiRes = await apiRequest<any>(finalUrl, method, body, headers, token);
 
       // backend returns { not_modified: true, ... } or { not_modified:false, config: {...} }
