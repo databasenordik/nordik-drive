@@ -118,10 +118,12 @@ describe("utils", () => {
       expect(normalizeIncomingDateToDdMmYyyy("12/01/2025")).toBe("12/01/2025");
     });
 
-    it("returns API date only for valid dd.mm.yyyy", () => {
-      expect(toApiDate("01.12.2025")).toBe("01.12.2025");
-      expect(toApiDate("2025-12-01")).toBe("");
+    it("returns ISO API dates for ISO and legacy inputs", () => {
+      expect(toApiDate("01.12.2025")).toBe("2025-12-01");
+      expect(toApiDate("2025-12-01")).toBe("2025-12-01");
       expect(toApiDate("")).toBe("");
+      expect(toApiDate("2025-02-29")).toBe("");
+      expect(toApiDate("2024-02-29")).toBe("2024-02-29");
     });
   });
 

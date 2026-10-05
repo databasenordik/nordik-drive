@@ -62,7 +62,7 @@ import { useViewerLoader } from "../../hooks/useViewerLoader";
 import { useExternalGridFilters } from "../../hooks/useExternalGridFilters";
 import { headerDisplay, headerMinWidthPx, MAX_HEADER_CHARS } from "./HelperComponents";
 import { useDescribeEntry } from "../models/DescribeEntry";
-import { apiEnsure } from "../../store/api/apiSlice";
+import { useConfigRefresh } from "../../hooks/useConfigRefresh";
 import { FormCfg } from "./config-form-modal.tsx/shared";
 import { readOnlyAgGridModules, registerAgGridModules } from "../../lib/agGridModules";
 import type { AchieverStoryTemplateValues } from "../../pages/viewers/DocumentViewer";
@@ -355,17 +355,12 @@ export default function DataGrid({ rowData }: DataGridProps) {
     ? !!configJson?.source_filter
     : true; // old behavior (only shown when !community_filter and sources exist)
 
-  useEffect(() => {
-    if (!configKey || !selectedFile?.filename) return;
-
-    dispatch(
-      apiEnsure({
-        key: configKey,
-        url: `${API_BASE}/config?file_name=${encodeURIComponent(selectedFile.filename)}`,
-        method: "GET",
-      })
-    );
-  }, [dispatch, configKey, selectedFile?.filename]);
+  useConfigRefresh(
+    configKey,
+    selectedFile?.filename
+      ? `${API_BASE}/config?file_name=${encodeURIComponent(selectedFile.filename)}`
+      : ""
+  );
 
   useEffect(() => {
     const fileName = String(selectedFile?.filename || "").trim();
@@ -664,7 +659,7 @@ export default function DataGrid({ rowData }: DataGridProps) {
   const columnDefs = useMemo(() => {
     if (!rowData || rowData.length === 0) return [];
 
-    const rowKeys = new Set(Object.keys(rowData[0] || {}));
+    const rowKeys = new Set(rowData.flatMap((record: any) => Object.keys(record || {})));
 
     // --- Add Info column (config-driven) ---
     const addInfoCol = addInfoEnabled
@@ -865,7 +860,7 @@ export default function DataGrid({ rowData }: DataGridProps) {
     }
 
     // --- Fallback (NO config): old behavior ---
-    const keys = Object.keys(rowData[0]).filter((k) => k !== "id");
+    const keys = Array.from(rowKeys).filter((k) => k !== "id");
 
     const addInfoColOld = selectedFile?.community_filter
       ? [

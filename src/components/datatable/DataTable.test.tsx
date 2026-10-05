@@ -1047,6 +1047,7 @@ describe("DataGrid", () => {
             required_fields: ["Required Field"],
           },
           columns: [
+            { name: "Name Comments", display_name: "Name Comments", type: "textarea" },
             { name: "Name", display_name: "Student Name", type: "input" },
             { name: "Tags", display_name: "Tags", type: "multi" },
             {
@@ -1085,6 +1086,7 @@ describe("DataGrid", () => {
       Photos: "",
       Documents: "",
     },
+    { id: 2, Name: "Bob", "Name Comments": "Stored name annotation" },
   ]);
 
   expect(screen.getByTestId("community-action-bar")).toBeInTheDocument();
@@ -1094,6 +1096,7 @@ describe("DataGrid", () => {
 
   expect(fields).toContain("add_info");
   expect(fields).toContain("Name");
+  expect(fields).toContain("Name Comments");
   expect(fields).toContain("Extra Field");
   expect(fields).toContain("__form__att");
   expect(fields).not.toContain("__describe");

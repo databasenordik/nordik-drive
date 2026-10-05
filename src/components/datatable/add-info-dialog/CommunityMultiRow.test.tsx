@@ -3,6 +3,13 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import CommunityMultiRow from "./CommunityMultiRow";
 
+jest.mock("@mui/material", () => ({
+  Box: ({ children }: any) => <div>{children}</div>,
+  Button: ({ children, onClick, disabled }: any) => <button onClick={onClick} disabled={disabled}>{children}</button>,
+  TextField: ({ inputProps, disabled, placeholder, onKeyDown }: any) =>
+    <input {...inputProps} disabled={disabled} placeholder={placeholder} onKeyDown={onKeyDown} />,
+}));
+
 jest.mock("@mui/material/Autocomplete", () => {
   const React = require("react");
 
@@ -237,4 +244,14 @@ describe("CommunityMultiRow", () => {
     expect(onChange).not.toHaveBeenCalled();
     expect(onAddNewCommunity).not.toHaveBeenCalled();
   });
+  it("keeps an invalid value visible but does not add it to the community directory", () => {
+    const onChange = jest.fn();
+    const onAddNewCommunity = jest.fn();
+    render(<CommunityMultiRow values={[""]} options={[]} onChange={onChange}
+      onAddNewCommunity={onAddNewCommunity} validateValue={() => "Letters and spaces only"} />);
+    fireEvent.keyDown(screen.getByTestId("community-input"), { key: "Enter", target: { value: "Community123" } });
+    expect(onChange).toHaveBeenCalledWith(["Community123"]);
+    expect(onAddNewCommunity).not.toHaveBeenCalled();
+  });
+
 });

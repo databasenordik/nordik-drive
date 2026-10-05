@@ -5,6 +5,7 @@ import { Box, Button } from "@mui/material";
 import { RestartAlt } from "@mui/icons-material";
 import {
   color_border,
+  color_error,
   color_light_gray,
   color_secondary,
   color_secondary_dark,
@@ -17,6 +18,7 @@ type FieldRowProps = {
   label: string;
   required?: boolean;
   helperText?: string;
+  errorText?: string;
   onReset?: () => void;
   resetDisabled?: boolean;
   children: React.ReactNode;
@@ -26,6 +28,7 @@ export default function FieldRow({
   label,
   required,
   helperText,
+  errorText,
   onReset,
   resetDisabled,
   children,
@@ -81,6 +84,11 @@ export default function FieldRow({
         ) : null}
       </Box>
 
+      {errorText && (
+        <Box role="alert" sx={{ color: color_error, mb: 1, fontSize: "0.9rem" }}>
+          {errorText}
+        </Box>
+      )}
       <Box sx={{ background: color_light_gray, borderRadius: "10px", p: 1.25 }}>
         {children}
       </Box>
