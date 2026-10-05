@@ -244,13 +244,15 @@ describe("CommunityMultiRow", () => {
     expect(onChange).not.toHaveBeenCalled();
     expect(onAddNewCommunity).not.toHaveBeenCalled();
   });
-  it("keeps an invalid value visible but does not add it to the community directory", () => {
+  it("blocks invalid input and does not add it to the community directory", () => {
     const onChange = jest.fn();
     const onAddNewCommunity = jest.fn();
     render(<CommunityMultiRow values={[""]} options={[]} onChange={onChange}
       onAddNewCommunity={onAddNewCommunity} validateValue={() => "Letters and spaces only"} />);
     fireEvent.keyDown(screen.getByTestId("community-input"), { key: "Enter", target: { value: "Community123" } });
-    expect(onChange).toHaveBeenCalledWith(["Community123"]);
+    expect(onChange).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByTestId("mock-input-change"));
+    expect(onChange).not.toHaveBeenCalled();
     expect(onAddNewCommunity).not.toHaveBeenCalled();
   });
 
