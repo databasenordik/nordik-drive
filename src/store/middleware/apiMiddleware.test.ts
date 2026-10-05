@@ -42,7 +42,7 @@ describe("apiMiddleware", () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   it("passes through non-apiEnsure actions", async () => {
@@ -161,7 +161,7 @@ describe("apiMiddleware", () => {
     );
   });
 
-  it("for config keys, seeds redux from IDB first and keeps cache when backend says not_modified", async () => {
+  it("for config keys, keeps config and persists metadata when backend says not_modified", async () => {
     const cached = {
       key: "config_boarding",
       file_name: "boarding.json",
@@ -206,46 +206,15 @@ describe("apiMiddleware", () => {
       fetchSuccess({ key: "config_boarding", data: cached })
     );
 
-    expect(mockIdbSetConfig).not.toHaveBeenCalled();
+    expect(mockIdbSetConfig).toHaveBeenCalledWith(cached);
   });
 
-  it("for config keys, stores minimal metadata when backend says not_modified but IDB has no config", async () => {
-    const action = apiEnsure({
-      key: "config_boarding",
-      url: "/config/boarding",
-    });
-
-    mockIdbGetConfig.mockResolvedValueOnce(null as any);
-    mockApiRequest.mockResolvedValueOnce({
-      not_modified: true,
-      file_name: "boarding.json",
-      updated_at: "2026-02-26T12:00:00.000Z",
-      checksum: "xyz",
-      version: 5,
-    } as any);
-
-    const { store } = await run(action);
-
-    expect(store.dispatch).toHaveBeenNthCalledWith(
-      1,
-      fetchStart({ key: "config_boarding" })
-    );
-
-    expect(store.dispatch).toHaveBeenNthCalledWith(
-      2,
-      fetchSuccess({
-        key: "config_boarding",
-        data: {
-          key: "config_boarding",
-          file_name: "boarding.json",
-          updated_at: "2026-02-26T12:00:00.000Z",
-          checksum: "xyz",
-          version: 5,
-          config: null,
-        },
-      })
-    );
-
+  it("retries a not-modified response without local config and rejects an empty full response", async () => {
+    mockIdbGetConfig.mockResolvedValueOnce(null);
+    mockApiRequest.mockResolvedValue({ not_modified: true });
+    const { store } = await run(apiEnsure({ key: "config_boarding", url: "/config/boarding" }));
+    expect(mockApiRequest).toHaveBeenCalledTimes(2);
+    expect(store.dispatch).toHaveBeenLastCalledWith(fetchError({ key: "config_boarding", error: "Configuration API returned no configuration for a full refresh request." }));
     expect(mockIdbSetConfig).not.toHaveBeenCalled();
   });
 
@@ -323,7 +292,7 @@ describe("apiMiddleware", () => {
       fetchSuccess({ key: "config_boarding", data: cached })
     );
 
-    expect(store.dispatch).not.toHaveBeenCalledWith(
+    expect(store.dispatch).toHaveBeenLastCalledWith(
       fetchError({ key: "config_boarding", error: "network down" })
     );
   });
@@ -396,6 +365,56 @@ describe("apiMiddleware", () => {
     mockApiRequest.mockResolvedValueOnce({ config: { updated: true } });
     await run(apiEnsure({ key: "config_boarding", url: "/config?file_name=boarding", force: true }));
     expect(mockApiRequest).toHaveBeenCalledWith("/config?file_name=boarding", "GET", undefined, {}, "token-123");
+  });
+
+  it("revalidates config even when Redux was just populated", async () => {
+    const state = { ...baseState, api: { entries: { config_boarding: {
+      loading: false, data: { config: { old: true } }, lastFetchedAt: Date.now(),
+    } } } };
+    mockIdbGetConfig.mockResolvedValueOnce({ config: { old: true }, checksum: "old" } as any);
+    mockApiRequest.mockResolvedValueOnce({ config: { validation: true }, updated_at: "2026-10-05T14:08:29.955708Z" });
+    await run(apiEnsure({ key: "config_boarding", url: "/config" }), state);
+    expect(mockIdbSetConfig).toHaveBeenCalledWith(expect.objectContaining({ config: { validation: true } }));
+  });
+
+  it("fetches the body when a not-modified response has a newer timestamp", async () => {
+    mockIdbGetConfig.mockResolvedValueOnce({ config: { old: true }, checksum: "old", updated_at: "2026-09-14T12:16:36Z" } as any);
+    mockApiRequest.mockResolvedValueOnce({ not_modified: true, updated_at: "2026-10-05T14:08:29Z" })
+      .mockResolvedValueOnce({ config: { validation: true }, updated_at: "2026-10-05T14:08:29Z", checksum: "new" });
+    await run(apiEnsure({ key: "config_boarding", url: "/config" }));
+    expect(mockApiRequest).toHaveBeenNthCalledWith(2, "/config", "GET", undefined, {}, "token-123");
+    expect(mockIdbSetConfig).toHaveBeenCalledWith(expect.objectContaining({ config: { validation: true }, updated_at: "2026-10-05T14:08:29Z" }));
+  });
+
+  it("preserves form config identity when only response metadata changed", async () => {
+    const config = { validation: true };
+    const state = { ...baseState, api: { entries: { config_boarding: {
+      loading: false, data: { config, checksum: "same" }, lastFetchedAt: 0,
+    } } } };
+    mockIdbGetConfig.mockResolvedValueOnce({ config: { validation: true }, checksum: "same", updated_at: "2026-10-05T14:08:29Z" } as any);
+    mockApiRequest.mockResolvedValueOnce({ not_modified: true, version: 4, checksum: "same", updated_at: "2026-10-05T14:08:29Z" });
+    await run(apiEnsure({ key: "config_boarding", url: "/config" }), state);
+    expect(mockIdbSetConfig.mock.calls[0][0].config).toBe(config);
+    expect(mockIdbSetConfig.mock.calls[0][0].version).toBe(4);
+  });
+
+  it("does not discard fresh config when IndexedDB writes fail", async () => {
+    const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+    mockIdbGetConfig.mockResolvedValueOnce({ config: { old: true } } as any);
+    mockApiRequest.mockResolvedValueOnce({ config: { validation: true } });
+    mockIdbSetConfig.mockRejectedValueOnce(new Error("storage failed"));
+    const { store } = await run(apiEnsure({ key: "config_boarding", url: "/config" }));
+    expect(store.dispatch).toHaveBeenLastCalledWith(fetchSuccess({ key: "config_boarding", data: expect.objectContaining({ config: { validation: true } }) }));
+    expect(warn).toHaveBeenCalled();
+    warn.mockRestore();
+  });
+
+  it("uses full API content even if an older server returns a stale stored checksum", async () => {
+    const state = { ...baseState, api: { entries: { config_boarding: { loading: false, data: { config: { old: true }, checksum: "unchanged" }, lastFetchedAt: 0 } } } };
+    mockIdbGetConfig.mockResolvedValueOnce({ config: { old: true }, checksum: "unchanged" } as any);
+    mockApiRequest.mockResolvedValueOnce({ config: { validation: true }, checksum: "unchanged" });
+    await run(apiEnsure({ key: "config_boarding", url: "/config", force: true }), state);
+    expect(mockIdbSetConfig).toHaveBeenCalledWith(expect.objectContaining({ config: { validation: true } }));
   });
 
 });
