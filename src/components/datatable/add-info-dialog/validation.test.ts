@@ -1,4 +1,4 @@
-import { validateConfiguredField } from "./validation";
+import { validateConfiguredField, validateConfiguredInput } from "./validation";
 
 const names = { pattern: "^[\\p{L}\\p{M} ]+$", message: "Only letters and spaces are allowed." };
 const age = { integer: true, min: 0, max: 140, max_length: 3 };
@@ -10,13 +10,13 @@ describe("configuration-driven Add Info validation", () => {
     }
   });
   it("rejects numbers, punctuation, and tabs in each name entry", () => {
-    for (const name of ["Jane2", "Anne-Marie", "O'Neil", "Jane\tDoe"]) {
+    for (const name of ["Jane2", "Anne-Marie", "O'Neil", "Jane\tDoe", "\t"]) {
       expect(validateConfiguredField(["Valid Name", name], names)).toBe(names.message);
     }
   });
   it("validates the whole-number age boundaries and length", () => {
     for (const value of ["0", "9", "99", "140"]) expect(validateConfiguredField(value, age)).toBe("");
-    for (const value of ["141", "1000", "0140", "-1", "1.5", "1e2", "abc", " 14 "]) {
+    for (const value of ["141", "1000", "0140", "-1", "1.5", "1e2", "abc", " 14 ", " ", "\t"]) {
       expect(validateConfiguredField(value, age)).not.toBe("");
     }
   });
@@ -28,4 +28,11 @@ describe("configuration-driven Add Info validation", () => {
   it("fails safely for a malformed configured regex", () => {
     expect(validateConfiguredField("Jane", { pattern: "[" })).toContain("configuration is invalid");
   });
+  it("blocks a newly typed invalid list item but permits correcting older entries", () => {
+    expect(validateConfiguredInput(["Anna", "Bob2"], ["Anna", "Bob"], names)).toBe(names.message);
+    expect(validateConfiguredInput(["Anna", "Bob2"], ["Anna1", "Bob2"], names)).toBe("");
+    expect(validateConfiguredInput(["Anna1"], ["Anna1", "Bob2"], names)).toBe("");
+    expect(validateConfiguredInput(["Anna1", "Anna1"], ["Anna1"], names)).toBe(names.message);
+  });
+
 });

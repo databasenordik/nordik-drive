@@ -50,11 +50,12 @@ export default function CommunityMultiRow({
     if (disabled) return;
 
     const cleaned = norm(raw);
+    if (validateValue?.(cleaned)) return;
     const next = [...safe];
     next[idx] = cleaned;
     onChange(next);
 
-    if (cleaned && !validateValue?.(cleaned) && !exists(cleaned)) {
+    if (cleaned && !exists(cleaned)) {
       await onAddNewCommunity(cleaned);
     }
   };
@@ -77,7 +78,7 @@ export default function CommunityMultiRow({
             inputValue={val || ""}
             disabled={disabled}
             onInputChange={(_, newInputValue) => {
-              if (disabled) return;
+              if (disabled || validateValue?.(newInputValue)) return;
               const next = [...safe];
               next[idx] = newInputValue;
               onChange(next);
