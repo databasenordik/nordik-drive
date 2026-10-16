@@ -1034,6 +1034,29 @@ describe("DataGrid", () => {
   expect(screen.getByTestId("cfg-current-user-email")).toHaveTextContent("owner@nordik.test");
 });
 
+  it("shows configured name comments even when no loaded row contains the field", () => {
+    mockApiEntries = {
+      "config_students.csv": {
+        data: {
+          config: {
+            columns: [
+              { name: "Name", type: "input" },
+              { name: "Name Comments", type: "textarea" },
+              { name: "Add Only", type: "input", add_only: true },
+            ],
+          },
+        },
+      },
+    };
+
+    renderComponent([{ id: 1, Name: "Alice" }]);
+
+    const fields = mockLatestAgGridProps.columnDefs.map((c: any) => c.field);
+    expect(fields).toContain("Name Comments");
+    expect(fields).toContain("Name");
+    expect(fields).not.toContain("Add Only");
+  });
+
   it("config-driven mode uses config columns, hides fallback source filter when disabled, and add-student uses config defaults", async () => {
   mockApiEntries = {
     "config_students.csv": {

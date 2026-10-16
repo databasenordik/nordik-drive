@@ -25,7 +25,7 @@ import {
 } from "./styles";
 
 import FieldRow from "./FieldRow";
-import { validateConfiguredField } from "./validation";
+import { validateConfiguredField, validateConfiguredInput } from "./validation";
 import TextFieldRow from "./TextFieldRow";
 import DateFieldRow from "./DateFieldRow";
 import MultiValueRow from "./MultiValueRow";
@@ -283,7 +283,9 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
   }, [editData, editError, isNewEntry, onClose]);
 
   const updateField = (field: string, value: any) => {
-    setFieldErrors((prev) => ({ ...prev, [field]: validateConfiguredField(value, colMetaByName.get(field)?.validation) }));
+    const error = validateConfiguredInput(value, formValues[field], colMetaByName.get(field)?.validation);
+    setFieldErrors((prev) => ({ ...prev, [field]: error }));
+    if (error) return;
     setFormValues((prev) => ({ ...prev, [field]: value }));
 
     if (isNewEntry) return;

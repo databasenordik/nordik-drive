@@ -1003,7 +1003,7 @@ describe("AddInfoForm", () => {
         expect(screen.getByTestId("loader")).toHaveTextContent("true|");
         expect(screen.getByTestId("mui-dialog")).toBeInTheDocument();
     });
-    it("blocks saving and submitting invalid fields using configured rules", () => {
+    it("blocks invalid input using configured rules", () => {
         const config = { ...FORM_CONFIG, columns: FORM_CONFIG.columns.map((column) =>
             column.name === "Last Names" ? { ...column, validation: {
                 pattern: "^[A-Za-z ]+$", message: "Letters and spaces only",
@@ -1014,6 +1014,7 @@ describe("AddInfoForm", () => {
             target: { value: "Doe123" },
         });
         expect(screen.getByRole("alert")).toHaveTextContent("Letters and spaces only");
+        expect(within(screen.getByTestId("field-row-Last Names")).getByTestId("text-field-row")).toHaveValue("Doe");
         fireEvent.click(screen.getByRole("button", { name: "Save" }));
         expect(screen.queryByTestId("review-dialog")).not.toBeInTheDocument();
         expect(submitFetchState.fetchData).not.toHaveBeenCalled();
@@ -1031,6 +1032,31 @@ describe("AddInfoForm", () => {
         renderForm({ ...EDIT_ROW, "Name Comments": "Nickname" }, createState({ configData: { config } }));
         expect(screen.getByText("Include nicknames and Indigenous names.")).toBeInTheDocument();
         expect(within(screen.getByTestId("field-row-Name Comments")).getByTestId("textarea-field-row")).toHaveValue("Nickname");
+    });
+
+    it("blocks invalid ages as they are typed or pasted and allows clearing", () => {
+        const config = { ...FORM_CONFIG, columns: FORM_CONFIG.columns.map((column) =>
+            column.name === "Age" ? { ...column, validation: {
+                integer: true, min: 0, max: 140, max_length: 3,
+            } } : column
+        ) };
+        renderForm(EDIT_ROW, createState({ configData: { config } }));
+        const input = within(screen.getByTestId("field-row-Age")).getByTestId("text-field-row");
+        for (const value of ["141", "1000", "12a", "-1", "1.5"]) {
+            fireEvent.change(input, { target: { value } });
+            expect(input).toHaveValue("12");
+        }
+        fireEvent.change(input, { target: { value: "140" } });
+        expect(input).toHaveValue("140");
+        fireEvent.change(input, { target: { value: "" } });
+        expect(input).toHaveValue("");
+    });
+
+    it("leaves fields without configured validation unrestricted", () => {
+        renderForm(EDIT_ROW);
+        const input = within(screen.getByTestId("field-row-Notes")).getByTestId("textarea-field-row");
+        fireEvent.change(input, { target: { value: "Nickname #2, details!" } });
+        expect(input).toHaveValue("Nickname #2, details!");
     });
 
 });
