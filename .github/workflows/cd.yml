@@ -30,19 +30,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # OIDC → short-lived creds (no keys)
-      - id: auth
-        uses: google-github-actions/auth@v3
-        with:
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
-
-      - uses: google-github-actions/setup-gcloud@v2
-
-      - name: Configure Docker auth for Artifact Registry
-        run: |
-          gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
-
       - name: Compute image tag
         run: |
           echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
@@ -52,6 +39,25 @@ jobs:
       - name: Build Docker image
         run: |
           docker build --no-cache -t "$IMAGE_URI" .
+
+      # Request credentials after the build so they are fresh for push and deploy.
+      - id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          # Resource identifiers are public configuration, not secret credentials.
+          workload_identity_provider: projects/724838782318/locations/global/workloadIdentityPools/github-pool-ui/providers/github-provider-ui
+          service_account: nordik-drive-deployer-ui@planar-ray-472112-e8.iam.gserviceaccount.com
+          token_format: access_token
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Authenticate Docker to Artifact Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
 
       - name: Push Docker image
         run: |
