@@ -690,12 +690,8 @@ export default function DataGrid({ rowData }: DataGridProps) {
         // not needed in table view
         if (c?.add_only) return false;
 
-        // If it’s a real data column, include only if present OR explicitly additional_field
-        const name = String(c?.name || "");
-        if (!name) return false;
-
-        if (c?.additional_field) return true;
-        return rowKeys.has(name);
+        // Config defines the table schema, including fields absent from loaded rows.
+        return Boolean(String(c?.name || "").trim());
       });
 
       const mapped = tableCols.map((c: any) => {
