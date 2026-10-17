@@ -34,6 +34,7 @@ import {
   selectNiaThreadByFileName,
   setThreadVisibility,
   submitNiaQuestion,
+  loadNiaHistory,
 } from "../store/niaChatSlice";
 import { setSelectedCommunities } from "../store/auth/fileSlice";
 import type { AppDispatch, RootState } from "../store/store";
@@ -157,6 +158,7 @@ export default function NIAChat({ open, setOpen }: NIAChatProps) {
     selectNiaThreadByFileName(state, selectedFile?.filename)
   );
   const hasPendingExchange = useSelector((state: RootState) => selectHasAnyPendingNia(state));
+  const authIdentity = useSelector((state: RootState) => state.auth.user?.id ?? state.auth.token);
 
   const exchanges = currentThread?.exchanges || [];
   const unreadCount = currentThread?.unreadCount || 0;
@@ -175,6 +177,12 @@ export default function NIAChat({ open, setOpen }: NIAChatProps) {
 
   const [ttsPlayingExchangeId, setTtsPlayingExchangeId] = useState<string | null>(null);
   const [ttsLoadingExchangeId, setTtsLoadingExchangeId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (open && currentFileName && authIdentity) {
+      dispatch(loadNiaHistory(currentFileName));
+    }
+  }, [open, currentFileName, authIdentity, dispatch]);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768);
@@ -214,7 +222,7 @@ export default function NIAChat({ open, setOpen }: NIAChatProps) {
         })
       );
     };
-  }, [currentFileName, dispatch, minimized, open]);
+  }, [currentFileName, dispatch, minimized, open, authIdentity]);
 
   useEffect(() => {
     if (!open || minimized || !currentFileName || unreadCount === 0) return;
@@ -804,9 +812,23 @@ export default function NIAChat({ open, setOpen }: NIAChatProps) {
             background: color_white_smoke,
           }}
         >
+          {currentThread?.historyStatus === "loading" && (
+            <div role="status">Loading saved conversation...</div>
+          )}
+          {currentThread?.historyError && (
+            <div role="alert">
+              {currentThread.historyError}{" "}
+              <button type="button" onClick={() => dispatch(loadNiaHistory(currentFileName))}>
+                Retry
+              </button>
+            </div>
+          )}
+          {currentThread?.hasMoreHistory && (
+            <div style={{ color: color_text_light, fontSize: 13 }}>Showing the 10 most recent questions and answers.</div>
+          )}
           {renderedMessages.length > 0 ? (
             renderedMessages
-          ) : (
+          ) : currentThread?.historyStatus !== "loading" ? (
             <div
               style={{
                 padding: "14px 16px",
@@ -819,7 +841,7 @@ export default function NIAChat({ open, setOpen }: NIAChatProps) {
             >
               Ask NIA a question about the selected file to start the conversation.
             </div>
-          )}
+          ) : null}
         </div>
 
         <div

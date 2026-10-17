@@ -71,7 +71,8 @@ jest.mock("@mui/icons-material/Pause", () => ({
 }));
 
 const useFetchMock = useFetch as unknown as jest.Mock;
-const apiRequestMock = apiRequest as unknown as jest.Mock;
+const apiRequestMock = jest.fn();
+const historyRequestMock = jest.fn();
 
 class MockFormData {
   public entries: Array<[string, any]> = [];
@@ -238,6 +239,10 @@ describe("NIAChat + NIAChatTrigger", () => {
     ttsHook = makeTtsHook();
     useFetchMock.mockImplementation(() => ttsHook);
     apiRequestMock.mockReset();
+    historyRequestMock.mockReset().mockRejectedValue(new Error("History is unavailable"));
+    (apiRequest as jest.Mock).mockImplementation((...args: any[]) =>
+      (args[1] === "GET" ? historyRequestMock : apiRequestMock)(...args)
+    );
     global.FormData = MockFormData as any;
     (HTMLElement.prototype as any).scrollTo = jest.fn();
   });
@@ -340,6 +345,22 @@ describe("NIAChat + NIAChatTrigger", () => {
     expect(screen.getByText("Saved answer")).toBeInTheDocument();
   });
 
+  test("loads saved file history and sends its conversation ID with the next question", async () => {
+    historyRequestMock.mockResolvedValue({
+      conversation_id: "owned-conversation", file_id: 49, has_more: false,
+      entries: [{ id: "saved-exchange", exchange_id: "saved-exchange", question: "Saved question",
+        answer: "Saved answer from server", created_at: "2026-10-15T10:00:00Z" }],
+    });
+    apiRequestMock.mockResolvedValueOnce({ answer: "Follow-up answer", conversation_id: "owned-conversation", exchange_id: "new-exchange" });
+    renderWithStore(<NIAChat open={true} setOpen={jest.fn()} />);
+    expect(await screen.findByText("Saved answer from server")).toBeInTheDocument();
+    expect(historyRequestMock.mock.calls[0][0]).toContain("limit=10");
+    sendViaButton("Follow up");
+    expect(await screen.findByText("Follow-up answer")).toBeInTheDocument();
+    const fields = new Map((apiRequestMock.mock.calls[0][2] as MockFormData).entries);
+    expect(fields.get("conversation_id")).toBe("owned-conversation");
+  });
+
   test("shows a notification and unread state when an answer completes while chat is closed", async () => {
     const store = makeStore();
     const pending = deferredResponse();
@@ -425,7 +446,7 @@ describe("NIAChat + NIAChatTrigger", () => {
     sendViaButton("Will fail");
 
     await waitFor(() => {
-      expect(screen.getByRole("alert")).toHaveTextContent("Request failed");
+      expect(screen.getAllByRole("alert").some((alert) => alert.textContent?.includes("Request failed"))).toBe(true);
     });
     expect((toast as any).error).toHaveBeenCalledWith("Something went wrong. Please try again later!");
   });
