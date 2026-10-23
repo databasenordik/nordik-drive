@@ -1,53 +1,130 @@
-# Getting Started with Create React App
+# Nordik Drive
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React frontend for the Nordik Drive data management platform.
 
-## Available Scripts
+The application provides screens for browsing files, searching records, viewing documents, and working with forms. It connects to a separate Go backend.
 
-In the project directory, you can run:
+## Main features
 
-### `npm start`
+| Area | Features |
+| --- | --- |
+| Files | File lists, uploads, replacement, and version history. |
+| Data tables | Search, filtering, and record views using AG Grid. |
+| Documents | Photo and document viewers. |
+| Forms | Data entry forms and submission screens. |
+| Administration | Application management pages. |
+| Support | Contact pages and support call screens. |
+| NIA | Chat interface with voice and audio features where supported. |
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Technology
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+| Tool | Used for |
+| --- | --- |
+| React and TypeScript | Application pages and components. |
+| Redux Toolkit | Shared application state. |
+| React Router | Page navigation. |
+| Material UI and styled-components | Interface components and styling. |
+| AG Grid | Data tables. |
+| React Hook Form and Yup | Form handling and validation. |
+| Jest and React Testing Library | Unit and component tests. |
+| Cypress | Browser tests. |
+| Docker and Nginx | Container build and serving the built application. |
 
-### `npm test`
+## How the frontend is organised
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Pages are kept separate from shared components. Redux handles shared state, and common hooks support data fetching and other repeated work.
 
-### `npm run build`
+Several pages are loaded when needed rather than being imported into the main bundle at startup. A shared API URL helper keeps URL construction in one place.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Location | Purpose |
+| --- | --- |
+| `src/pages/` | Main application pages. |
+| `src/components/` | Shared interface elements, tables, and dialogs. |
+| `src/store/` | Redux state and middleware. |
+| `src/hooks/` | Shared React hooks. |
+| `src/config/` | Application configuration helpers. |
+| `src/lib/` | Shared utilities. |
+| `cypress/` | Browser test code. |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Main pages
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+These are frontend page routes, not backend API endpoints.
 
-### `npm run eject`
+| Route | Page |
+| --- | --- |
+| `/files` | File list. |
+| `/dataview` | Data table view. |
+| `/file-content` | File content page. |
+| `/contact-us` | Contact and support information. |
+| `/faq` | Frequently asked questions. |
+| `/profile` | User profile and support-related settings. |
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Local development
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Use Node.js 20 and npm, matching the current CI setup.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```bash
+git clone https://github.com/databasenordik/nordik-drive.git
+cd nordik-drive
+npm ci --legacy-peer-deps
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Start the development server:
 
-## Learn More
+```bash
+npm start
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The frontend opens at `http://localhost:3000`.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Connected features need a development backend and the correct local connection settings. Use a test account and generated sample records when checking those features.
 
-## API Origin Configuration
+The project uses React Scripts. Restart the development server after changing its local environment settings.
 
-The frontend reads the backend origin from a single shared `API_ORIGIN` value.
+## Tests
 
-- Cloud Run / Docker: set `API_ORIGIN` on the service. The container startup script injects it into both Nginx and the React runtime config.
-- Local `npm start`: set `REACT_APP_API_ORIGIN` if you want the dev server to talk to a non-default backend.
+Run the unit tests once with coverage:
+
+```bash
+npm run test:unit:ci
+```
+
+Run the unit tests in watch mode:
+
+```bash
+npm run test:unit
+```
+
+Start the development server and run the browser tests:
+
+```bash
+npm run test:e2e
+```
+
+Open the Cypress interface:
+
+```bash
+npm run cy:open
+```
+
+Component tests sit alongside their source files. The current Cypress tests cover account screens and use mocked API responses. A separate check with a development backend is needed to test connected application behaviour.
+
+## Build
+
+```bash
+npm run build
+```
+
+The build output is written to `build/`.
+
+Build the Docker image:
+
+```bash
+docker build -t nordik-drive:local .
+```
+
+The image serves the built application through Nginx. It also needs the appropriate development backend settings when started.
+
+## Related project
+
+[The Nordik Drive API](https://github.com/databasenordik/nordikdriveapi) is the Go backend used by this frontend.
