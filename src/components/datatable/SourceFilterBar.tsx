@@ -52,19 +52,10 @@ export default function SourceFilterBar({ availableSources, sourceFilter, setSou
   const allSelected = sourceFilter === null;
 
   return (
-    <section
-      aria-label="Filter by source"
-      className="dv-source-bar"
-      style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}
-    >
+    <section aria-label="Filter by source" className="dv-source-bar">
       <span className="dv-source-label">Filter by source</span>
 
-      <div
-        className="dv-source-pills"
-        data-testid="source-filter-scroll"
-        aria-label="Source filters"
-        style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, minWidth: 0 }}
-      >
+      <div className="dv-source-pills" data-testid="source-filter-scroll" aria-label="Source filters">
         <button
           type="button"
           className="dv-source-pill"
@@ -102,7 +93,6 @@ export default function SourceFilterBar({ availableSources, sourceFilter, setSou
             >
               <span
                 aria-hidden="true"
-                data-testid="source-dot"
                 style={{
                   width: 8,
                   height: 8,

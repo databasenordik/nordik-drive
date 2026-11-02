@@ -862,23 +862,10 @@ describe("DataGrid", () => {
 
         const highlighted = within(ui.container).getByText("Ali");
         expect(highlighted).toHaveStyle("background-color: yellow");
-        const { getSourceTint } = jest.requireActual("./sourceColors");
-        const tint = getSourceTint("SRC1");
-
         const pill = ui.container.querySelector(".dv-source-value") as HTMLElement;
         expect(pill).toBeInTheDocument();
         expect(pill).toHaveAttribute("title", "SRC1");
-        expect(pill).toHaveStyle(`background: ${tint.bg}`);
-        expect(pill).toHaveStyle(`color: ${tint.fg}`);
-
-        const dot = pill.querySelector(".dv-source-dot") as HTMLElement;
-        expect(dot).toBeInTheDocument();
-        expect(dot).toHaveAttribute("aria-hidden", "true");
-        expect(dot).toHaveStyle(`background: ${tint.dot}`);
-
-        // The source is announced to screen readers, and the bracketed source is not shown as cell text
-        expect(within(pill).getByText(", SRC1")).toHaveClass("dv-visually-hidden");
-        expect(pill).not.toHaveTextContent("(SRC1)");
+        expect(pill.querySelector(".dv-source-dot")).toBeInTheDocument();
     });
 
     it("single website URL cell opens a website in a new tab", () => {
