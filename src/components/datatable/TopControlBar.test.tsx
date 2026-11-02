@@ -2,6 +2,7 @@ import React from "react";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
+import userEvent from "@testing-library/user-event";
 import TopControlsBar from "./TopControlBar";
 import * as XLSX from "xlsx";
 import { useDispatch } from "react-redux";
@@ -233,13 +234,27 @@ describe("TopControlsBar", () => {
     expect(onNavigateMatch).toHaveBeenCalledWith("next");
   });
 
-  it("opens NIA from the Ask NIA button", () => {
+  it("opens NIA from the Ask NIA button by click and keyboard", async () => {
+    const user = userEvent.setup();
     const setNiaOpen = jest.fn();
 
     render(<TopControlsBar {...defaultProps({ setNiaOpen })} />);
 
-    fireEvent.click(screen.getByRole("button", { name: /ask nia/i }));
-    expect(setNiaOpen).toHaveBeenCalledWith(true);
+    const niaButton = screen.getByRole("button", { name: /ask nia/i });
+    expect(niaButton.tagName).toBe("BUTTON");
+
+    fireEvent.click(niaButton);
+    expect(setNiaOpen).toHaveBeenCalledTimes(1);
+    expect(setNiaOpen).toHaveBeenLastCalledWith(true);
+
+    niaButton.focus();
+    await user.keyboard("{Enter}");
+    expect(setNiaOpen).toHaveBeenCalledTimes(2);
+    expect(setNiaOpen).toHaveBeenLastCalledWith(true);
+
+    await user.keyboard(" ");
+    expect(setNiaOpen).toHaveBeenCalledTimes(3);
+    expect(setNiaOpen).toHaveBeenLastCalledWith(true);
   });
 
   it("shows the unread NIA badge when there are unread answers", () => {
