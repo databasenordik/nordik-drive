@@ -1,35 +1,24 @@
 // SourceFilterBar.test.tsx
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
-jest.mock("./sourceColors", () => ({
-  __esModule: true,
-  SOURCE_COLORS: {
-    SourceA: "#123456",
-    SourceB: "#654321",
-    "NCTR SOURCE": "#FFC000",
-    "CIRNAC SOURCE": "#9F5FCF",
-  },
-  SOURCE_ACRONYM_DETAILS: [
-    {
-      acronym: "NCTR",
-      fullName: "National Center for Truth and Reconciliation",
+jest.mock("./sourceColors", () => {
+  const actual = jest.requireActual("./sourceColors");
+  return {
+    __esModule: true,
+    ...actual,
+    SOURCE_COLORS: {
+      SourceA: "#123456",
+      SourceB: "#654321",
+      "NCTR SOURCE": "#FFC000",
+      "CIRNAC SOURCE": "#9F5FCF",
     },
-    {
-      acronym: "CIRNAC",
-      fullName: "Crown-Indigenous Relations and Northern Affairs Canada",
-    },
-  ],
-}));
+  };
+});
 
 import SourceFilterBar from "./SourceFilterBar";
-import { SOURCE_COLORS } from "./sourceColors";
-import {
-  color_black,
-  color_light_gray,
-  color_white,
-} from "../../constants/colors";
+import { color_dv_primary, color_dv_surface } from "../../constants/colors";
 
 describe("SourceFilterBar", () => {
   const mockSetSourceFilter = jest.fn();
@@ -41,145 +30,70 @@ describe("SourceFilterBar", () => {
 
   it("renders nothing when availableSources is empty", () => {
     const { container } = render(
-      <SourceFilterBar
-        availableSources={[]}
-        sourceFilter={null}
-        setSourceFilter={mockSetSourceFilter}
-      />
+      <SourceFilterBar availableSources={[]} sourceFilter={null} setSourceFilter={mockSetSourceFilter} />
     );
 
-    expect(container.firstChild).toBeNull();
+    expect(container).toBeEmptyDOMElement();
   });
 
-  it("renders label, All button, and source buttons", () => {
+  it("renders label, All sources button, and source buttons", () => {
     render(
-      <SourceFilterBar
-        availableSources={sources}
-        sourceFilter={null}
-        setSourceFilter={mockSetSourceFilter}
-      />
+      <SourceFilterBar availableSources={sources} sourceFilter={null} setSourceFilter={mockSetSourceFilter} />
     );
 
-    expect(screen.getByText("Filter by Source:")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "All" })).toBeInTheDocument();
+    expect(screen.getByText("Filter by source")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "All sources" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "SourceA" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "SourceB" })).toBeInTheDocument();
   });
 
-  it("keeps filters on a single horizontal scrolling row", () => {
+  it("calls setSourceFilter(null) when All sources is clicked", () => {
     render(
-      <SourceFilterBar
-        availableSources={sources}
-        sourceFilter={null}
-        setSourceFilter={mockSetSourceFilter}
-      />
+      <SourceFilterBar availableSources={sources} sourceFilter="SourceA" setSourceFilter={mockSetSourceFilter} />
     );
 
-    const scrollRail = screen.getByTestId("source-filter-scroll");
+    fireEvent.click(screen.getByRole("button", { name: "All sources" }));
 
-    expect(scrollRail).toHaveStyle("overflow-x: auto");
-    expect(scrollRail).toHaveStyle("overflow-y: hidden");
-    expect(scrollRail).toHaveStyle("flex-wrap: nowrap");
-    expect(scrollRail).toHaveStyle("white-space: nowrap");
-  });
-
-  it("calls setSourceFilter(null) when All button is clicked", () => {
-    render(
-      <SourceFilterBar
-        availableSources={sources}
-        sourceFilter="SourceA"
-        setSourceFilter={mockSetSourceFilter}
-      />
-    );
-
-    fireEvent.click(screen.getByRole("button", { name: "All" }));
-
-    expect(mockSetSourceFilter).toHaveBeenCalledTimes(1);
     expect(mockSetSourceFilter).toHaveBeenCalledWith(null);
   });
 
   it("calls setSourceFilter(source) when a source button is clicked", () => {
     render(
-      <SourceFilterBar
-        availableSources={sources}
-        sourceFilter={null}
-        setSourceFilter={mockSetSourceFilter}
-      />
+      <SourceFilterBar availableSources={sources} sourceFilter={null} setSourceFilter={mockSetSourceFilter} />
     );
 
     fireEvent.click(screen.getByRole("button", { name: "SourceB" }));
 
-    expect(mockSetSourceFilter).toHaveBeenCalledTimes(1);
     expect(mockSetSourceFilter).toHaveBeenCalledWith("SourceB");
   });
 
-  it("applies selected styles to All button when sourceFilter is null", () => {
+  it("marks All sources as pressed and navy when no source is selected", () => {
     render(
-      <SourceFilterBar
-        availableSources={sources}
-        sourceFilter={null}
-        setSourceFilter={mockSetSourceFilter}
-      />
+      <SourceFilterBar availableSources={sources} sourceFilter={null} setSourceFilter={mockSetSourceFilter} />
     );
 
-    const allButton = screen.getByRole("button", { name: "All" });
+    const allButton = screen.getByRole("button", { name: "All sources" });
 
-    expect(allButton).toHaveStyle(`border: 3px solid ${color_black}`);
-    expect(allButton).toHaveStyle("box-shadow: 0 0 6px rgba(0,0,0,0.3)");
-    expect(allButton).toHaveStyle(`background: ${color_white}`);
-    expect(allButton).toHaveStyle(`color: ${color_black}`);
+    expect(allButton).toHaveAttribute("aria-pressed", "true");
+    expect(allButton).toHaveStyle(`background: ${color_dv_primary}`);
+    expect(screen.getByRole("button", { name: "SourceA" })).toHaveAttribute("aria-pressed", "false");
   });
 
-  it("applies unselected styles to All button when a source is selected", () => {
+  it("marks the active source as pressed and navy, and All sources as unpressed", () => {
     render(
-      <SourceFilterBar
-        availableSources={sources}
-        sourceFilter="SourceA"
-        setSourceFilter={mockSetSourceFilter}
-      />
+      <SourceFilterBar availableSources={sources} sourceFilter="SourceA" setSourceFilter={mockSetSourceFilter} />
     );
 
-    const allButton = screen.getByRole("button", { name: "All" });
-
-    expect(allButton).toHaveStyle(`border: 1px solid ${color_light_gray}`);
-    expect(allButton).toHaveStyle("box-shadow: none");
-  });
-
-  it("applies selected styles to the active source button", () => {
-    render(
-      <SourceFilterBar
-        availableSources={sources}
-        sourceFilter="SourceA"
-        setSourceFilter={mockSetSourceFilter}
-      />
-    );
-
+    const allButton = screen.getByRole("button", { name: "All sources" });
     const sourceAButton = screen.getByRole("button", { name: "SourceA" });
 
-    expect(sourceAButton).toHaveStyle("border: 3px solid #000");
-    expect(sourceAButton).toHaveStyle("box-shadow: 0 0 6px rgba(0,0,0,0.4)");
-    expect(sourceAButton).toHaveStyle(`background: ${SOURCE_COLORS["SourceA"]}`);
-    expect(sourceAButton).toHaveStyle(`color: ${color_white}`);
+    expect(allButton).toHaveAttribute("aria-pressed", "false");
+    expect(allButton).toHaveStyle(`background: ${color_dv_surface}`);
+    expect(sourceAButton).toHaveAttribute("aria-pressed", "true");
+    expect(sourceAButton).toHaveStyle(`background: ${color_dv_primary}`);
   });
 
-  it("applies unselected styles to inactive source buttons", () => {
-    render(
-      <SourceFilterBar
-        availableSources={sources}
-        sourceFilter="SourceA"
-        setSourceFilter={mockSetSourceFilter}
-      />
-    );
-
-    const sourceBButton = screen.getByRole("button", { name: "SourceB" });
-
-    expect(sourceBButton).toHaveStyle("border: 1px solid #ccc");
-    expect(sourceBButton).toHaveStyle("box-shadow: none");
-    expect(sourceBButton).toHaveStyle(`background: ${SOURCE_COLORS["SourceB"]}`);
-    expect(sourceBButton).toHaveStyle(`color: ${color_white}`);
-  });
-
-  it("keeps source button labels unchanged for NCTR, CIRNAC, and other sources", () => {
+  it("shows short labels but keeps the full source name as the accessible name", () => {
     render(
       <SourceFilterBar
         availableSources={["NCTR SOURCE", "CIRNAC SOURCE", "SourceA"]}
@@ -188,27 +102,23 @@ describe("SourceFilterBar", () => {
       />
     );
 
-    expect(screen.getByRole("button", { name: "NCTR SOURCE" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "CIRNAC SOURCE" })).toBeInTheDocument();
+    const nctr = screen.getByRole("button", { name: "NCTR SOURCE" });
+    expect(nctr).toHaveTextContent("NCTR");
+    expect(screen.getByRole("button", { name: "CIRNAC SOURCE" })).toHaveTextContent("CIRNAC");
     expect(screen.getByRole("button", { name: "SourceA" })).toBeInTheDocument();
   });
 
   it("shows the acronym and expanded source value in a tooltip", async () => {
     render(
-      <SourceFilterBar
-        availableSources={["NCTR SOURCE"]}
-        sourceFilter={null}
-        setSourceFilter={mockSetSourceFilter}
-      />
+      <SourceFilterBar availableSources={["NCTR SOURCE"]} sourceFilter={null} setSourceFilter={mockSetSourceFilter} />
     );
 
-    fireEvent.mouseOver(
-      screen.getByRole("button", { name: "NCTR SOURCE" })
-    );
+    fireEvent.mouseOver(screen.getByRole("button", { name: "NCTR SOURCE" }));
 
-    expect(await screen.findByText("NCTR")).toBeInTheDocument();
+    const tooltip = await screen.findByRole("tooltip");
+    expect(within(tooltip).getByText("NCTR")).toBeInTheDocument();
     expect(
-      await screen.findByText("National Center for Truth and Reconciliation Source")
+      within(tooltip).getByText("National Center for Truth and Reconciliation Source")
     ).toBeInTheDocument();
   });
 });

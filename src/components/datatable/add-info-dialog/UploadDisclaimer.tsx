@@ -4,7 +4,6 @@ import React from "react";
 import { Box } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
-import { color_secondary, color_white_smoke } from "../../../constants/colors";
 import {
   ADD_INFO_DISCLAIMER_BOX_SX,
   ADD_INFO_DISCLAIMER_KICKER_SX,
@@ -28,17 +27,17 @@ export default function UploadDisclaimer({ text }: Props) {
     >
       <Box
         sx={{
-          width: 60,
-          height: 60,
-          minWidth: 60,
+          width: 36,
+          height: 36,
+          minWidth: 36,
           borderRadius: "50%",
           display: "grid",
           placeItems: "center",
-          color: color_secondary,
-          background: color_white_smoke,
+          color: "#8A5A00",
+          background: "#FDF0D5",
         }}
       >
-        <InfoOutlinedIcon sx={{ fontSize: 32 }} />
+        <InfoOutlinedIcon sx={{ fontSize: 20 }} />
       </Box>
 
       <Box sx={{ minWidth: 0 }}>

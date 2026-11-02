@@ -64,7 +64,7 @@ export function AuthTitle({
   children,
   mb = 2,
   fontSize = 22,
-  fontWeight = 800,
+  fontWeight = 600,
 }: {
   children: React.ReactNode;
   mb?: number;
@@ -100,7 +100,7 @@ export function OrDivider({
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 2, my }}>
       <Divider sx={{ flex: 1, borderColor: dividerColor }} />
-      <Typography sx={{ fontSize: 12, fontWeight: 900, color: textColor }}>
+      <Typography sx={{ fontSize: 13, fontWeight: 500, color: textColor }}>
         {text}
       </Typography>
       <Divider sx={{ flex: 1, borderColor: dividerColor }} />
@@ -122,14 +122,44 @@ export function AuthPrimaryButton({
       fullWidth
       {...props}
       sx={{
-        height: 46,
-        borderRadius: 2,
-        fontWeight: 900,
-        letterSpacing: "0.06em",
-        textTransform: "uppercase",
+        height: 48,
+        borderRadius: "10px",
+        fontSize: 16,
+        fontWeight: 500,
+        letterSpacing: 0,
+        textTransform: "none",
         boxShadow: "none",
         backgroundColor: `${color_secondary} !important`,
-        "&:hover": { backgroundColor: `${color_secondary_dark} !important` },
+        "&:hover": { backgroundColor: `${color_secondary_dark} !important`, boxShadow: "none" },
+        "&:focus-visible": { outline: `3px solid ${color_secondary}`, outlineOffset: "2px" },
+        ...sx,
+      }}
+    />
+  );
+}
+
+/* Outline companion to AuthPrimaryButton (e.g. "Create new account"). */
+export function AuthSecondaryButton({
+  sx,
+  ...props
+}: ButtonProps & { sx?: SxProps<Theme> }) {
+  return (
+    <Button
+      variant="outlined"
+      fullWidth
+      {...props}
+      sx={{
+        height: 48,
+        borderRadius: "10px",
+        fontSize: 16,
+        fontWeight: 500,
+        textTransform: "none",
+        boxShadow: "none",
+        border: `1px solid ${color_border}`,
+        backgroundColor: `${color_white} !important`,
+        color: `${color_secondary} !important`,
+        "&:hover": { backgroundColor: "#F7F8FA !important", borderColor: "#9AA3B2" },
+        "&:focus-visible": { outline: `3px solid ${color_secondary}`, outlineOffset: "2px" },
         ...sx,
       }}
     />
@@ -179,8 +209,9 @@ export function AuthControlledTextField({
   const finalSx = useMemo(() => {
     const base: any = {
       "& .MuiOutlinedInput-root": {
-        borderRadius: 2,
+        borderRadius: "10px",
         backgroundColor: color_white,
+        fontSize: 16,
         ...(inputHeight ? { height: inputHeight } : {}),
       },
     };

@@ -23,7 +23,6 @@ import {
   color_text_light,
   color_text_primary,
   color_border,
-  shadow_auth_button,
 } from "../../constants/colors";
 
 import {
@@ -32,6 +31,7 @@ import {
   AuthControlledTextField,
   AuthPasswordField,
   AuthPrimaryButton,
+  AuthSecondaryButton,
   OrDivider,
 } from "./AuthShared";
 import { normalizeEmail, trimmedEmailSchema } from "./authValidation";
@@ -111,28 +111,29 @@ function Login() {
         <AuthLogosHeader mb={3} />
 
         <AuthTitle fontSize={22} mb={2}>
-          Sign in with Email Address
+          Sign in with your email address
         </AuthTitle>
 
         <FormWrapper onSubmit={handleSubmit(onSubmit)}>
           <AuthControlledTextField
             name="email"
             control={control as any}
+            label="Email address"
             placeholder="Email address"
+            type="email"
             errorMessage={errors.email?.message}
-            inputHeight={48}
             sx={{ mt: 0 }}
-            textFieldProps={{ InputLabelProps: { shrink: false } }}
+            textFieldProps={{ autoComplete: "email" }}
           />
 
           <AuthPasswordField
             name="password"
             control={control as any}
+            label="Password"
             placeholder="Password"
             errorMessage={errors.password?.message}
-            inputHeight={48}
-            sx={{ mt: 1.25 }}
-            textFieldProps={{ InputLabelProps: { shrink: false } }}
+            sx={{ mt: 1 }}
+            textFieldProps={{ autoComplete: "current-password" }}
           />
 
           <Box sx={{ display: "flex", justifyContent: "flex-start", alignSelf: "flex-start", mt: 0.5 }}>
@@ -143,8 +144,8 @@ function Login() {
                 <FormControlLabel
                   control={<CheckBoxWrapper {...field} checked={!!field.value} />}
                   label={
-                    <Typography sx={{ fontSize: 13.5, fontWeight: 600, color: color_text_primary }}>
-                      Remember Me
+                    <Typography sx={{ fontSize: 15, fontWeight: 400, color: color_text_primary }}>
+                      Remember me
                     </Typography>
                   }
                   sx={{ m: 0 }}
@@ -153,15 +154,8 @@ function Login() {
             />
           </Box>
 
-          <AuthPrimaryButton
-            type="submit"
-            sx={{
-              mt: 2,
-              mb: 1.5,
-              boxShadow: shadow_auth_button,
-            }}
-          >
-            Sign In
+          <AuthPrimaryButton type="submit" sx={{ mt: 2, mb: 1 }}>
+            Sign in
           </AuthPrimaryButton>
 
           <Box sx={{ textAlign: "center", mb: 2 }}>
@@ -172,9 +166,9 @@ function Login() {
 
           <OrDivider my={2} dividerColor={color_border} textColor={color_text_light} />
 
-          <AuthPrimaryButton type="button" onClick={() => navigate("/signup")} sx={{ height: 44, boxShadow: "none" }}>
-            Create New Account
-          </AuthPrimaryButton>
+          <AuthSecondaryButton type="button" onClick={() => navigate("/signup")}>
+            Create new account
+          </AuthSecondaryButton>
         </FormWrapper>
       </AuthWrapper>
     </AuthContainer>

@@ -2,7 +2,7 @@
 
 import React from "react";
 import CommunityFilter from "../CommunityFilter/CommunityFilter";
-import { color_background, color_primary, color_white } from "../../constants/colors";
+import { color_dv_border, color_dv_page } from "../../constants/colors";
 
 type Props = {
   enabled: boolean;
@@ -31,12 +31,9 @@ export default function CommunityFilterPanel({
         <div
           className="left-panel"
           style={{
-            padding: "8px 16px",
             boxSizing: "border-box",
-            flex: "0 0 30%",
-            maxWidth: "30%",
-            transition: "all 220ms ease",
-            boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
+            flex: "0 0 280px",
+            maxWidth: 300,
 
             display: "flex",
             flexDirection: "column",
@@ -47,26 +44,16 @@ export default function CommunityFilterPanel({
         >
           <div
             style={{
-              position: "sticky",
-              top: 0,
-              zIndex: 2,
-              background: color_white,
-              paddingBottom: 8,
-            }}
-          />
-
-          <div
-            style={{
               flex: 1,
               minHeight: 0,
               overflowY: "auto",
               overflowX: "hidden",
-              paddingRight: 6,
               WebkitOverflowScrolling: "touch",
               overscrollBehavior: "contain",
             }}
           >
-            <CommunityFilter onClose={() => setFilterOpen(false)} showClose />
+            {/* Desktop: the "Hide filter" button closes the panel, so no extra close button here */}
+            <CommunityFilter />
           </div>
         </div>
       )}
@@ -83,9 +70,10 @@ export default function CommunityFilterPanel({
             right: 8,
             top: overlayTop,
             zIndex: 999,
-            background: color_background,
-            borderRadius: 10,
-            boxShadow: "0 12px 40px rgba(0,0,0,0.25)",
+            background: color_dv_page,
+            borderRadius: 12,
+            border: `1px solid ${color_dv_border}`,
+            boxShadow: "0 12px 40px rgba(16,24,40,0.18)",
             maxHeight: `calc(100vh - ${overlayTop + 16}px)`,
             overflow: "auto",
             padding: 12,
@@ -102,17 +90,10 @@ export default function CommunityFilterPanel({
             }}
           >
             <button
+              type="button"
+              className="dv-btn dv-btn-primary"
               onClick={() => setFilterOpen(false)}
-              style={{
-                padding: "10px 14px",
-                borderRadius: 10,
-                background: color_primary,
-                color: color_white,
-                border: "none",
-                cursor: "pointer",
-                fontWeight: 700,
-                flex: 1,
-              }}
+              style={{ flex: 1, justifyContent: "center" }}
             >
               Close filter
             </button>

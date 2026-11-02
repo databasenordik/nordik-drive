@@ -61,6 +61,7 @@ import {
   color_background,
   color_text_primary,
   color_text_light,
+  color_danger,
 } from "../../constants/colors";
 import { renderDocxPreview } from "../../lib/docxPreview";
 
@@ -565,7 +566,7 @@ function AchieverStorySubmissionForm({
             </Box>
           )}
 
-          {error && <Typography role="alert" sx={{ color: color_primary, fontWeight: 800 }}>{error}</Typography>}
+          {error && <Typography role="alert" sx={{ color: color_danger, fontWeight: 600 }}>{error}</Typography>}
 
           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, flexWrap: "wrap" }}>
             <Button onClick={onCancel} disabled={submitting} variant="outlined">Cancel</Button>

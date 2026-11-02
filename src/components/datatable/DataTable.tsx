@@ -22,19 +22,18 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 
 import { DataTableWrapper, GridWrapper } from "../Wrappers";
 import {
-  color_primary,
-  color_secondary,
   header_height,
   header_mobile_height,
   color_white,
   color_black,
   color_black_light,
+  color_danger,
 } from "../../constants/colors";
 import { API_BASE } from "../../config/api";
 
 import { MicIcon } from "lucide-react";
 import styled, { keyframes } from "styled-components";
-import { SOURCE_COLORS } from "./sourceColors";
+import { SOURCE_COLORS, getSourceDisplayName, getSourceTint } from "./sourceColors";
 import { useDispatch, useSelector } from "react-redux";
 import { setCommunities } from "../../store/auth/fileSlice";
 import { AppDispatch, RootState } from "../../store/store";
@@ -89,23 +88,16 @@ interface DailyHonourResponse {
 const AddInfoRenderer = React.memo((props: any) => {
   return (
     <button
-      style={{
-        padding: "6px 12px",
-        background: color_secondary,
-        color: color_white,
-        border: "none",
-        borderRadius: "6px",
-        cursor: "pointer",
-        width: "100%",
-        height: "34px",
-        fontSize: "14px",
-        fontWeight: 600,
-      }}
+      type="button"
+      className="dv-row-btn"
       onClick={(e) => {
         e.stopPropagation();
         props.context.openForm(props.data);
       }}
     >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
+      </svg>
       Add Info
     </button>
   );
@@ -203,7 +195,7 @@ const MicButton = styled.div<{ $recording: boolean }>`
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background: ${props => props.$recording ? color_primary : "#E0E0E0"};
+  background: ${props => props.$recording ? color_danger : "#E0E0E0"};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -227,7 +219,8 @@ const RecorderText = styled.div`
 export default function DataGrid({ rowData }: DataGridProps) {
   const [gridApi, setGridApi] = useState<any>(null);
 
-  const [filterOpen, setFilterOpen] = useState(true);
+  // Community filter starts collapsed; "Show filter" opens it.
+  const [filterOpen, setFilterOpen] = useState(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [overlayTop, setOverlayTop] = useState<number>(0);
   const [overlayHeight, setOverlayHeight] = useState<number>(360);
@@ -599,24 +592,11 @@ export default function DataGrid({ rowData }: DataGridProps) {
           const single = urls.length === 1 ? urls[0] : null;
           const isDoc = single ? isDocumentUrl(single) : false;
 
-          const btnStyle: React.CSSProperties = {
-            padding: "6px 10px",
-            background: color_secondary,
-            color: color_white,
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-            width: "100%",
-            height: "32px",
-            fontSize: "12px",
-            fontWeight: 700,
-            whiteSpace: "nowrap",
-          };
-
           return (
-            <div style={{ padding: 8 }}>
+            <div className="dv-cell-pad">
               <button
-                style={btnStyle}
+                type="button"
+                className="dv-chip"
                 title={value}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -636,19 +616,28 @@ export default function DataGrid({ rowData }: DataGridProps) {
 
         const match = value.match(/^([\s\S]*?)\s*(\(([^)]*)\))?$/);
         const bracketText = (match?.[3] || "").trim();
+        const isSourceValue = Boolean(bracketText && SOURCE_COLORS[bracketText]);
 
-        const bgColor = bracketText ? SOURCE_COLORS[bracketText] || "transparent" : "transparent";
-        const isColored = bracketText && SOURCE_COLORS[bracketText];
+        // Values tagged with a source, e.g. "53 (NCTR SOURCE)", show as a tinted pill with a dot
+        if (isSourceValue) {
+          const tint = getSourceTint(bracketText);
+          return (
+            <div className="dv-cell-pad">
+              <span
+                className="dv-source-value"
+                title={bracketText}
+                style={{ background: tint.bg, color: tint.fg }}
+              >
+                <span aria-hidden="true" className="dv-source-dot" style={{ background: tint.dot }} />
+                <HighlightCell value={value} searchText={searchText} fontSize={fontSize} />
+                <span className="dv-visually-hidden">, {bracketText}</span>
+              </span>
+            </div>
+          );
+        }
 
         return (
-          <div
-            style={{
-              backgroundColor: bgColor,
-              padding: "8px",
-              color: isColored ? color_white : color_black_light,
-              fontWeight: isColored ? 600 : 400,
-            }}
-          >
+          <div className="dv-cell-text">
             <HighlightCell value={value} searchText={searchText} fontSize={fontSize} />
           </div>
         );
@@ -711,18 +700,8 @@ export default function DataGrid({ rowData }: DataGridProps) {
             filter: false,
             cellRenderer: (params: any) => (
               <button
-                style={{
-                  padding: "6px 10px",
-                  background: color_secondary,
-                  color: color_white,
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: "pointer",
-                  width: "100%",
-                  height: "32px",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                }}
+                type="button"
+                className="dv-chip"
                 onClick={(e) => {
                   e.stopPropagation();
                   params.context.openPhotoView(params.data);
@@ -747,18 +726,8 @@ export default function DataGrid({ rowData }: DataGridProps) {
             filter: false,
             cellRenderer: (params: any) => (
               <button
-                style={{
-                  padding: "6px 10px",
-                  background: color_secondary,
-                  color: color_white,
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: "pointer",
-                  width: "100%",
-                  height: "32px",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                }}
+                type="button"
+                className="dv-chip"
                 onClick={(e) => {
                   e.stopPropagation();
                   params.context.openDocumentsView(params.data);
@@ -782,18 +751,8 @@ export default function DataGrid({ rowData }: DataGridProps) {
             filter: false,
             cellRenderer: (params: any) => (
               <button
-                style={{
-                  padding: "6px 10px",
-                  background: color_secondary,
-                  color: color_white,
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: "pointer",
-                  width: "100%",
-                  height: "32px",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                }}
+                type="button"
+                className="dv-chip"
                 onClick={(e) => {
                   e.stopPropagation();
                   params.context.openAchieverStoriesView(params.data);
@@ -822,18 +781,8 @@ export default function DataGrid({ rowData }: DataGridProps) {
             filter: false,
             cellRenderer: (params: any) => (
               <button
-                style={{
-                  padding: "6px 10px",
-                  background: color_secondary,
-                  color: color_white,
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: "pointer",
-                  width: "100%",
-                  height: "32px",
-                  fontSize: "12px",
-                  fontWeight: 700,
-                }}
+                type="button"
+                className="dv-chip"
                 onClick={(e) => {
                   e.stopPropagation();
                   openConfigForm(params.data, c);
@@ -890,18 +839,8 @@ export default function DataGrid({ rowData }: DataGridProps) {
           filter: false,
           cellRenderer: (params: any) => (
             <button
-              style={{
-                padding: "6px 10px",
-                background: color_secondary,
-                color: color_white,
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer",
-                width: "100%",
-                height: "32px",
-                fontSize: "12px",
-                fontWeight: 600,
-              }}
+              type="button"
+              className="dv-chip"
               onClick={(e) => {
                 e.stopPropagation();
                 params.context.openPhotoView(params.data);
@@ -924,18 +863,8 @@ export default function DataGrid({ rowData }: DataGridProps) {
           filter: false,
           cellRenderer: (params: any) => (
             <button
-              style={{
-                padding: "6px 10px",
-                background: color_secondary,
-                color: color_white,
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer",
-                width: "100%",
-                height: "32px",
-                fontSize: "12px",
-                fontWeight: 600,
-              }}
+              type="button"
+              className="dv-chip"
               onClick={(e) => {
                 e.stopPropagation();
                 params.context.openDocumentsView(params.data);
@@ -981,9 +910,8 @@ export default function DataGrid({ rowData }: DataGridProps) {
 
   /* -------- grid handlers & filters -------- */
 
-  const getRowStyle = (params: any) => ({
-    backgroundColor: params.node.rowIndex % 2 === 0 ? "#e8f1fb" : "#ffffff",
-  });
+  // Row colours (white rows, hover + selected tints) live in DataGridStyles.
+  const getRowStyle = undefined;
 
   const onGridReady = (params: GridReadyEvent) => {
     setGridApi(params.api);
@@ -1151,17 +1079,34 @@ export default function DataGrid({ rowData }: DataGridProps) {
 
       <GridWrapper
         ref={wrapperRef}
+        className="dv-page"
         style={{
-          padding: "8px",
           boxSizing: "border-box",
           height: `calc(100vh - ${isMobile ? header_mobile_height : header_height})`,
           overflow: "hidden",
           position: "relative",
         }}
       >
-        <DataTableWrapper>
+        <DataTableWrapper className="dv-shell">
           {!editMode && (
             <>
+              {!communityFilterEnabled && (
+                selectedFile?.filename && (
+                  <div className="dv-page-title">
+                    <h1>{selectedFile.filename}</h1>
+                    <p>
+                      {new Intl.NumberFormat().format(rowData.length)}{" "}
+                      {rowData.length === 1 ? "record" : "records"}
+                      {sourceFilterEnabled && availableSources.length > 0
+                        ? sourceFilter
+                          ? ` · showing ${getSourceDisplayName(sourceFilter)} only`
+                          : ` from ${availableSources.length} ${availableSources.length === 1 ? "source" : "sources"}`
+                        : ""}
+                    </p>
+                  </div>
+                )
+              )}
+
               <div ref={topControlsRef}>
                 <TopControlsBar
                   isMobile={isMobile}
@@ -1198,7 +1143,7 @@ export default function DataGrid({ rowData }: DataGridProps) {
 
               {/* SOURCE FILTER (config-driven) */}
               {sourceFilterEnabled && availableSources.length > 0 && !communityFilterEnabled && (
-                <div ref={filtersRef}>
+                <div ref={filtersRef} style={{ flexShrink: 0 }}>
                   <SourceFilterBar
                     availableSources={availableSources}
                     sourceFilter={sourceFilter}
@@ -1216,20 +1161,7 @@ export default function DataGrid({ rowData }: DataGridProps) {
                 />
               )}
 
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  width: "100%",
-                  borderRadius: "8px",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                  alignItems: "stretch",
-                  gap: "8px",
-                  flex: 1,
-                  minHeight: 0,
-                  overflow: "hidden",
-                }}
-              >
+              <div className="dv-content">
                 <CommunityFilterPanel
                   enabled={!!communityFilterEnabled}
                   isMobile={isMobile}
@@ -1239,22 +1171,13 @@ export default function DataGrid({ rowData }: DataGridProps) {
                   overlayHeight={overlayHeight}
                 />
 
-                <div
-                  className="ag-theme-quartz"
-                  style={{
-                    flex: 1,
-                    minWidth: 0,
-                    minHeight: 0,
-                    height: "100%",
-                    overflow: "auto",
-                  }}
-                >
+                <div className="ag-theme-quartz dv-grid-card" role="region" aria-label="Student list">
                   <AgGridReact
                     columnDefs={columnDefs}
                     rowData={rowData}
                     defaultColDef={defaultColDef}
-                    getRowHeight={() => 48}
-                    headerHeight={45}
+                    getRowHeight={() => 56}
+                    headerHeight={52}
                     domLayout="normal"
                     rowSelection="single"
                     getRowStyle={getRowStyle}

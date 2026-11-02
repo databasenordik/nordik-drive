@@ -92,10 +92,11 @@ export const AuthWrapper = styled.div`
     width: 100%;
     max-width: 580px; /* Slightly wider for better readability */
     flex-direction: column;
-    border-radius: 12px; /* More rounded corners */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 16px 32px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    border: 1px solid #E3E6EB;
+    box-shadow: 0 12px 32px rgba(16, 24, 40, 0.08);
     box-sizing: border-box;
-    padding: 1rem 2.5rem 2.5rem 2.5rem; /* More padding for breathing room */
+    padding: 1.5rem 2.5rem 2.5rem 2.5rem;
     background: #fff;
     margin: 2rem;
 

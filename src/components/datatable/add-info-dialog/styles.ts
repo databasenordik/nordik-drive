@@ -1,144 +1,239 @@
 import type { SxProps, Theme } from "@mui/material/styles";
 
 import {
-  color_black_light,
-  color_border,
-  color_focus_ring,
-  color_light_gray,
-  color_secondary,
-  color_secondary_dark,
-  color_warning,
-  color_warning_light,
-  color_text_light,
-  color_text_primary,
-  color_white,
-  color_white_smoke,
+  color_dv_banner_title,
+  color_dv_border,
+  color_dv_control_border,
+  color_dv_divider,
+  color_dv_header_bg,
+  color_dv_primary,
+  color_dv_primary_hover,
+  color_dv_text,
+  color_dv_text_muted,
 } from "../../../constants/colors";
 
 type AddInfoSx = SxProps<Theme>;
 
+/* Shared look for the Add student / Add info form (matches the "Add new student" artboard). */
+
+export const ADD_INFO_LABEL_COLOR = "#3D4657";
+export const ADD_INFO_REQUIRED_COLOR = "#A12C3A";
+
+const focusRing = {
+  "&:focus-visible": { outline: `3px solid ${color_dv_primary}`, outlineOffset: "2px" },
+};
+
+/* Text inputs (MUI TextField / Autocomplete) */
+export const ADD_INFO_INPUT_SX: AddInfoSx = {
+  background: "#FFFFFF",
+  borderRadius: "10px",
+  "& .MuiOutlinedInput-root": { borderRadius: "10px", background: "#FFFFFF" },
+  "& .MuiOutlinedInput-notchedOutline": { borderColor: color_dv_control_border },
+  "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#9AA3B2" },
+  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+    borderColor: color_dv_primary,
+    borderWidth: "2px",
+  },
+  "& .MuiInputBase-input": {
+    fontSize: "16px",
+    fontWeight: 400,
+    color: color_dv_text,
+    padding: "10px 12px",
+    minHeight: "24px",
+  },
+  "& .MuiInputBase-multiline": { padding: 0 },
+  "& .MuiInputBase-input::placeholder": { color: "#8A93A3", opacity: 1 },
+  "& .Mui-disabled .MuiInputBase-input": { WebkitTextFillColor: color_dv_text_muted },
+};
+
+/* Square "remove" icon button next to an input */
+export const ADD_INFO_REMOVE_BUTTON_SX: AddInfoSx = {
+  width: 44,
+  minWidth: 44,
+  height: 44,
+  flexShrink: 0,
+  borderRadius: "10px",
+  border: `1px solid ${color_dv_control_border}`,
+  background: "#FFFFFF",
+  color: color_dv_text_muted,
+  "&:hover": { background: color_dv_header_bg },
+  ...focusRing,
+};
+
+/* Small outline "Add ..." button under a list of inputs */
+export const ADD_INFO_ADD_BUTTON_SX: AddInfoSx = {
+  height: 40,
+  px: 1.75,
+  gap: 0.25,
+  borderRadius: "10px",
+  textTransform: "none",
+  fontSize: 14,
+  fontWeight: 500,
+  border: `1px solid ${color_dv_control_border}`,
+  background: "#FFFFFF",
+  color: color_dv_primary,
+  "&:hover": { background: color_dv_header_bg, borderColor: "#9AA3B2" },
+  "& .MuiButton-startIcon": { mr: 0.5 },
+  ...focusRing,
+};
+
 export const ADD_INFO_CARD_SX: AddInfoSx = {
-  border: `1px solid ${color_border}`,
-  background: color_white,
+  border: `1px solid ${color_dv_border}`,
+  background: "#FFFFFF",
   borderRadius: "12px",
-  p: 2,
+  p: 2.5,
 };
 
 export const ADD_INFO_DIALOG_PAPER_SX: AddInfoSx = {
-  borderRadius: "14px",
+  borderRadius: "16px",
   overflow: "hidden",
-  border: `1px solid ${color_border}`,
+  boxShadow: "0 28px 72px rgba(16, 24, 40, 0.22)",
 };
 
 export const ADD_INFO_DIALOG_HEADER_SX: AddInfoSx = {
-  background: `linear-gradient(180deg, ${color_secondary} 0%, ${color_secondary_dark} 100%)`,
-  borderBottom: `1px solid ${color_border}`,
+  background: "#FFFFFF",
+  borderBottom: `1px solid ${color_dv_border}`,
 };
 
 export const ADD_INFO_DIALOG_CONTENT_SX: AddInfoSx = {
-  background: color_white_smoke,
+  background: "#FFFFFF",
 };
 
 export const ADD_INFO_DIALOG_ACTIONS_SX: AddInfoSx = {
-  background: color_white,
-  borderTop: `1px solid ${color_border}`,
+  background: "#FAFBFC",
+  borderTop: `1px solid ${color_dv_border}`,
+};
+
+export const ADD_INFO_DIALOG_TITLE_SX: AddInfoSx = {
+  m: 0,
+  fontSize: 22,
+  fontWeight: 600,
+  color: color_dv_text,
+  lineHeight: 1.3,
+};
+
+export const ADD_INFO_DIALOG_SUBTITLE_SX: AddInfoSx = {
+  m: 0,
+  mt: 0.5,
+  fontSize: 15,
+  color: color_dv_text_muted,
 };
 
 export const ADD_INFO_CARD_TITLE_SX: AddInfoSx = {
-  fontWeight: 900,
-  fontSize: "1.1rem",
-  color: color_text_primary,
-  mb: 1,
+  fontWeight: 600,
+  fontSize: 16,
+  color: color_dv_text,
+  mb: 0.25,
 };
 
 export const ADD_INFO_CARD_DESCRIPTION_SX: AddInfoSx = {
-  color: color_text_primary,
-  opacity: 0.85,
-  fontSize: "0.95rem",
+  color: color_dv_text_muted,
+  fontSize: 13,
+  lineHeight: 1.5,
   mb: 1.5,
 };
 
+export const ADD_INFO_SECTION_TITLE_SX: AddInfoSx = {
+  m: 0,
+  fontSize: 17,
+  fontWeight: 600,
+  color: color_dv_banner_title,
+};
+
 export const ADD_INFO_PRIMARY_ACTION_BUTTON_SX: AddInfoSx = {
-  background: color_secondary,
-  fontWeight: 900,
+  height: 44,
+  background: color_dv_primary,
+  color: "#FFFFFF",
+  fontSize: 15,
+  fontWeight: 500,
   textTransform: "none",
   borderRadius: "10px",
-  px: 2,
-  py: 1.1,
-  "&:hover": { background: color_secondary_dark },
-  "&:focus-visible": {
-    outline: `3px solid ${color_focus_ring}`,
-    outlineOffset: "2px",
-  },
+  boxShadow: "none",
+  px: 3,
+  "&:hover": { background: color_dv_primary_hover, boxShadow: "none" },
+  ...focusRing,
 };
 
 export const ADD_INFO_SECONDARY_ACTION_BUTTON_SX: AddInfoSx = {
+  height: 44,
   textTransform: "none",
-  fontWeight: 900,
+  fontSize: 15,
+  fontWeight: 500,
   borderRadius: "10px",
-  border: `1px solid ${color_border}`,
-  background: color_light_gray,
-  color: color_text_primary,
-  "&:hover": { background: color_white_smoke },
-  "&:focus-visible": {
-    outline: `3px solid ${color_focus_ring}`,
-    outlineOffset: "2px",
-  },
+  px: 2.5,
+  border: `1px solid ${color_dv_control_border}`,
+  background: "#FFFFFF",
+  color: color_dv_text,
+  "&:hover": { background: color_dv_header_bg, borderColor: "#9AA3B2" },
+  ...focusRing,
+};
+
+export const ADD_INFO_GHOST_BUTTON_SX: AddInfoSx = {
+  height: 44,
+  textTransform: "none",
+  fontSize: 15,
+  fontWeight: 500,
+  borderRadius: "10px",
+  px: 1.75,
+  color: color_dv_text_muted,
+  background: "transparent",
+  "&:hover": { background: "#F1F3F6" },
+  ...focusRing,
 };
 
 export const ADD_INFO_CONSENT_TEXT_SX: AddInfoSx = {
-  color: color_text_primary,
-  fontSize: "0.98rem",
-  fontWeight: 800,
+  color: ADD_INFO_LABEL_COLOR,
+  fontSize: 14,
+  fontWeight: 400,
+  lineHeight: 1.5,
 };
 
 export const ADD_INFO_DISCLAIMER_BOX_SX: AddInfoSx = {
   mt: 1.5,
-  p: 1.75,
+  p: 2,
   display: "flex",
   gap: 1.5,
   alignItems: "flex-start",
-  borderRadius: "16px",
-  border: `3px solid ${color_warning}`,
-  background: `linear-gradient(90deg, ${color_white} 0%, ${color_warning_light} 100%)`,
-  boxShadow: "0 8px 22px rgba(243, 156, 18, 0.10)",
+  borderRadius: "12px",
+  border: "1px solid #F0D9A0",
+  background: "#FFF8E6",
 };
 
 export const ADD_INFO_DISCLAIMER_KICKER_SX: AddInfoSx = {
-  color: color_text_primary,
-  fontSize: "1.22rem",
-  fontWeight: 900,
-  lineHeight: 1.3,
+  color: "#6B4A00",
+  fontSize: 15,
+  fontWeight: 600,
+  lineHeight: 1.4,
   mb: 0.5,
-  textTransform: "uppercase",
-  letterSpacing: "0.05em",
 };
 
 export const ADD_INFO_DISCLAIMER_TEXT_SX: AddInfoSx = {
-  color: color_text_primary,
-  fontSize: "1.08rem",
-  fontWeight: 700,
-  lineHeight: 1.7,
+  color: color_dv_text,
+  fontSize: 15,
+  fontWeight: 400,
+  lineHeight: 1.6,
 };
 
 export const ADD_INFO_REVIEW_SECTION_TITLE_SX: AddInfoSx = {
-  fontWeight: 900,
-  fontSize: 13,
-  color: color_text_primary,
-  lineHeight: 1.2,
+  fontWeight: 600,
+  fontSize: 15,
+  color: color_dv_text,
+  lineHeight: 1.3,
 };
 
 export const ADD_INFO_REVIEW_SECTION_SUBTITLE_SX: AddInfoSx = {
   mt: 0.35,
-  fontSize: 11.5,
-  fontWeight: 700,
-  color: color_text_light,
-  lineHeight: 1.35,
+  fontSize: 13,
+  fontWeight: 400,
+  color: color_dv_text_muted,
+  lineHeight: 1.4,
 };
 
 export const ADD_INFO_REVIEW_DIALOG_TITLE_SX: AddInfoSx = {
-  fontWeight: 900,
-  fontSize: 16,
-  color: color_black_light,
-  lineHeight: 1.2,
+  fontWeight: 600,
+  fontSize: 20,
+  color: color_dv_text,
+  lineHeight: 1.3,
 };
+
+export const ADD_INFO_DIVIDER_COLOR = color_dv_divider;

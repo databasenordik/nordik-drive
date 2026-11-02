@@ -49,11 +49,13 @@ jest.mock("lucide-react", () => ({
   Mic: () => <span data-testid="lucide-mic" />,
   Send: () => <span data-testid="lucide-send" />,
   Bot: () => <span data-testid="lucide-bot" />,
-  X: ({ onClick }: any) => (
-    <button aria-label="Close chat" onClick={onClick}>
-      x
-    </button>
-  ),
+  X: () => <span data-testid="lucide-x" />,
+  ArrowRight: () => <span data-testid="lucide-arrow-right" />,
+  ChevronUp: () => <span data-testid="lucide-chevron-up" />,
+  Maximize2: () => <span data-testid="lucide-maximize" />,
+  Minimize2: () => <span data-testid="lucide-minimize" />,
+  Minus: () => <span data-testid="lucide-minus" />,
+  SlidersHorizontal: () => <span data-testid="lucide-sliders" />,
 }));
 
 jest.mock("@mui/icons-material/VolumeUp", () => ({
@@ -261,7 +263,8 @@ describe("NIAChat + NIAChatTrigger", () => {
   test("renders panel when open=true; fullscreen + minimize toggles work; mobile hides fullscreen", async () => {
     renderWithStore(<NIAChat open={true} setOpen={jest.fn()} />);
 
-    expect(screen.getByText(/NIA ASSISTANT/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "NIA" })).toBeInTheDocument();
+    expect(screen.getByText("Records assistant")).toBeInTheDocument();
 
     fireEvent.click(screen.getByLabelText(/enter fullscreen/i));
     expect(screen.getByLabelText(/exit fullscreen/i)).toBeInTheDocument();
@@ -423,7 +426,7 @@ describe("NIAChat + NIAChatTrigger", () => {
 
     renderWithStore(<NIAChat open={true} setOpen={jest.fn()} />, { store });
 
-    expect(screen.getByText("Community Filter")).toBeInTheDocument();
+    expect(screen.getByText("Community filter:")).toBeInTheDocument();
     expect(screen.getByText("Shingwauk, Garden River")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Clear community filters" }));

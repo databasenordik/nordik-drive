@@ -1,17 +1,19 @@
 import { NavWrapper } from "../Wrappers";
 import { HeaderLink } from "../Links";
 import { useSelector } from "react-redux";
-import FolderIcon from "@mui/icons-material/Folder";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import HistoryIcon from '@mui/icons-material/History';
-import PhoneIcon from '@mui/icons-material/Phone';
-import DoneIcon from '@mui/icons-material/Done';
+import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
+import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
+import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
+import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
+import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
+import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 import { Stack, useMediaQuery, useTheme } from "@mui/material";
-import PendingActionsOutlinedIcon from '@mui/icons-material/PendingActionsOutlined';
 
 interface HeaderNavProps {
   onLinkClick?: () => void; // called when a nav link is clicked
 }
+
+const iconSx = { fontSize: 18 };
 
 function HeaderNav({ onLinkClick }: HeaderNavProps) {
   const { user } = useSelector((state: any) => state.auth);
@@ -19,46 +21,48 @@ function HeaderNav({ onLinkClick }: HeaderNavProps) {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <NavWrapper>
+    <NavWrapper aria-label="Main">
       <Stack
         direction={isMobile ? "column" : "row"} // vertical on mobile
-        spacing={isMobile ? 1.5 : 3}
-        alignItems={isMobile ? "flex-start" : "stretch"}
+        spacing={isMobile ? 1 : 0.5}
+        alignItems={isMobile ? "stretch" : "center"}
+        flexWrap={isMobile ? "nowrap" : "wrap"}
+        useFlexGap
       >
         <HeaderLink to="/files" onClick={onLinkClick}>
-          <FolderIcon sx={{ verticalAlign: "middle", mr: 1 }} />
+          <FolderOutlinedIcon sx={iconSx} aria-hidden="true" />
           Files
         </HeaderLink>
 
-        {user?.role === 'Admin' && (
+        {user?.role === "Admin" && (
           <HeaderLink to="/adminpanel" onClick={onLinkClick}>
-            <AdminPanelSettingsIcon sx={{ verticalAlign: "middle", mr: 1 }} />
-            Admin View
+            <AdminPanelSettingsOutlinedIcon sx={iconSx} aria-hidden="true" />
+            Admin view
           </HeaderLink>
         )}
 
-        {user?.role === 'Admin' && (
+        {user?.role === "Admin" && (
           <HeaderLink to="/useractivity" onClick={onLinkClick}>
-            <HistoryIcon sx={{ verticalAlign: "middle", mr: 1 }} />
-            User Activity
+            <ScheduleOutlinedIcon sx={iconSx} aria-hidden="true" />
+            User activity
           </HeaderLink>
         )}
 
-        {user?.role === 'User' && (
+        {user?.role === "User" && (
           <HeaderLink to="/contact-us" onClick={onLinkClick}>
-            <PhoneIcon sx={{ verticalAlign: "middle", mr: 1 }} />
-            Contact Us
+            <PhoneOutlinedIcon sx={iconSx} aria-hidden="true" />
+            Contact us
           </HeaderLink>
         )}
-        {user?.role === 'User' && (
+        {user?.role === "User" && (
           <HeaderLink to="/acknowledgement" onClick={onLinkClick}>
-            <DoneIcon sx={{ verticalAlign: "middle", mr: 1 }} />
+            <TaskAltOutlinedIcon sx={iconSx} aria-hidden="true" />
             Acknowledgement
           </HeaderLink>
         )}
 
         <HeaderLink to="/requests" onClick={onLinkClick}>
-          <PendingActionsOutlinedIcon sx={{ verticalAlign: "middle", mr: 1 }} />
+          <AssignmentOutlinedIcon sx={iconSx} aria-hidden="true" />
           Requests
         </HeaderLink>
       </Stack>

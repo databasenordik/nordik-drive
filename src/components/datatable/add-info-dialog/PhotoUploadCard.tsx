@@ -1,7 +1,11 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, IconButton, TextField } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import PhotoOutlinedIcon from "@mui/icons-material/PhotoOutlined";
+import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
+import CardHeader from "./CardHeader";
 import {
   color_border,
   color_light_gray,
@@ -27,13 +31,7 @@ import {
   PHOTO_UPLOAD_FALLBACK_TITLE,
   PHOTO_UPLOAD_SELECT_LABEL,
 } from "./messages";
-import {
-  ADD_INFO_CARD_DESCRIPTION_SX,
-  ADD_INFO_CARD_SX,
-  ADD_INFO_CARD_TITLE_SX,
-  ADD_INFO_CONSENT_TEXT_SX,
-  ADD_INFO_PRIMARY_ACTION_BUTTON_SX,
-} from "./styles";
+import { ADD_INFO_ADD_BUTTON_SX, ADD_INFO_CARD_SX, ADD_INFO_CONSENT_TEXT_SX } from "./styles";
 import UploadDisclaimer from "./UploadDisclaimer";
 
 export type PhotoItem = {
@@ -141,33 +139,22 @@ export default function PhotoUploadCard({
         opacity: disabled ? 0.9 : 1,
       }}
     >
-      <Box sx={ADD_INFO_CARD_TITLE_SX}>
-        {title}
-      </Box>
-
-      <Box sx={ADD_INFO_CARD_DESCRIPTION_SX}>
+      <CardHeader icon={<PhotoOutlinedIcon />} title={title}>
         {description}
-        {(showCount || showTotal) && (
+        {(showCount || showTotal) && showTotal ? (
           <>
             <br />
-            {showTotal ? (
-              <>
-                <b>Total upload (photos + docs):</b>{" "}
-                {getPhotoCombinedUploadText(totalCombinedMB).replace(
-                  "Total upload (photos + docs): ",
-                  ""
-                )}
-              </>
-            ) : null}
+            <b style={{ fontWeight: 500 }}>Total upload (photos + docs):</b>{" "}
+            {getPhotoCombinedUploadText(totalCombinedMB).replace("Total upload (photos + docs): ", "")}
           </>
-        )}
-      </Box>
+        ) : null}
+      </CardHeader>
 
       <Button
         disabled={disabled}
-        variant="contained"
         component="label"
-        sx={ADD_INFO_PRIMARY_ACTION_BUTTON_SX}
+        startIcon={<FileUploadOutlinedIcon sx={{ fontSize: "18px !important" }} />}
+        sx={ADD_INFO_ADD_BUTTON_SX}
       >
         {PHOTO_UPLOAD_SELECT_LABEL}
         <input type="file" hidden accept="image/*" multiple onChange={onUpload} />
@@ -182,27 +169,26 @@ export default function PhotoUploadCard({
                 alt={p.file?.name || getPhotoUploadAltText(idx)}
               />
 
-              <Button
+              <IconButton
                 disabled={disabled}
+                aria-label={`Remove photo ${idx + 1}`}
                 onClick={() => !disabled && onRemove(idx)}
                 sx={{
                   position: "absolute",
                   top: -10,
                   right: -10,
-                  minWidth: 34,
-                  width: 34,
-                  height: 34,
-                  borderRadius: "50%",
-                  fontWeight: 900,
-                  background: color_secondary,
-                  color: color_white,
-                  border: `1px solid ${color_secondary_dark}`,
-                  "&:hover": { background: color_secondary_dark },
+                  width: 32,
+                  height: 32,
+                  background: "#FFFFFF",
+                  color: color_text_primary,
+                  border: `1px solid ${color_border}`,
+                  boxShadow: "0 2px 6px rgba(16,24,40,0.12)",
+                  "&:hover": { background: "#F7F8FA" },
                   "&:focus-visible": { outline: `3px solid ${color_focus_ring}`, outlineOffset: "2px" },
                 }}
               >
-                ✕
-              </Button>
+                <CloseIcon sx={{ fontSize: 16 }} />
+              </IconButton>
 
               <Box sx={{ mt: 1 }}>
                 <TextField
@@ -233,8 +219,8 @@ export default function PhotoUploadCard({
                     },
                     "& .MuiFormHelperText-root": {
                       marginLeft: 0,
-                      color: color_light_gray,
-                      fontWeight: 800,
+                      color: "#5B6475",
+                      fontWeight: 400,
                     },
                   }}
                   helperText={`${(p.comment || "").length}/100`}
@@ -246,24 +232,23 @@ export default function PhotoUploadCard({
       )}
 
       {showCount && (
-        <Box sx={{ mt: 2, color: color_text_primary, fontWeight: 900 }}>
+        <Box sx={{ mt: 2, color: "#5B6475", fontSize: 13, fontWeight: 500 }}>
           {getPhotoUploadLimitText(photos.length, totalPhotoMB)}
           <Box
             sx={{
-              mt: 1,
-              height: 10,
+              mt: 0.75,
+              height: 6,
               width: "100%",
-              background: color_white_smoke,
+              background: "#EDF0F3",
               borderRadius: 8,
               overflow: "hidden",
-              border: `1px solid ${color_border}`,
             }}
           >
             <Box
               sx={{
                 height: "100%",
                 width: `${clamp((photos.length / MAX_PHOTOS) * 100, 0, 100)}%`,
-                background: color_secondary,
+                background: "#1F3A6E",
               }}
             />
           </Box>
@@ -277,9 +262,10 @@ export default function PhotoUploadCard({
             p: 1.25,
             borderRadius: "10px",
             background: warning.bg,
-            border: `1px solid ${dark_grey}`,
+            border: "1px solid #F0D9A0",
             color: color_text_primary,
-            fontWeight: 900,
+            fontSize: 14,
+            fontWeight: 500,
           }}
         >
           {warning.text}
@@ -287,15 +273,15 @@ export default function PhotoUploadCard({
       ) : null}
 
       {consentText ? (
-        <Box sx={{ mt: 2, display: "flex", gap: 1.25, alignItems: "flex-start" }}>
+        <Box component="label" sx={{ mt: 2, display: "flex", gap: 1.25, alignItems: "flex-start", cursor: "pointer" }}>
           <input
             type="checkbox"
             disabled={disabled}
             checked={consent}
             onChange={(e) => !disabled && setConsent(e.target.checked)}
-            style={{ transform: "scale(1.4)", marginTop: 4 }}
+            style={{ width: 20, height: 20, margin: "1px 0 0", accentColor: "#1F3A6E", flexShrink: 0, cursor: "pointer" }}
           />
-          <Box sx={ADD_INFO_CONSENT_TEXT_SX}>
+          <Box component="span" sx={ADD_INFO_CONSENT_TEXT_SX}>
             {consentText}
           </Box>
         </Box>

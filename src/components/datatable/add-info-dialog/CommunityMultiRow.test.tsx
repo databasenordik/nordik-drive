@@ -3,9 +3,17 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import CommunityMultiRow from "./CommunityMultiRow";
 
+jest.mock("@mui/icons-material/Add", () => () => <span data-testid="add-icon" />);
+jest.mock("@mui/icons-material/Close", () => () => <span data-testid="close-icon" />);
+
 jest.mock("@mui/material", () => ({
   Box: ({ children }: any) => <div>{children}</div>,
-  Button: ({ children, onClick, disabled }: any) => <button onClick={onClick} disabled={disabled}>{children}</button>,
+  Button: ({ children, onClick, disabled, "aria-label": ariaLabel }: any) => (
+    <button onClick={onClick} disabled={disabled} aria-label={ariaLabel}>{children}</button>
+  ),
+  IconButton: ({ children, onClick, disabled, "aria-label": ariaLabel }: any) => (
+    <button onClick={onClick} disabled={disabled} aria-label={ariaLabel}>{children}</button>
+  ),
   TextField: ({ inputProps, disabled, placeholder, onKeyDown }: any) =>
     <input {...inputProps} disabled={disabled} placeholder={placeholder} onKeyDown={onKeyDown} />,
 }));
@@ -50,10 +58,7 @@ jest.mock("@mui/material/Autocomplete", () => {
 });
 
 describe("CommunityMultiRow", () => {
-  const getRemoveButtons = () =>
-    screen
-      .getAllByRole("button")
-      .filter((btn) => btn.textContent?.trim() === "✕");
+  const getRemoveButtons = () => screen.getAllByRole("button", { name: "Remove community" });
 
   it("renders one empty row when values is empty and shows default texts", () => {
     render(

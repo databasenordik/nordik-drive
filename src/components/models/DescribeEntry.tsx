@@ -74,23 +74,17 @@ function TinySpinner() {
 const DescribeRenderer = React.memo((props: any) => {
     return (
         <button
-            style={{
-                padding: "6px 12px",
-                background: color_secondary,   // ✅ same as AddInfo
-                color: color_white,
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer",
-                width: "100%",
-                height: "34px",
-                fontSize: "14px",
-                fontWeight: 600,              // ✅ same vibe as AddInfo
-            }}
+            type="button"
+            className="dv-row-btn"
             onClick={(e) => {
                 e.stopPropagation();
                 props.context.describeRow?.(props.data);
             }}
         >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+                <path d="M14 3v5h5M9 13h6M9 17h4" />
+            </svg>
             {DESCRIBE_COLUMN_HEADER}
         </button>
     );

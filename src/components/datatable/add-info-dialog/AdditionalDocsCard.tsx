@@ -32,13 +32,10 @@ import {
   getAdditionalDocsSummaryText,
   getPhotoCombinedUploadText,
 } from "./messages";
-import {
-  ADD_INFO_CARD_DESCRIPTION_SX,
-  ADD_INFO_CARD_SX,
-  ADD_INFO_CARD_TITLE_SX,
-  ADD_INFO_CONSENT_TEXT_SX,
-  ADD_INFO_PRIMARY_ACTION_BUTTON_SX,
-} from "./styles";
+import { ADD_INFO_ADD_BUTTON_SX, ADD_INFO_CARD_SX, ADD_INFO_CONSENT_TEXT_SX } from "./styles";
+import CardHeader from "./CardHeader";
+import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
+import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import UploadDisclaimer from "./UploadDisclaimer";
 
 type DocumentTypeOpt = { value: string; label: string };
@@ -102,25 +99,21 @@ export default function AdditionalDocsCard({
 
   return (
     <Box sx={ADD_INFO_CARD_SX}>
-      <Box sx={ADD_INFO_CARD_TITLE_SX}>
-        {title}
-      </Box>
-
-      <Box sx={ADD_INFO_CARD_DESCRIPTION_SX}>
+      <CardHeader icon={<DescriptionOutlinedIcon />} title={title}>
         {description}
         {(showDocsCount || showTotalUpload) && (
           <>
             <br />
             {showDocsCount && (
               <>
-                <b>Docs:</b>{" "}
+                <b style={{ fontWeight: 500 }}>Docs:</b>{" "}
                 {getAdditionalDocsSummaryText(additionalDocs.length, totalAdditionalDocsMB).replace("Docs: ", "")}
                 <br />
               </>
             )}
             {showTotalUpload && (
               <>
-                <b>Total upload (photos + docs):</b>{" "}
+                <b style={{ fontWeight: 500 }}>Total upload (photos + docs):</b>{" "}
                 {getPhotoCombinedUploadText(totalCombinedMB).replace(
                   "Total upload (photos + docs): ",
                   ""
@@ -129,12 +122,12 @@ export default function AdditionalDocsCard({
             )}
           </>
         )}
-      </Box>
+      </CardHeader>
 
       <Button
-        variant="contained"
         component="label"
-        sx={ADD_INFO_PRIMARY_ACTION_BUTTON_SX}
+        startIcon={<FileUploadOutlinedIcon sx={{ fontSize: "18px !important" }} />}
+        sx={ADD_INFO_ADD_BUTTON_SX}
       >
         {ADDITIONAL_DOCS_UPLOAD_LABEL}
         <input type="file" hidden multiple accept={ACCEPT_DOCS} onChange={onUpload} />
@@ -147,8 +140,8 @@ export default function AdditionalDocsCard({
               key={d.id}
               sx={{
                 border: `1px solid ${color_border}`,
-                background: color_light_gray,
-                borderRadius: "12px",
+                background: "#FAFBFC",
+                borderRadius: "10px",
                 p: 1.25,
                 display: "flex",
                 gap: 1.25,
@@ -162,7 +155,7 @@ export default function AdditionalDocsCard({
                 sx={{
                   background: color_white,
                   borderColor: color_border,
-                  fontWeight: 900,
+                  fontWeight: 500,
                   maxWidth: 420,
                 }}
               />
@@ -170,14 +163,14 @@ export default function AdditionalDocsCard({
               {hasPresetCategories ? (
                 <FormControl
                   size="small"
-                  sx={{ minWidth: 240, background: color_white_smoke, borderRadius: "10px" }}
+                  sx={{ minWidth: 240, background: color_white, borderRadius: "10px", "& .MuiOutlinedInput-root": { borderRadius: "10px" } }}
                 >
                   <InputLabel shrink>{ADDITIONAL_DOCS_CATEGORY_LABEL}</InputLabel>
                   <Select
                     label={ADDITIONAL_DOCS_CATEGORY_LABEL}
                     value={d.document_category || ""}
                     onChange={(e) => onUpdateCategory(d.id, String(e.target.value))}
-                    sx={{ fontWeight: 900 }}
+                    sx={{ fontWeight: 400 }}
                   >
                     {documentTypes.map((opt) => (
                       <MenuItem key={opt.value} value={opt.value}>
@@ -199,7 +192,7 @@ export default function AdditionalDocsCard({
                     background: color_white,
                     "& .MuiOutlinedInput-root": {
                       borderRadius: "10px",
-                      fontWeight: 900,
+                      fontWeight: 400,
                     },
                     "& .MuiOutlinedInput-notchedOutline": {
                       borderColor: color_border,
@@ -213,10 +206,14 @@ export default function AdditionalDocsCard({
                 sx={{
                   textTransform: "none",
                   borderRadius: "10px",
-                  fontWeight: 900,
-                  border: `1px solid ${color_secondary}`,
+                  height: 40,
+                  px: 1.75,
+                  fontSize: 14,
+                  fontWeight: 500,
+                  border: `1px solid ${color_border}`,
                   background: color_white,
-                  color: color_secondary,
+                  color: "#5B6475",
+                  "&:hover": { background: "#F7F8FA" },
                 }}
               >
                 {ADDITIONAL_DOCS_REMOVE_LABEL}
@@ -227,14 +224,14 @@ export default function AdditionalDocsCard({
       )}
 
       {consentText ? (
-        <Box sx={{ mt: 2, display: "flex", gap: 1.25, alignItems: "flex-start" }}>
+        <Box component="label" sx={{ mt: 2, display: "flex", gap: 1.25, alignItems: "flex-start", cursor: "pointer" }}>
           <input
             type="checkbox"
             checked={archiveConsent}
             onChange={(e) => setArchiveConsent(e.target.checked)}
-            style={{ transform: "scale(1.4)", marginTop: 4 }}
+            style={{ width: 20, height: 20, margin: "1px 0 0", accentColor: "#1F3A6E", flexShrink: 0, cursor: "pointer" }}
           />
-          <Box sx={ADD_INFO_CONSENT_TEXT_SX}>
+          <Box component="span" sx={ADD_INFO_CONSENT_TEXT_SX}>
             {consentText}
           </Box>
         </Box>

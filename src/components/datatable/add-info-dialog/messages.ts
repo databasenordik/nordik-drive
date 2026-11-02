@@ -9,7 +9,7 @@ import {
 export const PHOTO_UPLOAD_FALLBACK_TITLE = "Photos";
 export const getPhotoUploadDefaultDescription = () =>
   `Upload up to ${MAX_PHOTOS} images or ${MAX_PHOTO_MB} MB total.`;
-export const PHOTO_UPLOAD_SELECT_LABEL = "Select Photos";
+export const PHOTO_UPLOAD_SELECT_LABEL = "Select photos";
 export const PHOTO_UPLOAD_COMMENT_LABEL = "Comment";
 export const PHOTO_UPLOAD_COMMENT_PLACEHOLDER = "Add a comment...";
 export const getPhotoUploadAltText = (index: number) => `Photo ${index + 1}`;
@@ -19,12 +19,12 @@ export const getPhotoUploadWarningText = (percentUsed: number) => {
   return "";
 };
 export const getPhotoUploadLimitText = (photoCount: number, totalPhotoMB: number) =>
-  `Upload Limit: ${photoCount}/${MAX_PHOTOS} photos (${totalPhotoMB.toFixed(2)} MB of ${MAX_PHOTO_MB} MB)`;
+  `Upload limit: ${photoCount}/${MAX_PHOTOS} photos (${totalPhotoMB.toFixed(2)} MB of ${MAX_PHOTO_MB} MB)`;
 export const getPhotoCombinedUploadText = (totalCombinedMB: number) =>
   `Total upload (photos + docs): ${totalCombinedMB.toFixed(2)} MB / ${MAX_COMBINED_UPLOAD_MB} MB`;
 
 export const ADDITIONAL_DOCS_FALLBACK_TITLE = "Additional Documents";
-export const ADDITIONAL_DOCS_UPLOAD_LABEL = "Upload Documents";
+export const ADDITIONAL_DOCS_UPLOAD_LABEL = "Upload documents";
 export const ADDITIONAL_DOCS_CATEGORY_LABEL = "Document Category";
 export const ADDITIONAL_DOCS_CATEGORY_PLACEHOLDER = "Type document category";
 export const ADDITIONAL_DOCS_REMOVE_LABEL = "Remove";

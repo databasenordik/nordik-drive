@@ -151,7 +151,7 @@ describe("Logout", () => {
         name: "Athul Narayanan",
         email: "athul@test.com",
         image:
-          "https://ui-avatars.com/api/?name=Athul+Narayanan&background=004B9C&color=fff&size=64",
+          "https://ui-avatars.com/api/?name=Athul+Narayanan&background=1F3A6E&color=fff&size=64",
       });
     });
   });

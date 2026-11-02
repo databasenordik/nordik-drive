@@ -3,7 +3,15 @@ import { renderToString } from "react-dom/server";
 import { ServerStyleSheet } from "styled-components";
 
 import { LinkButton, SecondaryButton, HeaderLink, WebLink } from "./Links"; // adjust path
-import { color_primary, color_secondary, color_secondary_dark } from "../constants/colors"; // adjust path
+import {
+  color_nav_active,
+  color_nav_hover,
+  color_nav_text,
+  color_primary,
+  color_secondary,
+  color_secondary_dark,
+  color_white,
+} from "../constants/colors"; // adjust path
 
 // ✅ Virtual mock: works even if react-router-dom is NOT installed
 jest.mock(
@@ -90,18 +98,20 @@ describe("Links styled-components", () => {
       </HeaderLink>
     );
 
-    expect(css).toMatch(/color:\s*#003366/i);
-    expect(css).toMatch(/display:\s*flex/i);
-    expect(css).toMatch(/padding:\s*12px\s+16px/i);
-    expect(css).toMatch(/border-radius:\s*6px/i);
+    expect(css).toMatch(new RegExp(`color:\\s*${color_nav_text}`, "i"));
+    expect(css).toMatch(/display:\s*inline-flex/i);
+    expect(css).toMatch(/height:\s*44px/i);
+    expect(css).toMatch(/padding:\s*0\s+16px/i);
+    expect(css).toMatch(/border-radius:\s*10px/i);
 
     expect(css).toMatch(/width:\s*100%/i);
 
-    expect(css).toMatch(new RegExp(`:hover\\{[^}]*background-color:\\s*${color_secondary}`, "i"));
-    expect(css).toMatch(/:hover\{[^}]*color:\s*white/i);
+    expect(css).toMatch(new RegExp(`:hover\\{[^}]*background-color:\\s*${color_nav_hover}`, "i"));
+    expect(css).toMatch(new RegExp(`:hover\\{[^}]*color:\\s*${color_nav_active}`, "i"));
 
-    expect(css).toMatch(new RegExp(`\\.active\\{[^}]*background-color:\\s*${color_secondary_dark}`, "i"));
-    expect(css).toMatch(/\.active\{[^}]*color:\s*white/i);
+    expect(css).toMatch(new RegExp(`\\.active[^{]*\\{[^}]*background-color:\\s*${color_nav_active}`, "i"));
+    expect(css).toMatch(new RegExp(`\\.active[^{]*\\{[^}]*color:\\s*${color_white}`, "i"));
+    expect(css).toMatch(new RegExp(`:focus-visible\\{[^}]*outline:\\s*3px\\s+solid\\s+${color_nav_active}`, "i"));
 
     expect(css).toMatch(/@media\s+screen\s+and\s+\(max-width:\s*600px\)/i);
   });

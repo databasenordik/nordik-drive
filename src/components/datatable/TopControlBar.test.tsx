@@ -7,13 +7,6 @@ import * as XLSX from "xlsx";
 import { useDispatch } from "react-redux";
 import { clearSelectedFile } from "../../store/auth/fileSlice";
 
-jest.mock("../NIAChatTrigger", () => ({
-  __esModule: true,
-  default: ({ setOpen }: { setOpen: (v: boolean) => void }) => (
-    <button onClick={() => setOpen(true)}>NIA Trigger</button>
-  ),
-}));
-
 jest.mock("react-redux", () => ({
   useDispatch: jest.fn(),
 }));
@@ -119,14 +112,18 @@ describe("TopControlsBar", () => {
       allNodes: [{ data: { id: 1 } }, { data: null }, { data: { id: 2 } }],
     });
 
-    render(<TopControlsBar {...defaultProps({ gridApi })} />);
+    const { rerender } = render(<TopControlsBar {...defaultProps({ gridApi })} />);
 
     expect(screen.getByRole("button", { name: "Files" })).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Search records...")).toBeInTheDocument();
+    // With matches, the search field shows the match position
     expect(screen.getByText("1 of 3")).toBeInTheDocument();
-    expect(screen.getByText("TOTAL: 2 RECORDS")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "ZOOM IN" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "ZOOM OUT" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /zoom in/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /zoom out/i })).toBeInTheDocument();
+
+    // Without matches, it shows the total record count
+    rerender(<TopControlsBar {...defaultProps({ gridApi, matchesCount: 0 })} />);
+    expect(screen.getByText("2 records")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Download" })).toBeInTheDocument();
 
     expect(gridApi.addEventListener).toHaveBeenCalledWith(
@@ -220,52 +217,35 @@ describe("TopControlsBar", () => {
   it("disables result navigation when there are no matches", () => {
     render(<TopControlsBar {...defaultProps({ matchesCount: 0 })} />);
 
-    const navButton = screen.getByRole("button", { name: "Result navigation" });
-    expect(navButton).toBeDisabled();
-    expect(screen.getByText("0 results")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Previous result" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Next result" })).toBeDisabled();
   });
 
-  it("navigates to previous on upper-half click and next on lower-half click", () => {
+  it("navigates to previous and next results", () => {
     const onNavigateMatch = jest.fn();
 
     render(<TopControlsBar {...defaultProps({ onNavigateMatch })} />);
 
-    const navButton = screen.getByRole("button", { name: "Result navigation" });
-
-    jest.spyOn(navButton, "getBoundingClientRect").mockReturnValue({
-      x: 0,
-      y: 0,
-      top: 10,
-      left: 0,
-      right: 46,
-      bottom: 56,
-      width: 46,
-      height: 46,
-      toJSON: () => {},
-    } as DOMRect);
-
-    fireEvent.click(navButton, { clientY: 15 });
+    fireEvent.click(screen.getByRole("button", { name: "Previous result" }));
     expect(onNavigateMatch).toHaveBeenCalledWith("prev");
 
-    fireEvent.click(navButton, { clientY: 50 });
+    fireEvent.click(screen.getByRole("button", { name: "Next result" }));
     expect(onNavigateMatch).toHaveBeenCalledWith("next");
   });
 
-  it("opens NIA from the compact indicator by click and keyboard", () => {
+  it("opens NIA from the Ask NIA button", () => {
     const setNiaOpen = jest.fn();
 
     render(<TopControlsBar {...defaultProps({ setNiaOpen })} />);
 
-    const niaIndicator = screen.getByRole("button", { name: "Talk to NIA" });
-
-    fireEvent.click(niaIndicator);
+    fireEvent.click(screen.getByRole("button", { name: /ask nia/i }));
     expect(setNiaOpen).toHaveBeenCalledWith(true);
+  });
 
-    fireEvent.keyDown(niaIndicator, { key: "Enter", code: "Enter" });
-    expect(setNiaOpen).toHaveBeenCalledWith(true);
+  it("shows the unread NIA badge when there are unread answers", () => {
+    render(<TopControlsBar {...defaultProps({ niaUnreadCount: 12 })} />);
 
-    fireEvent.keyDown(niaIndicator, { key: " ", code: "Space" });
-    expect(setNiaOpen).toHaveBeenCalledWith(true);
+    expect(screen.getByLabelText("12 unread NIA answers")).toHaveTextContent("9+");
   });
 
   it("zooms in and out with bounds applied", () => {
@@ -275,18 +255,18 @@ describe("TopControlsBar", () => {
       <TopControlsBar {...defaultProps({ fontSize: 16, onZoomChange })} />
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "ZOOM IN" }));
+    fireEvent.click(screen.getByRole("button", { name: /zoom in/i }));
     expect(onZoomChange).toHaveBeenCalledWith(18);
 
-    fireEvent.click(screen.getByRole("button", { name: "ZOOM OUT" }));
+    fireEvent.click(screen.getByRole("button", { name: /zoom out/i }));
     expect(onZoomChange).toHaveBeenCalledWith(14);
 
     rerender(<TopControlsBar {...defaultProps({ fontSize: 28, onZoomChange })} />);
-    fireEvent.click(screen.getByRole("button", { name: "ZOOM IN" }));
+    fireEvent.click(screen.getByRole("button", { name: /zoom in/i }));
     expect(onZoomChange).toHaveBeenCalledWith(28);
 
     rerender(<TopControlsBar {...defaultProps({ fontSize: 12, onZoomChange })} />);
-    fireEvent.click(screen.getByRole("button", { name: "ZOOM OUT" }));
+    fireEvent.click(screen.getByRole("button", { name: /zoom out/i }));
     expect(onZoomChange).toHaveBeenCalledWith(12);
   });
 
@@ -343,9 +323,9 @@ describe("TopControlsBar", () => {
   });
 
   it("shows total records as 0 when gridApi is missing", () => {
-    render(<TopControlsBar {...defaultProps({ gridApi: null })} />);
+    render(<TopControlsBar {...defaultProps({ gridApi: null, matchesCount: 0 })} />);
 
-    expect(screen.getByText("TOTAL: 0 RECORDS")).toBeInTheDocument();
+    expect(screen.getByText("0 records")).toBeInTheDocument();
   });
 
   it("shows alert when speech recognition is not supported", () => {
@@ -472,9 +452,9 @@ describe("TopControlsBar", () => {
       allNodes: [{ data: { id: 1 } }],
     });
 
-    render(<TopControlsBar {...defaultProps({ gridApi })} />);
+    render(<TopControlsBar {...defaultProps({ gridApi, matchesCount: 0 })} />);
 
-    expect(screen.getByText("TOTAL: 1 RECORDS")).toBeInTheDocument();
+    expect(screen.getByText("1 record")).toBeInTheDocument();
 
     gridApi.forEachNode.mockImplementation((cb: (node: GridNode) => void) => {
       [{ data: { id: 1 } }, { data: { id: 2 } }].forEach(cb);
@@ -484,6 +464,6 @@ describe("TopControlsBar", () => {
       gridApi.listeners.modelUpdated?.();
     });
 
-    expect(screen.getByText("TOTAL: 2 RECORDS")).toBeInTheDocument();
+    expect(screen.getByText("2 records")).toBeInTheDocument();
   });
 });

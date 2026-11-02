@@ -108,8 +108,8 @@ describe("HeaderNav", () => {
     // Stack props (desktop)
     const stack = screen.getByTestId("mui-stack");
     expect(stack).toHaveAttribute("data-direction", "row");
-    expect(stack).toHaveAttribute("data-spacing", "3");
-    expect(stack).toHaveAttribute("data-alignitems", "stretch");
+    expect(stack).toHaveAttribute("data-spacing", "0.5");
+    expect(stack).toHaveAttribute("data-alignitems", "center");
 
     // Always visible
     expect(screen.getByTestId("header-link-/files")).toBeInTheDocument();
@@ -133,7 +133,7 @@ describe("HeaderNav", () => {
     expect(onLinkClick).toHaveBeenCalledTimes(3);
   });
 
-  test("mobile (isMobile=true): renders Files + Requests always; User role shows Contact/Acknowledgement; no Admin links; Stack layout is column/flex-start/spacing=1.5", async () => {
+  test("mobile (isMobile=true): renders Files + Requests always; User role shows Contact/Acknowledgement; no Admin links; Stack layout is column/stretch/spacing=1", async () => {
     const user = userEvent.setup();
     mockRole = "User";
     mockUseMediaQuery.mockReturnValue(true); // mobile
@@ -144,8 +144,8 @@ describe("HeaderNav", () => {
     // Stack props (mobile)
     const stack = screen.getByTestId("mui-stack");
     expect(stack).toHaveAttribute("data-direction", "column");
-    expect(stack).toHaveAttribute("data-spacing", "1.5");
-    expect(stack).toHaveAttribute("data-alignitems", "flex-start");
+    expect(stack).toHaveAttribute("data-spacing", "1");
+    expect(stack).toHaveAttribute("data-alignitems", "stretch");
 
     // Always visible
     expect(screen.getByTestId("header-link-/files")).toBeInTheDocument();
