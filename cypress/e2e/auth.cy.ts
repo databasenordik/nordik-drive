@@ -8,9 +8,9 @@ describe("Auth integration", () => {
 
     it("Login: shows validation errors on empty submit", () => {
         cy.visit(`${baseUrl}/`);
-        cy.contains("Sign in with your email address").should("be.visible");
+        cy.contains("Sign in with Email Address").should("be.visible");
 
-        cy.contains("button", "Sign in").click();
+        cy.contains("button", "Sign In").click();
 
         cy.contains("Email is required").should("be.visible");
         cy.contains("Password is required").should("be.visible");
@@ -51,7 +51,7 @@ describe("Auth integration", () => {
 
         cy.get('input[placeholder="Email address"]').type("athul@test.com");
         cy.get('input[placeholder="Password"]').type("secret12");
-        cy.contains("button", "Sign in").click();
+        cy.contains("button", "Sign In").click();
 
         cy.wait("@login");
         cy.location("pathname").should("eq", "/files");
@@ -67,7 +67,7 @@ describe("Auth integration", () => {
 
         cy.get('input[placeholder="Email address"]').type("athul@test.com");
         cy.get('input[placeholder="Password"]').type("wrongpass");
-        cy.contains("button", "Sign in").click();
+        cy.contains("button", "Sign In").click();
 
         cy.wait("@loginFail");
         cy.contains("Invalid credentials").should("be.visible");
@@ -80,10 +80,10 @@ describe("Auth integration", () => {
         cy.get('[data-testid="reset-modal"]').should("exist");
     });
 
-    it("Login: Create new account navigates to /signup", () => {
+    it("Login: Create New Account navigates to /signup", () => {
         cy.visit(`${baseUrl}/`);
 
-        cy.contains("button", "Create new account").click();
+        cy.contains("button", "Create New Account").click();
         cy.location("pathname").should("eq", "/signup");
     });
 
@@ -159,7 +159,7 @@ describe("Auth integration", () => {
 
         cy.get('input[placeholder="Search or type a community"]').first().type("NewComm{enter}");
 
-        cy.contains("button", "Sign up").click();
+        cy.contains("button", "SIGN UP").click();
 
         cy.wait("@addCommunity");
         cy.wait("@communities");
