@@ -29,9 +29,11 @@ jobs:
           cache: npm
 
       - name: Cypress run
-        uses: cypress-io/github-action@v6
+        # v7.4.4+ fixes readiness checks failing before the dev server starts.
+        uses: cypress-io/github-action@v7.4.8
         with:
           install-command: npm ci --legacy-peer-deps
           start: npm start
           wait-on: http://localhost:3000
+          wait-on-timeout: 180
           browser: chrome
