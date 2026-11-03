@@ -4,14 +4,17 @@ import "@testing-library/jest-dom";
 
 import DataGridStyles from "./DataGridStyles";
 import {
-  color_secondary,
-  color_blue_lightest,
-  color_blue_light,
-  color_blue_lighter,
-  color_white,
-  color_border,
-  color_secondary_dark,
-  color_black_light,
+  color_dv_primary,
+  color_dv_primary_hover,
+  color_dv_surface,
+  color_dv_border,
+  color_dv_control_border,
+  color_dv_text_muted,
+  color_dv_header_bg,
+  color_dv_banner_bg,
+  color_dv_banner_title,
+  color_dv_row_hover,
+  color_dv_chip_bg,
 } from "../../constants/colors";
 
 describe("DataGridStyles", () => {
@@ -34,14 +37,14 @@ describe("DataGridStyles", () => {
     const css = getCss(container);
 
     expect(css).toContain(".ag-theme-quartz .bold-header");
-    expect(css).toContain(`background-color: ${color_blue_lightest} !important;`);
-    expect(css).toContain(`color: ${color_secondary} !important;`);
+    expect(css).toContain(`background-color: ${color_dv_header_bg} !important;`);
+    expect(css).toContain(`color: ${color_dv_text_muted} !important;`);
 
     expect(css).toContain(".ag-theme-quartz .ag-row-selected");
-    expect(css).toContain(`background-color: ${color_blue_light} !important;`);
+    expect(css).toContain(`background-color: ${color_dv_banner_bg} !important;`);
 
     expect(css).toContain(".ag-theme-quartz .ag-row:hover");
-    expect(css).toContain(`background-color: ${color_blue_lighter} !important;`);
+    expect(css).toContain(`background-color: ${color_dv_row_hover} !important;`);
   });
 
   it("contains paging and pinned column layout rules", () => {
@@ -55,58 +58,49 @@ describe("DataGridStyles", () => {
     expect(css).toContain("width: max-content !important;");
   });
 
-  it("contains responsive mobile and tablet media query rules", () => {
+  it("contains responsive mobile media query rules", () => {
     const { container } = renderComponent();
     const css = getCss(container);
 
     expect(css).toContain("@media (max-width: 900px)");
     expect(css).toContain(".mobile-filter-button { display: inline-flex !important;");
     expect(css).toContain(".left-panel { display: none !important; }");
-
-    expect(css).toContain("@media (min-width: 900px) and (max-width: 1200px)");
-    expect(css).toContain("flex: 0 0 40% !important;");
-    expect(css).toContain("max-width: 40% !important;");
+    expect(css).toContain("@media (max-width: 600px)");
   });
 
-  it("contains top controls, NIA slot, and focus-visible accessibility styles", () => {
+  it("contains toolbar, button and focus-visible accessibility styles", () => {
     const { container } = renderComponent();
     const css = getCss(container);
 
     expect(css).toContain(".top-controls-bar");
-    expect(css).toContain("scrollbar-width: none;");
-    expect(css).toContain(".top-controls-bar::-webkit-scrollbar");
-    expect(css).toContain("display: none;");
+    expect(css).toContain(`background: ${color_dv_surface};`);
+    expect(css).toContain(`border: 1px solid ${color_dv_border};`);
 
-    expect(css).toContain(".nia-slot");
-    expect(css).toContain("height: 56px;");
+    expect(css).toContain(".dv-btn");
+    expect(css).toContain("height: 44px;");
+    expect(css).toContain(`border: 1px solid ${color_dv_control_border};`);
 
-    expect(css).toContain(".community-action-btn:focus-visible");
-    expect(css).toContain(`outline: 3px solid ${color_blue_light};`);
+    expect(css).toContain(".dv-btn-primary");
+    expect(css).toContain(`background: ${color_dv_primary};`);
+    expect(css).toContain(`background: ${color_dv_primary_hover};`);
+
+    expect(css).toContain(".dv-btn:focus-visible");
+    expect(css).toContain(`outline: 3px solid ${color_dv_primary};`);
   });
 
-  it("contains community action bar/button/message styling with the correct colors", () => {
+  it("contains row button and chip styling with the correct colors", () => {
     const { container } = renderComponent();
     const css = getCss(container);
 
     expect(css).toContain(".community-action-bar");
-    expect(css).toContain(`background: ${color_white};`);
-    expect(css).toContain(`border: 1px solid ${color_border};`);
-
-    expect(css).toContain(".community-action-btn");
-    expect(css).toContain(`background: ${color_secondary};`);
-    expect(css).toContain(`color: ${color_white};`);
-
-    expect(css).toContain(".community-action-btn:hover");
-    expect(css).toContain(`background: ${color_secondary_dark};`);
-
     expect(css).toContain(".community-action-msg");
-    expect(css).toContain(`background: ${color_blue_lightest};`);
-    expect(css).toContain(`border: 1px solid ${color_blue_light};`);
-    expect(css).toContain(`color: ${color_black_light};`);
+    expect(css).toContain(`background: ${color_dv_banner_bg};`);
+    expect(css).toContain(`color: ${color_dv_banner_title};`);
 
-    expect(css).toContain(".community-action-msg-icon");
-    expect(css).toContain(`background: ${color_white};`);
-    expect(css).toContain(`color: ${color_secondary};`);
+
+    expect(css).toContain(".dv-row-btn");
+    expect(css).toContain(".dv-chip");
+    expect(css).toContain(`background: ${color_dv_chip_bg};`);
   });
 
   it("contains AG Grid header overflow handling rules", () => {

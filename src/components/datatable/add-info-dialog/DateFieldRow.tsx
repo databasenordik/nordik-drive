@@ -3,12 +3,7 @@
 import React from "react";
 import { Box, TextField } from "@mui/material";
 import DropdownDatePicker from "../DropDownPicker";
-import {
-  color_border,
-  color_text_primary,
-  color_white,
-  color_focus_ring,
-} from "../../../constants/colors";
+import { ADD_INFO_INPUT_SX } from "./styles";
 
 type Props = {
   value: string;
@@ -18,28 +13,15 @@ type Props = {
 
 export default function DateFieldRow({ value, onChange, disabled = false }: Props) {
   return (
-    <Box sx={{ display: "flex", gap: 1.5, alignItems: "center" }}>
+    <Box sx={{ display: "flex", gap: 1, alignItems: "center", flexWrap: { xs: "wrap", sm: "nowrap" } }}>
       <TextField
         fullWidth
-        label="yyyy-mm-dd"
+        placeholder="yyyy-mm-dd"
+        inputProps={{ "aria-label": "Full date (yyyy-mm-dd)" }}
         value={value || ""}
         disabled={disabled}
         onChange={(e) => !disabled && onChange(e.target.value)}
-        sx={{
-          background: color_white,
-          borderRadius: "10px",
-          "& .MuiOutlinedInput-notchedOutline": { borderColor: color_border },
-          "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: color_focus_ring,
-            borderWidth: "2px",
-          },
-          "& .MuiInputBase-input": {
-            fontSize: "1.05rem",
-            fontWeight: 800,
-            color: color_text_primary,
-            padding: "12px",
-          },
-        }}
+        sx={ADD_INFO_INPUT_SX}
       />
       <DropdownDatePicker
         value={value || ""}

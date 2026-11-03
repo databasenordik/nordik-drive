@@ -1,5 +1,8 @@
 import { TextField, MenuItem } from "@mui/material";
 import React, { useState, useEffect } from "react";
+import { ADD_INFO_INPUT_SX } from "./add-info-dialog/styles";
+
+const SELECT_SX = [ADD_INFO_INPUT_SX as any, { "& .MuiInputLabel-root:not(.MuiInputLabel-shrink)": { transform: "translate(12px, 11px) scale(1)" } }];
 
 export default function DropdownDatePicker({ value, onChange, disabled = false }:any) {
   const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString().padStart(2, "0"));
@@ -38,10 +41,11 @@ export default function DropdownDatePicker({ value, onChange, disabled = false }
   };
 
   return (
-    <div style={{ display: "flex", gap: "12px", width: "100%" }}>
+    <div style={{ display: "flex", gap: "8px", width: "100%" }}>
       <TextField
         select fullWidth disabled={disabled} value={day} onChange={(e) => selectPart("day", e.target.value)}
         label="Day"
+        sx={SELECT_SX}
       >
         {days.map(d => <MenuItem key={d} value={d}>{d}</MenuItem>)}
       </TextField>
@@ -49,6 +53,7 @@ export default function DropdownDatePicker({ value, onChange, disabled = false }
       <TextField
         select fullWidth disabled={disabled} value={month} onChange={(e) => selectPart("month", e.target.value)}
         label="Month"
+        sx={SELECT_SX}
       >
         {months.map(m => <MenuItem key={m} value={m}>{m}</MenuItem>)}
       </TextField>
@@ -56,6 +61,7 @@ export default function DropdownDatePicker({ value, onChange, disabled = false }
       <TextField
         select fullWidth disabled={disabled} value={year} onChange={(e) => selectPart("year", e.target.value)}
         label="Year"
+        sx={SELECT_SX}
       >
         {years.map(y => <MenuItem key={y} value={y}>{y}</MenuItem>)}
       </TextField>

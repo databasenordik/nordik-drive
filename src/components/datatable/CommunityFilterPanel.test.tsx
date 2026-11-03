@@ -7,8 +7,8 @@ import CommunityActionBar from "./CommunityActionBar";
 jest.mock("lucide-react", () => ({
   ChevronUp: () => <span data-testid="chevron-up">up</span>,
   ChevronDown: () => <span data-testid="chevron-down">down</span>,
-  Plus: () => <span data-testid="plus-icon">plus</span>,
-  Info: () => <span data-testid="info-icon">info</span>,
+  UserPlus: () => <span data-testid="plus-icon">plus</span>,
+  SlidersHorizontal: () => <span data-testid="sliders-icon">sliders</span>,
 }));
 
 describe("CommunityActionBar", () => {
@@ -79,18 +79,14 @@ describe("CommunityActionBar", () => {
     expect(onAddStudent).toHaveBeenCalledTimes(1);
   });
 
-  it("renders the welcome message inside a note region", () => {
+
+  it("renders the welcome message beside the buttons, without an icon", () => {
     renderComponent();
 
     const note = screen.getByRole("note");
-
-    expect(note).toBeInTheDocument();
-    expect(screen.getByTestId("info-icon")).toBeInTheDocument();
-    expect(
-      screen.getByText(/we welcome you to add and\/or edit any information/i)
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/chi-miigwetch!/i)
-    ).toBeInTheDocument();
+    expect(note).toHaveTextContent("Aanii, Boozhoo, Wachéye, Sago!");
+    expect(note).toHaveTextContent(/we welcome you to add and\/or edit any information/i);
+    expect(note).toHaveTextContent(/chi-miigwetch!/i);
+    expect(note.querySelector("svg")).toBeNull();
   });
 });

@@ -117,13 +117,14 @@ describe("Wrappers styled-components", () => {
     expect(css).toContain("width:100%");
     expect(css).toContain("max-width:580px");
     expect(css).toContain("flex-direction:column");
-    expect(css).toContain("border-radius:12px");
+    expect(css).toContain("border-radius:16px");
+    expect(css).toContain("border:1pxsolid#E3E6EB");
     expect(css).toContain("box-sizing:border-box");
     expect(css).toContain("background:#fff");
     expect(css).toContain("margin:2rem");
 
     expect(css).toContain(
-      "box-shadow:04px12pxrgba(0,0,0,0.15),016px32pxrgba(0,0,0,0.1)"
+      "box-shadow:012px32pxrgba(16,24,40,0.08)"
     );
 
     expect(css).toContain(

@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
-import { Mic, Send, X, Bot } from "lucide-react";
+import { ArrowRight, ChevronUp, Maximize2, Mic, Minimize2, Minus, SlidersHorizontal, X } from "lucide-react";
+import NiaMark from "./nia/NiaMark";
 import { useDispatch, useSelector } from "react-redux";
 import useFetch from "../hooks/useFetch";
 
@@ -16,16 +17,17 @@ import { marked } from "marked";
 import { decode } from "he";
 
 import {
-  color_primary,
-  color_secondary,
-  color_primary_dark,
-  color_secondary_dark,
-  color_border,
-  color_white,
-  color_white_smoke,
-  color_black,
-  color_black_light,
-  color_text_light,
+  color_nav_hover,
+  color_dv_border,
+  color_dv_chip_bg,
+  color_dv_control_border,
+  color_dv_divider,
+  color_dv_header_bg,
+  color_dv_primary,
+  color_dv_primary_hover,
+  color_dv_text,
+  color_dv_text_faint,
+  color_dv_text_muted,
 } from "../constants/colors";
 import { apiUrl } from "../config/api";
 import {
@@ -89,15 +91,17 @@ function detectAudioMime(buf: ArrayBuffer): string {
 
 function TinySpinner() {
   return (
-    <div
+    <span
       aria-label="Generating audio"
+      role="status"
       style={{
-        width: 18,
-        height: 18,
+        width: 16,
+        height: 16,
         borderRadius: "50%",
-        border: `2px solid ${color_border}`,
-        borderTopColor: color_secondary,
+        border: `2px solid ${color_dv_control_border}`,
+        borderTopColor: color_dv_primary,
         animation: "niaSpin 0.9s linear infinite",
+        display: "inline-block",
       }}
     />
   );
@@ -105,27 +109,70 @@ function TinySpinner() {
 
 function ThinkingBubble() {
   return (
-    <div
-      aria-label="NIA is thinking"
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 10,
-        padding: "12px 14px",
-        borderRadius: 14,
-        background: color_white,
-        color: color_black_light,
-        border: `1px solid ${color_border}`,
-        boxShadow: "0 10px 24px rgba(0,0,0,0.10)",
-        lineHeight: 1.35,
-        fontWeight: 700,
-      }}
-    >
-      <TinySpinner />
-      <span>NIA is thinking...</span>
+    <div aria-label="NIA is thinking" role="status" className="nia-bubble nia-bubble-nia nia-thinking">
+      <span className="nia-dots" aria-hidden="true">
+        <span className="nia-dot" />
+        <span className="nia-dot" style={{ animationDelay: ".2s" }} />
+        <span className="nia-dot" style={{ animationDelay: ".4s" }} />
+      </span>
+      <span>NIA is thinking</span>
     </div>
   );
 }
+
+const NIA_CHAT_STYLES = `
+@keyframes niaSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes niaDot { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
+.nia-panel { font-family: inherit; color: ${color_dv_text}; }
+.nia-panel .dv-visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.nia-icon-btn {
+  width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 10px; border: 1px solid transparent; background: transparent; color: #3D4657;
+  cursor: pointer; padding: 0; flex-shrink: 0;
+}
+.nia-icon-btn:hover { background: #F1F3F6; }
+.nia-icon-btn:focus-visible, .nia-listen:focus-visible, .nia-send:focus-visible, .nia-mic:focus-visible, .nia-clear:focus-visible {
+  outline: 3px solid ${color_dv_primary}; outline-offset: 2px;
+}
+.nia-bubble { font-size: 16px; line-height: 1.5; padding: 10px 16px; overflow-wrap: anywhere; }
+.nia-bubble p { margin: 0 0 8px; } .nia-bubble p:last-child { margin-bottom: 0; }
+.nia-bubble ul, .nia-bubble ol { margin: 4px 0 8px; padding-left: 20px; }
+.nia-bubble-you { align-self: flex-end; max-width: 80%; background: ${color_dv_primary}; color: #FFFFFF; border-radius: 16px 16px 4px 16px; }
+.nia-bubble-you a { color: #FFFFFF; }
+.nia-bubble-nia { background: #F1F3F6; color: ${color_dv_text}; border-radius: 16px 16px 16px 4px; }
+.nia-bubble-error { background: #FDECEE; color: #8B1E2D; border: 1px solid #F3C4CB; }
+.nia-thinking { display: flex; align-items: center; gap: 10px; padding: 14px 16px; font-size: 15px; color: ${color_dv_text_muted}; }
+.nia-dots { display: inline-flex; gap: 4px; }
+.nia-dot { width: 7px; height: 7px; border-radius: 50%; background: ${color_dv_text_muted}; display: inline-block; animation: niaDot 1.2s infinite; }
+.nia-listen {
+  display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: 8px; border: 0;
+  background: transparent; color: ${color_dv_primary}; font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer;
+}
+.nia-listen:hover { background: ${color_nav_hover}; }
+.nia-listen svg { font-size: 16px; }
+.nia-input {
+  flex: 1; min-width: 0; min-height: 48px; box-sizing: border-box; border: 1px solid ${color_dv_control_border}; border-radius: 12px;
+  padding: 12px 14px; font-family: inherit; font-size: 16px; color: ${color_dv_text}; background: #FFFFFF; resize: none;
+  white-space: pre-wrap; word-break: break-word; overflow-y: auto;
+}
+.nia-input:focus { outline: none; border-color: ${color_dv_primary}; box-shadow: 0 0 0 1px ${color_dv_primary}; }
+.nia-input::placeholder { color: ${color_dv_text_faint}; }
+.nia-mic, .nia-send {
+  width: 48px; height: 48px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 12px; cursor: pointer; padding: 0; font-family: inherit;
+}
+.nia-mic { border: 1px solid ${color_dv_control_border}; background: #FFFFFF; color: ${color_dv_primary}; }
+.nia-mic:hover:not(:disabled) { background: ${color_dv_header_bg}; }
+.nia-mic-recording { background: #8B1E2D; border-color: #8B1E2D; color: #FFFFFF; font-size: 12px; font-weight: 600; }
+.nia-send { border: 0; background: ${color_dv_primary}; color: #FFFFFF; }
+.nia-send:hover:not(:disabled) { background: ${color_dv_primary_hover}; }
+.nia-mic:disabled, .nia-send:disabled { opacity: 0.5; cursor: not-allowed; }
+.nia-clear {
+  width: 32px; height: 32px; border-radius: 8px; border: 1px solid transparent; background: transparent;
+  color: ${color_dv_text_muted}; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0;
+}
+.nia-clear:hover { background: #F1F3F6; }
+`;
 
 const MAX_LINES = 4;
 const LINE_HEIGHT_PX = 22;
@@ -480,133 +527,59 @@ export default function NIAChat({ open, setOpen }: NIAChatProps) {
         const showAudioControls = exchange.status === "completed" && !!exchange.answer;
         const isThisLoading = ttsLoadingExchangeId === exchange.id;
         const isThisPlaying = ttsPlayingExchangeId === exchange.id;
+        const isError = exchange.status === "error";
 
         return (
-          <div
-            key={exchange.id}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 14,
-              maxWidth: "100%",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-                gap: 6,
-                maxWidth: "100%",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 900,
-                  color: color_text_light,
-                  paddingRight: 4,
-                  textTransform: "uppercase",
-                  letterSpacing: 0.6,
-                }}
-              >
-                YOU
-              </div>
-
-              <div
-                style={{
-                  maxWidth: "78%",
-                  padding: "12px 14px",
-                  borderRadius: 14,
-                  background: color_secondary,
-                  color: color_white,
-                  border: `1px solid ${color_secondary_dark}`,
-                  boxShadow: "0 10px 24px rgba(0,0,0,0.10)",
-                  lineHeight: 1.35,
-                  fontWeight: 700,
-                  overflowWrap: "anywhere",
-                }}
-              >
-                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>
-                  {exchange.question || ""}
-                </ReactMarkdown>
-              </div>
+          <div key={exchange.id} style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: "100%" }}>
+            {/* You */}
+            <div className="nia-bubble nia-bubble-you">
+              <span className="dv-visually-hidden">You said: </span>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>
+                {exchange.question || ""}
+              </ReactMarkdown>
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: 6,
-                maxWidth: "100%",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 900,
-                  color: color_secondary,
-                  paddingLeft: 4,
-                  textTransform: "uppercase",
-                  letterSpacing: 0.6,
-                }}
-              >
-                NIA ASSISTANT
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: 10,
-                  maxWidth: "82%",
-                }}
-              >
+            {/* NIA */}
+            <div style={{ display: "flex", gap: 10, alignItems: "flex-start", maxWidth: "88%" }}>
+              <NiaMark size={36} />
+              <div style={{ display: "flex", flexDirection: "column", gap: 4, alignItems: "flex-start", minWidth: 0 }}>
                 {exchange.status === "pending" ? (
                   <ThinkingBubble />
                 ) : (
                   <div
-                    role={exchange.status === "error" ? "alert" : undefined}
-                    style={{
-                      padding: "12px 14px",
-                      borderRadius: 14,
-                      background:
-                        exchange.status === "error" ? "#fff1f1" : color_white,
-                      color:
-                        exchange.status === "error" ? color_primary_dark : color_black_light,
-                      border:
-                        exchange.status === "error"
-                          ? `1px solid rgba(185, 28, 28, 0.22)`
-                          : `1px solid ${color_border}`,
-                      boxShadow: "0 10px 24px rgba(0,0,0,0.10)",
-                      lineHeight: 1.35,
-                      fontWeight: 700,
-                      overflowWrap: "anywhere",
-                    }}
+                    role={isError ? "alert" : undefined}
+                    className={`nia-bubble nia-bubble-nia${isError ? " nia-bubble-error" : ""}`}
                   >
+                    <span className="dv-visually-hidden">NIA said: </span>
                     <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>
-                      {exchange.status === "error"
+                      {isError
                         ? exchange.errorMessage || "Something went wrong. Please try again later!"
                         : exchange.answer || ""}
                     </ReactMarkdown>
                   </div>
                 )}
 
-                {showAudioControls && (
-                  <div style={{ display: "flex", alignItems: "center", paddingTop: 6 }}>
-                    {isThisLoading ? (
+                {showAudioControls &&
+                  (isThisLoading ? (
+                    <span className="nia-listen" style={{ cursor: "default" }}>
                       <TinySpinner />
-                    ) : isThisPlaying ? (
-                      <PauseIcon style={{ cursor: "pointer" }} onClick={stopTTS} />
-                    ) : (
-                      <VolumeUpIcon
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleAudio(exchange.answer || "", exchange.id)}
-                      />
-                    )}
-                  </div>
-                )}
+                      Preparing audio
+                    </span>
+                  ) : isThisPlaying ? (
+                    <button type="button" className="nia-listen" onClick={stopTTS}>
+                      <PauseIcon />
+                      Stop
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="nia-listen"
+                      onClick={() => handleAudio(exchange.answer || "", exchange.id)}
+                    >
+                      <VolumeUpIcon />
+                      Listen
+                    </button>
+                  ))}
               </div>
             </div>
           </div>
@@ -619,367 +592,264 @@ export default function NIAChat({ open, setOpen }: NIAChatProps) {
     return null;
   }
 
+  const sendDisabled = hasPendingExchange || !input.trim() || !currentFileName;
+  const closeChat = () => {
+    stopTTS();
+    clearTtsCache();
+    setOpen(false);
+  };
+
   return (
     <>
-      <style>{`
-        @keyframes niaSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-      `}</style>
+      <style>{NIA_CHAT_STYLES}</style>
 
       <div
+        className="nia-panel"
+        role="dialog"
+        aria-label="NIA records assistant"
         style={{
           position: "fixed",
-          top: minimized ? "auto" : isMobile ? "0" : fullscreen ? "0" : "8px",
-          right: minimized ? "20px" : isMobile ? "0" : fullscreen ? "0" : "8px",
-          left: minimized ? "auto" : isMobile ? "0" : fullscreen ? "0" : "auto",
-          bottom: minimized ? "20px" : isMobile ? "0" : fullscreen ? "0" : "8px",
-          width: minimized ? "100px" : isMobile ? "100%" : fullscreen ? "100%" : "50%",
-          height: minimized ? "60px" : isMobile ? "100%" : fullscreen ? "100%" : "auto",
-          borderRadius: 14,
-          background: color_white_smoke,
-          border: `1px solid ${color_border}`,
+          top: minimized ? "auto" : isMobile || fullscreen ? 0 : 12,
+          right: minimized ? 20 : isMobile || fullscreen ? 0 : 12,
+          left: minimized ? "auto" : isMobile || fullscreen ? 0 : "auto",
+          bottom: minimized ? 20 : isMobile || fullscreen ? 0 : 12,
+          width: minimized ? "auto" : isMobile || fullscreen ? "100%" : "min(520px, calc(100vw - 24px))",
+          height: minimized ? "auto" : "auto",
+          borderRadius: isMobile || fullscreen ? 0 : 16,
+          background: "#FFFFFF",
+          border: `1px solid ${color_dv_border}`,
           display: "flex",
           flexDirection: "column",
           zIndex: 10000,
           overflow: "hidden",
-          boxShadow: "0 18px 50px rgba(0,0,0,0.18)",
+          boxShadow: "0 24px 60px rgba(16, 24, 40, 0.18)",
         }}
       >
+        {/* Header */}
         <div
           style={{
-            padding: minimized ? "10px 12px" : "14px 16px",
-            background: color_secondary,
-            color: color_white,
+            padding: minimized ? "8px 8px 8px 12px" : "16px 16px 14px 20px",
+            borderBottom: minimized ? "none" : `1px solid ${color_dv_border}`,
             display: "flex",
-            justifyContent: "space-between",
             alignItems: "center",
-            fontWeight: 900,
-            borderBottom: `1px solid ${color_secondary_dark}`,
+            gap: 12,
           }}
         >
-          {!minimized && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div
-                  style={{
-                    width: 34,
-                    height: 34,
-                    borderRadius: 10,
-                    background: color_white,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: color_secondary,
-                    border: `1px solid ${color_border}`,
-                    flexShrink: 0,
-                  }}
-                >
-                  <Bot size={18} />
-                </div>
-                <div style={{ fontSize: 18, letterSpacing: 0.2 }}>NIA ASSISTANT</div>
-              </div>
-            </div>
+          <NiaMark size={minimized ? 32 : 48} />
+          <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 2 }}>
+            <h2 style={{ margin: 0, fontSize: minimized ? 16 : 18, fontWeight: 600 }}>NIA</h2>
+            {!minimized && <span style={{ fontSize: 13, color: color_dv_text_muted }}>Records assistant</span>}
+          </div>
+
+          {!isMobile && !minimized && (
+            <button
+              type="button"
+              className="nia-icon-btn"
+              onClick={() => setFullscreen((prev) => !prev)}
+              aria-label={fullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+              title={fullscreen ? "Exit full screen" : "Full screen"}
+            >
+              {fullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+            </button>
           )}
 
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {!isMobile && !minimized && (
-              <button
-                onClick={() => setFullscreen((prev) => !prev)}
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  color: color_white,
-                  cursor: "pointer",
-                  fontSize: "0.85rem",
-                  fontWeight: 900,
-                  lineHeight: 1,
-                  padding: 6,
-                }}
-                aria-label={fullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-              >
-                {fullscreen ? "FS-" : "FS+"}
-              </button>
-            )}
+          <button
+            type="button"
+            className="nia-icon-btn"
+            onClick={() => setMinimized((prev) => !prev)}
+            aria-label={minimized ? "Restore" : "Minimize"}
+            title={minimized ? "Restore" : "Minimize"}
+          >
+            {minimized ? <ChevronUp size={18} /> : <Minus size={18} />}
+          </button>
 
-            <button
-              onClick={() => setMinimized((prev) => !prev)}
-              style={{
-                background: "transparent",
-                border: "none",
-                color: color_white,
-                cursor: "pointer",
-                fontSize: "1rem",
-                fontWeight: 900,
-                lineHeight: 1,
-                padding: 6,
-              }}
-              aria-label={minimized ? "Restore" : "Minimize"}
-            >
-              {minimized ? "^" : "_"}
-            </button>
-
-            <X
-              onClick={() => {
-                stopTTS();
-                clearTtsCache();
-                setOpen(false);
-              }}
-              style={{ cursor: "pointer" }}
-            />
-          </div>
+          <button type="button" className="nia-icon-btn" onClick={closeChat} aria-label="Close NIA" title="Close">
+            <X size={18} />
+          </button>
         </div>
 
+        {/* Community filter strip */}
         {!minimized && hasCommunityFilter && (
           <div
             style={{
-              padding: "10px 16px",
-              background: color_white,
-              borderBottom: `1px solid ${color_border}`,
+              padding: "10px 20px",
+              borderBottom: `1px solid ${color_dv_divider}`,
+              background: "#FAFBFC",
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
-              gap: 12,
+              gap: 8,
+              fontSize: 14,
+              color: color_dv_text_muted,
             }}
           >
-            <div
+            <SlidersHorizontal size={16} aria-hidden="true" />
+            <span style={{ flexShrink: 0 }}>Community filter:</span>
+            <span
               style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 3,
+                fontSize: 13,
+                fontWeight: 500,
+                padding: "3px 10px",
+                borderRadius: 999,
+                background: color_dv_chip_bg,
+                color: color_dv_primary,
+                overflowWrap: "anywhere",
                 minWidth: 0,
               }}
             >
-              <div
-                style={{
-                  fontSize: 11,
-                  fontWeight: 900,
-                  color: color_secondary,
-                  textTransform: "uppercase",
-                  letterSpacing: 0.6,
-                }}
-              >
-                Community Filter
-              </div>
-              <div
-                style={{
-                  fontSize: 13,
-                  fontWeight: 700,
-                  color: color_black_light,
-                  overflowWrap: "anywhere",
-                }}
-              >
-                {communityFilterSummary}
-              </div>
-            </div>
-
+              {communityFilterSummary}
+            </span>
+            <span style={{ flex: 1 }} />
             {hasActiveCommunityFilters && (
               <button
                 type="button"
+                className="nia-clear"
                 aria-label="Clear community filters"
-                onClick={clearCommunityFilters}
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 999,
-                  border: `1px solid ${color_border}`,
-                  background: color_white_smoke,
-                  color: color_secondary,
-                  cursor: "pointer",
-                  fontSize: 14,
-                  fontWeight: 900,
-                  lineHeight: 1,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
                 title="Clear community filters"
+                onClick={clearCommunityFilters}
               >
-                x
+                <X size={16} />
               </button>
             )}
           </div>
         )}
 
-        <div
-          ref={messagesContainerRef}
-          style={{
-            flex: 1,
-            padding: "16px",
-            overflowY: "auto",
-            display: "flex",
-            flexDirection: "column",
-            gap: 14,
-            background: color_white_smoke,
-          }}
-        >
-          {currentThread?.historyStatus === "loading" && (
-            <div role="status">Loading saved conversation...</div>
-          )}
-          {currentThread?.historyError && (
-            <div role="alert">
-              {currentThread.historyError}{" "}
-              <button type="button" onClick={() => dispatch(loadNiaHistory(currentFileName))}>
-                Retry
-              </button>
-            </div>
-          )}
-          {currentThread?.hasMoreHistory && (
-            <div style={{ color: color_text_light, fontSize: 13 }}>Showing the 10 most recent questions and answers.</div>
-          )}
-          {renderedMessages.length > 0 ? (
-            renderedMessages
-          ) : currentThread?.historyStatus !== "loading" ? (
-            <div
-              style={{
-                padding: "14px 16px",
-                borderRadius: 14,
-                border: `1px solid ${color_border}`,
-                background: color_white,
-                color: color_text_light,
-                fontWeight: 700,
-              }}
-            >
-              Ask NIA a question about the selected file to start the conversation.
-            </div>
-          ) : null}
-        </div>
-
-        <div
-          style={{
-            padding: "14px 14px 12px",
-            background: color_white,
-            borderTop: `2px solid ${color_secondary}`,
-          }}
-        >
-          <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
-            <textarea
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder={recordingState === "recording" ? "Listening..." : "Type your message here..."}
-              rows={1}
-              style={{
-                flex: 1,
-                minHeight: 56,
-                maxHeight: MAX_TEXTAREA_HEIGHT,
-                padding: "12px 16px",
-                borderRadius: 12,
-                border: `2px solid ${color_border}`,
-                outline: "none",
-                fontSize: 16,
-                lineHeight: `${LINE_HEIGHT_PX}px`,
-                background: color_white,
-                color: color_black_light,
-                fontWeight: 800,
-                resize: "none",
-                overflowY: "auto",
-                whiteSpace: "pre-wrap",
-                wordBreak: "break-word",
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  sendMessage();
-                }
-              }}
-            />
-
-            <button
-              onClick={sendMessage}
-              disabled={hasPendingExchange || !input.trim() || !currentFileName}
-              style={{
-                width: 52,
-                height: 48,
-                borderRadius: 10,
-                background: color_secondary,
-                border: `1px solid ${color_secondary_dark}`,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: color_white,
-                cursor:
-                  hasPendingExchange || !input.trim() || !currentFileName
-                    ? "not-allowed"
-                    : "pointer",
-                opacity:
-                  hasPendingExchange || !input.trim() || !currentFileName
-                    ? 0.6
-                    : 1,
-              }}
-              aria-label="Send message"
-            >
-              <Send size={18} />
-            </button>
-
-            {recordingState === "idle" ? (
-              <button
-                onClick={startAudioRecording}
-                disabled={hasPendingExchange}
-                style={{
-                  width: 52,
-                  height: 48,
-                  borderRadius: 10,
-                  background: color_black_light,
-                  border: `1px solid ${color_black}`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: color_white,
-                  cursor: hasPendingExchange ? "not-allowed" : "pointer",
-                  opacity: hasPendingExchange ? 0.6 : 1,
-                }}
-                aria-label="Start voice input"
-              >
-                <Mic size={18} />
-              </button>
-            ) : (
-              <button
-                onClick={stopAudioRecording}
-                style={{
-                  width: 52,
-                  height: 48,
-                  borderRadius: 10,
-                  background: color_primary,
-                  border: `1px solid ${color_primary_dark}`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: color_white,
-                  cursor: "pointer",
-                  fontWeight: 900,
-                  fontSize: 12,
-                }}
-                aria-label="Stop voice input"
-              >
-                STOP
-              </button>
-            )}
-          </div>
-
-          {!minimized && (
-            <div
-              style={{
-                marginTop: 10,
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: 12,
-                fontSize: 12,
-                color: color_text_light,
-                fontWeight: 800,
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ color: color_secondary, fontWeight: 900 }}>i</span>
-                <span>
-                  {hasPendingExchange
-                    ? "NIA is preparing your answer. You can keep using the page."
-                    : "Tip: Tap the microphone to talk to NIA"}
-                </span>
+        {/* Conversation */}
+        {!minimized && (
+          <div
+            ref={messagesContainerRef}
+            style={{
+              flex: 1,
+              minHeight: 0,
+              padding: "24px 20px",
+              overflowY: "auto",
+              display: "flex",
+              flexDirection: "column",
+              gap: 20,
+              background: "#FFFFFF",
+            }}
+          >
+            {currentThread?.historyStatus === "loading" && (
+              <div role="status" style={{ fontSize: 15, color: color_dv_text_muted }}>
+                Loading saved conversation...
               </div>
+            )}
+            {currentThread?.historyError && (
+              <div role="alert" className="nia-bubble nia-bubble-nia nia-bubble-error">
+                {currentThread.historyError}{" "}
+                <button
+                  type="button"
+                  className="nia-listen"
+                  onClick={() => dispatch(loadNiaHistory(currentFileName))}
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+            {currentThread?.hasMoreHistory && (
+              <div style={{ color: color_dv_text_muted, fontSize: 13, textAlign: "center" }}>
+                Showing the 10 most recent questions and answers.
+              </div>
+            )}
+            {renderedMessages.length > 0 ? (
+              renderedMessages
+            ) : currentThread?.historyStatus !== "loading" ? (
+              <div
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 14,
+                  padding: "32px 28px",
+                  textAlign: "center",
+                }}
+              >
+                <NiaMark size={isMobile ? 96 : 128} />
+                <h3 style={{ margin: 0, fontSize: 20, fontWeight: 600 }}>Ask NIA about this file</h3>
+                <p style={{ margin: 0, fontSize: 16, lineHeight: 1.55, color: color_dv_text_muted }}>
+                  Type a question below, or tap the microphone to speak to NIA.
+                </p>
+              </div>
+            ) : null}
+          </div>
+        )}
+
+        {/* Composer */}
+        {!minimized && (
+          <div
+            style={{
+              borderTop: `1px solid ${color_dv_border}`,
+              padding: "14px 16px 12px",
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+              background: "#FFFFFF",
+            }}
+          >
+            <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
+              <label htmlFor="nia-message" className="dv-visually-hidden">
+                Message NIA
+              </label>
+              <textarea
+                id="nia-message"
+                ref={inputRef}
+                className="nia-input"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder={recordingState === "recording" ? "Listening..." : "Type your message here..."}
+                rows={1}
+                style={{ maxHeight: MAX_TEXTAREA_HEIGHT, lineHeight: `${LINE_HEIGHT_PX}px` }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                  }
+                }}
+              />
+
+              {recordingState === "idle" ? (
+                <button
+                  type="button"
+                  className="nia-mic"
+                  onClick={startAudioRecording}
+                  disabled={hasPendingExchange}
+                  aria-label="Start voice input"
+                  title="Speak to NIA"
+                >
+                  <Mic size={20} />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="nia-mic nia-mic-recording"
+                  onClick={stopAudioRecording}
+                  aria-label="Stop voice input"
+                  title="Stop"
+                >
+                  STOP
+                </button>
+              )}
+
+              <button
+                type="button"
+                className="nia-send"
+                onClick={sendMessage}
+                disabled={sendDisabled}
+                aria-label="Send message"
+                title="Send"
+              >
+                <ArrowRight size={20} />
+              </button>
             </div>
-          )}
-        </div>
+
+            <p style={{ margin: 0, fontSize: 13, color: color_dv_text_muted }}>
+              {hasPendingExchange
+                ? "NIA is preparing your answer. You can keep using the page."
+                : "Tip: Tap the microphone to talk to NIA."}
+            </p>
+          </div>
+        )}
       </div>
     </>
   );

@@ -1,31 +1,17 @@
-import React from "react";
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import React, { useMemo } from "react";
+import { Box, Button, Dialog, DialogActions, DialogContent, IconButton, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import {
-  color_black_light,
-  color_border,
-  color_focus_ring,
-  color_secondary,
-  color_text_primary,
-  color_white,
+  color_dv_banner_title,
+  color_dv_border,
+  color_dv_control_border,
+  color_dv_header_bg,
+  color_dv_primary,
+  color_dv_primary_hover,
+  color_dv_text,
+  color_dv_text_muted,
 } from "../../constants/colors";
-import {
-  ADD_INFO_DIALOG_ACTIONS_SX,
-  ADD_INFO_DIALOG_CONTENT_SX,
-  ADD_INFO_DIALOG_HEADER_SX,
-  ADD_INFO_DIALOG_PAPER_SX,
-  ADD_INFO_PRIMARY_ACTION_BUTTON_SX,
-  ADD_INFO_SECONDARY_ACTION_BUTTON_SX,
-} from "./add-info-dialog/styles";
 
 type DailyHonourDialogProps = {
   open: boolean;
@@ -35,163 +21,160 @@ type DailyHonourDialogProps = {
   onClose: () => void;
 };
 
-export default function DailyHonourDialog({
-  open,
-  loading,
-  honourText,
-  date,
-  onClose,
-}: DailyHonourDialogProps) {
+const SERIF = "'Lora', Georgia, 'Times New Roman', serif";
+const GOLD_RULE = "#C8B874";
+
+/* "2026-10-15" -> "Thursday, October 15, 2026"; anything else is shown as given. */
+export const formatHonourDate = (date?: string): string => {
+  if (!date) return "";
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date.trim());
+  if (!m) return date;
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  if (Number.isNaN(d.getTime())) return date;
+  return d.toLocaleDateString("en-CA", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+};
+
+const focusRing = {
+  "&:focus-visible": { outline: `3px solid ${color_dv_primary}`, outlineOffset: "2px" },
+};
+
+export default function DailyHonourDialog({ open, loading, honourText, date, onClose }: DailyHonourDialogProps) {
+  // Split into paragraphs; when there are several, the closing line reads as a quiet dedication.
+  const paragraphs = useMemo(
+    () =>
+      String(honourText || "")
+        .split(/\n\s*\n/)
+        .map((p) => p.trim())
+        .filter(Boolean),
+    [honourText]
+  );
+
   return (
     <Dialog
       open={open}
       onClose={onClose}
       fullWidth
-      maxWidth="md"
+      maxWidth={false}
       aria-labelledby="daily-honour-dialog-title"
       PaperProps={{
         sx: {
-          ...ADD_INFO_DIALOG_PAPER_SX,
-          boxShadow: "0 28px 72px rgba(0, 0, 0, 0.22)",
+          width: "100%",
+          maxWidth: 720,
+          m: { xs: 1.5, sm: 4 },
+          borderRadius: "16px",
+          overflow: "hidden",
+          boxShadow: "0 28px 72px rgba(16, 24, 40, 0.22)",
         },
       }}
     >
-      <DialogTitle sx={{ p: 0 }}>
-        <Box
-          sx={{
-            ...ADD_INFO_DIALOG_HEADER_SX,
-            px: { xs: 2.5, sm: 3.25 },
-            py: { xs: 2.1, sm: 2.65 },
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "flex-start",
-              justifyContent: "space-between",
-              gap: 2,
-            }}
-          >
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-              <Typography
-                id="daily-honour-dialog-title"
-                sx={{
-                  fontSize: "0.8rem",
-                  fontWeight: 900,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  color: color_white,
-                }}
-              >
-                Today's Honour
-              </Typography>
-
-              <Typography
-                sx={{
-                  fontSize: "0.98rem",
-                  fontWeight: 700,
-                  color: "rgba(255, 255, 255, 0.88)",
-                }}
-              >
-                Shared with respect
-              </Typography>
-            </Box>
-
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              {date ? (
-                <Box
-                  sx={{
-                    px: 1.4,
-                    py: 0.65,
-                    borderRadius: "999px",
-                    background: "rgba(255, 255, 255, 0.14)",
-                    border: "1px solid rgba(255, 255, 255, 0.25)",
-                  }}
-                >
-                  <Typography
-                    data-testid="daily-honour-date"
-                    sx={{
-                      fontSize: "0.95rem",
-                      fontWeight: 800,
-                      color: color_white,
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {date}
-                  </Typography>
-                </Box>
-              ) : null}
-
-              <IconButton
-                onClick={onClose}
-                aria-label="Close today's honour"
-                sx={{
-                  color: color_white,
-                  "&:hover": {
-                    background: "rgba(255, 255, 255, 0.12)",
-                  },
-                  "&:focus-visible": {
-                    outline: `3px solid ${color_focus_ring}`,
-                    outlineOffset: "2px",
-                  },
-                }}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </Box>
-          </Box>
-        </Box>
-      </DialogTitle>
-
-      <DialogContent
+      {/* Header */}
+      <Box
         sx={{
-          ...ADD_INFO_DIALOG_CONTENT_SX,
-          px: { xs: 2.5, sm: 3.25 },
-          py: { xs: 2.75, sm: 3.25 },
+          display: "flex",
+          alignItems: "flex-start",
+          gap: 2,
+          pt: { xs: 2.5, sm: 3.5 },
+          pr: { xs: 1.5, sm: 3.5 },
+          pl: { xs: 2.5, sm: 5 },
         }}
       >
-        <Box
-          sx={{
-            background: color_white,
-            border: `1px solid ${color_border}`,
-            borderLeft: `5px solid ${color_secondary}`,
-            borderRadius: "14px",
-            px: { xs: 2.25, sm: 2.75 },
-            py: { xs: 2.15, sm: 2.65 },
-          }}
-        >
+        <Box sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 0.75 }}>
+          {date ? (
+            <Typography
+              data-testid="daily-honour-date"
+              component="span"
+              sx={{ fontSize: 13, fontWeight: 500, color: color_dv_text_muted }}
+            >
+              {formatHonourDate(date)}
+            </Typography>
+          ) : null}
           <Typography
-            data-testid={loading ? "daily-honour-loading" : "daily-honour-text"}
+            id="daily-honour-dialog-title"
+            component="h2"
             sx={{
-              color: loading ? color_black_light : color_text_primary,
-              fontFamily: 'Georgia, "Times New Roman", serif',
-              fontSize: { xs: "1.14rem", sm: "1.36rem" },
-              lineHeight: 1.9,
-              fontStyle: loading ? "normal" : "italic",
-              whiteSpace: "pre-line",
+              m: 0,
+              fontFamily: SERIF,
+              fontSize: { xs: 24, sm: 28 },
+              fontWeight: 600,
+              lineHeight: 1.25,
+              color: color_dv_banner_title,
             }}
           >
-            {loading ? "Loading today's honour..." : honourText}
+            Today's honour
           </Typography>
+          <Typography component="span" sx={{ fontSize: 15, color: color_dv_text_muted }}>
+            Shared with respect
+          </Typography>
+        </Box>
+
+        <IconButton
+          onClick={onClose}
+          aria-label="Close today's honour"
+          sx={{ width: 40, height: 40, borderRadius: "10px", color: color_dv_text_muted, ...focusRing }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </Box>
+
+      {/* Body */}
+      <DialogContent sx={{ px: { xs: 2.5, sm: 5 }, pt: 3, pb: { xs: 3, sm: 4.5 } }}>
+        <Box sx={{ width: 48, height: 2, background: GOLD_RULE, mb: 3 }} aria-hidden="true" />
+
+        <Box
+          data-testid={loading ? "daily-honour-loading" : "daily-honour-text"}
+          sx={{ display: "flex", flexDirection: "column", gap: 3 }}
+        >
+          {loading ? (
+            <Typography sx={{ fontSize: 17, color: color_dv_text_muted }}>Loading today's honour…</Typography>
+          ) : (
+            paragraphs.map((p, i) => {
+              const isDedication = paragraphs.length > 1 && i === paragraphs.length - 1;
+              return (
+                <Typography
+                  key={i}
+                  sx={{
+                    m: 0,
+                    fontFamily: SERIF,
+                    fontSize: { xs: 18, sm: 21 },
+                    lineHeight: 1.75,
+                    whiteSpace: "pre-line",
+                    color: isDedication ? color_dv_banner_title : color_dv_text,
+                    fontStyle: isDedication ? "italic" : "normal",
+                  }}
+                >
+                  {p}
+                </Typography>
+              );
+            })
+          )}
         </Box>
       </DialogContent>
 
+      {/* Footer */}
       <DialogActions
         sx={{
-          ...ADD_INFO_DIALOG_ACTIONS_SX,
-          px: { xs: 2.5, sm: 3.25 },
+          px: { xs: 2, sm: 3.5 },
           py: 2,
-          gap: 1.25,
-          justifyContent: "flex-end",
+          gap: 1,
+          borderTop: `1px solid ${color_dv_border}`,
+          background: "#FAFBFC",
+          "& > :not(style) ~ :not(style)": { ml: 0 },
         }}
       >
         <Button
           onClick={onClose}
           sx={{
-            ...ADD_INFO_SECONDARY_ACTION_BUTTON_SX,
-            background: color_white,
-            px: 2.25,
-            py: 1,
+            height: 44,
+            px: 2.5,
+            borderRadius: "10px",
+            border: `1px solid ${color_dv_control_border}`,
+            background: "#FFFFFF",
+            color: color_dv_text,
+            fontSize: 15,
+            fontWeight: 500,
+            textTransform: "none",
+            "&:hover": { background: color_dv_header_bg, borderColor: "#9AA3B2" },
+            ...focusRing,
           }}
         >
           Close
@@ -199,11 +182,19 @@ export default function DailyHonourDialog({
 
         <Button
           onClick={onClose}
-          variant="contained"
+          endIcon={<ArrowForwardIcon />}
           sx={{
-            ...ADD_INFO_PRIMARY_ACTION_BUTTON_SX,
-            px: 3,
-            py: 1,
+            height: 44,
+            px: 2.75,
+            borderRadius: "10px",
+            background: color_dv_primary,
+            color: "#FFFFFF",
+            fontSize: 15,
+            fontWeight: 500,
+            textTransform: "none",
+            boxShadow: "none",
+            "&:hover": { background: color_dv_primary_hover, boxShadow: "none" },
+            ...focusRing,
           }}
         >
           Continue to records

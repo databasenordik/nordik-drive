@@ -490,13 +490,13 @@ describe("AddInfoForm", () => {
         renderForm({}, state);
 
         expect(screen.queryByTestId("mui-dialog")).not.toBeInTheDocument();
-        expect(screen.queryByText("Add New Student")).not.toBeInTheDocument();
+        expect(screen.queryByText("Add new student")).not.toBeInTheDocument();
     });
 
     it("renders editable supported items in config order and skips non-editable / unsupported rows", () => {
         renderForm();
 
-        expect(screen.getByText("Add New Student")).toBeInTheDocument();
+        expect(screen.getByText("Add new student")).toBeInTheDocument();
 
         const order = screen.getAllByTestId("order-node").map((el) => el.getAttribute("data-name"));
 
@@ -586,7 +586,7 @@ describe("AddInfoForm", () => {
         fireEvent.change(lastNamesInput, { target: { value: "" } });
         fireEvent.change(firstNamesInput, { target: { value: "" } });
 
-        expect(screen.getByText("Add Information – Jane Doe")).toBeInTheDocument();
+        expect(screen.getByText("Add information – Jane Doe")).toBeInTheDocument();
     });
 
     it("adds a new community and forces communities refetch", async () => {
@@ -723,7 +723,7 @@ describe("AddInfoForm", () => {
         expect(screen.getByTestId("photo-consent")).toHaveTextContent("true");
         expect(screen.getByTestId("archive-consent")).toHaveTextContent("true");
 
-        fireEvent.click(screen.getByRole("button", { name: "Reset All" }));
+        fireEvent.click(screen.getByRole("button", { name: "Reset all" }));
         expect(screen.getByTestId("reset-all-dialog")).toBeInTheDocument();
 
         fireEvent.click(screen.getByText("confirm-reset"));
@@ -753,7 +753,7 @@ describe("AddInfoForm", () => {
         fireEvent.click(screen.getByText("toggle-photo-consent"));
         fireEvent.click(screen.getByText("toggle-archive-consent"));
 
-        fireEvent.click(screen.getByRole("button", { name: "Reset All" }));
+        fireEvent.click(screen.getByRole("button", { name: "Reset all" }));
         fireEvent.click(screen.getByText("confirm-reset"));
 
         expect(lastNamesInput).toHaveValue("Doe");

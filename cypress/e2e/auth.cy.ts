@@ -4,13 +4,19 @@ describe("Auth integration", () => {
     beforeEach(() => {
         cy.clearCookies();
         cy.clearLocalStorage();
+        cy.intercept("GET", "**/api/user/me", { statusCode: 401, body: {} }).as("me");
+        cy.intercept("POST", "**/api/user/refresh", { statusCode: 401, body: {} }).as("refresh");
+        cy.intercept("GET", "**/api/communities", {
+            statusCode: 200,
+            body: { communities: [{ name: "Shingwauk" }] },
+        }).as("communities");
     });
 
     it("Login: shows validation errors on empty submit", () => {
         cy.visit(`${baseUrl}/`);
-        cy.contains("Sign in with Email Address").should("be.visible");
+        cy.contains(/^sign in with your email address$/i).should("be.visible");
 
-        cy.contains("button", "Sign In").click();
+        cy.contains("button", /^sign in$/i).click();
 
         cy.contains("Email is required").should("be.visible");
         cy.contains("Password is required").should("be.visible");
@@ -32,6 +38,10 @@ describe("Auth integration", () => {
     });
 
     it("Login: successful login navigates to /files", () => {
+        cy.intercept("GET", "**/api/file", {
+            statusCode: 200,
+            body: { files: [] },
+        }).as("files");
         cy.intercept("POST", "**/api/user/login", {
             statusCode: 200,
             body: {
@@ -51,10 +61,11 @@ describe("Auth integration", () => {
 
         cy.get('input[placeholder="Email address"]').type("athul@test.com");
         cy.get('input[placeholder="Password"]').type("secret12");
-        cy.contains("button", "Sign In").click();
+        cy.contains("button", /^sign in$/i).click();
 
         cy.wait("@login");
         cy.location("pathname").should("eq", "/files");
+        cy.wait("@files");
     });
 
     it("Login: shows toast on API error", () => {
@@ -67,7 +78,7 @@ describe("Auth integration", () => {
 
         cy.get('input[placeholder="Email address"]').type("athul@test.com");
         cy.get('input[placeholder="Password"]').type("wrongpass");
-        cy.contains("button", "Sign In").click();
+        cy.contains("button", /^sign in$/i).click();
 
         cy.wait("@loginFail");
         cy.contains("Invalid credentials").should("be.visible");
@@ -83,7 +94,7 @@ describe("Auth integration", () => {
     it("Login: Create New Account navigates to /signup", () => {
         cy.visit(`${baseUrl}/`);
 
-        cy.contains("button", "Create New Account").click();
+        cy.contains("button", /^create new account$/i).click();
         cy.location("pathname").should("eq", "/signup");
     });
 
@@ -110,7 +121,7 @@ describe("Auth integration", () => {
         cy.visit(`${baseUrl}/signup`);
         cy.wait("@communities");
 
-        cy.contains("button", /sign up/i).click();
+        cy.contains("button", /^sign up$/i).click();
 
         cy.contains("First name is required").should("be.visible");
         cy.contains("Last name is required").should("be.visible");
@@ -120,9 +131,6 @@ describe("Auth integration", () => {
     });
 
     it("Signup: adds missing community then submits signup and navigates to /", () => {
-        cy.intercept("GET", "**/api/user/me", { statusCode: 401, body: {} }).as("me");
-        cy.intercept("POST", "**/api/user/refresh", { statusCode: 401, body: {} }).as("refresh");
-
         let communitiesCall = 0;
         cy.intercept("GET", "**/api/communities", (req) => {
             communitiesCall += 1;
@@ -159,7 +167,7 @@ describe("Auth integration", () => {
 
         cy.get('input[placeholder="Search or type a community"]').first().type("NewComm{enter}");
 
-        cy.contains("button", "SIGN UP").click();
+        cy.contains("button", /^sign up$/i).click();
 
         cy.wait("@addCommunity");
         cy.wait("@communities");
@@ -174,3 +182,5 @@ describe("Auth integration", () => {
         cy.contains("OR").should("be.visible");
     });
 });
+
+export {};

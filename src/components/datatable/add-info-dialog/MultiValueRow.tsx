@@ -1,75 +1,63 @@
 "use client";
 
 import React from "react";
-import { Box, Button, TextField } from "@mui/material";
-import { color_border, color_secondary, color_text_primary, color_white } from "../../../constants/colors";
+import { Box, Button, IconButton, TextField } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
+import { ADD_INFO_ADD_BUTTON_SX, ADD_INFO_INPUT_SX, ADD_INFO_REMOVE_BUTTON_SX } from "./styles";
 
 type Props = {
   values: string[];
   onChange: (next: string[]) => void;
   addLabel: string;
+  disabled?: boolean;
 };
 
-export default function MultiValueRow({ values, onChange, addLabel }: Props) {
+/* "Add Name" -> "name", "Add Sibling" -> "sibling" */
+const itemNoun = (addLabel: string) => addLabel.replace(/^\+?\s*add\s+/i, "").trim().toLowerCase() || "item";
+
+export default function MultiValueRow({ values, onChange, addLabel, disabled }: Props) {
   const safe = values?.length ? values : [""];
+  const noun = itemNoun(addLabel);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
       {safe.map((val, idx) => (
-        <Box key={idx} sx={{ display: "flex", gap: 1, alignItems: "stretch" }}>
+        <Box key={idx} sx={{ display: "flex", gap: 1, alignItems: "flex-start" }}>
           <TextField
             fullWidth
             value={val || ""}
+            disabled={disabled}
+            inputProps={{ "aria-label": `${noun.charAt(0).toUpperCase() + noun.slice(1)} ${idx + 1}` }}
             onChange={(e) => {
               const next = [...safe];
               next[idx] = e.target.value;
               onChange(next);
             }}
-            sx={{
-              background: color_white,
-              borderRadius: "10px",
-              "& .MuiOutlinedInput-notchedOutline": { borderColor: color_border },
-              "& .MuiInputBase-input": {
-                fontSize: "1.05rem",
-                fontWeight: 800,
-                color: color_text_primary,
-                padding: "12px",
-              },
-            }}
+            sx={ADD_INFO_INPUT_SX}
           />
-          <Button
+          <IconButton
+            aria-label={`Remove ${noun}`}
+            disabled={disabled}
             onClick={() => {
               const next = safe.filter((_, i) => i !== idx);
               onChange(next.length ? next : [""]);
             }}
-            sx={{
-              minWidth: 54,
-              borderRadius: "10px",
-              textTransform: "none",
-              fontWeight: 900,
-              border: `1px solid ${color_border}`,
-              color: color_text_primary,
-              background: color_white,
-            }}
+            sx={ADD_INFO_REMOVE_BUTTON_SX}
           >
-            ✕
-          </Button>
+            <CloseIcon sx={{ fontSize: 18 }} />
+          </IconButton>
         </Box>
       ))}
 
       <Box>
         <Button
+          disabled={disabled}
+          startIcon={<AddIcon sx={{ fontSize: "16px !important" }} />}
           onClick={() => onChange([...safe, ""])}
-          sx={{
-            textTransform: "none",
-            fontWeight: 900,
-            borderRadius: "10px",
-            border: `1px dashed ${color_secondary}`,
-            color: color_secondary,
-            background: color_white,
-          }}
+          sx={ADD_INFO_ADD_BUTTON_SX}
         >
-          + {addLabel}
+          {addLabel.charAt(0).toUpperCase() + addLabel.slice(1).toLowerCase()}
         </Button>
       </Box>
     </Box>

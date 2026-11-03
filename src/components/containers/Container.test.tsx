@@ -53,8 +53,8 @@ describe("AuthContainer", () => {
       "";
 
     if (bgCandidate) {
-      // if something is present, allow it to be validated
-      expect(bgCandidate).toMatch(/linear-gradient/i);
+      // plain page background from the design system
+      expect(bgCandidate).toMatch(/#F5F6F8|rgb\(245,\s*246,\s*248\)/i);
     }
   });
 

@@ -1,22 +1,20 @@
 "use client";
 
 import React, { useMemo, useEffect, useState, useCallback } from "react";
-import { Box, Button, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
-import { ArrowLeft, ChevronUp, ChevronDown, Download, Mic, MicOff, Search } from "lucide-react";
-
 import {
-  color_primary,
-  color_secondary,
-  color_border,
-  color_secondary_dark,
-  color_white,
-  color_white_smoke,
-  dark_grey,
-  color_text_light,
-  color_black_light,
-} from "../../constants/colors";
+  ArrowLeft,
+  ChevronUp,
+  ChevronDown,
+  Download,
+  Mic,
+  MicOff,
+  Search,
+  X,
+  ZoomIn,
+  ZoomOut,
+} from "lucide-react";
 
-import NIAChatTrigger from "../NIAChatTrigger";
+import NiaMark from "../nia/NiaMark";
 import { clearSelectedFile } from "../../store/auth/fileSlice";
 import { useDispatch } from "react-redux";
 
@@ -102,7 +100,7 @@ export default function TopControlsBar({
 
   const totalRecordsText = useMemo(() => {
     const formatted = new Intl.NumberFormat().format(totalRecords);
-    return `TOTAL: ${formatted} RECORDS`;
+    return `${formatted} ${totalRecords === 1 ? "record" : "records"}`;
   }, [totalRecords]);
 
   const clearSearch = useCallback(() => {
@@ -164,408 +162,109 @@ export default function TopControlsBar({
     XLSX.writeFile(workbook, isFiltered ? "filtered_data.xlsx" : "all_data.xlsx");
   };
 
+  const hasSearch = searchText.trim().length > 0;
+
   return (
-    <div
-      className="top-controls-bar"
-      style={{
-        marginBottom: "10px",
-        display: "flex",
-        alignItems: "center",
-        gap: "8px",
-        padding: "8px 12px",
-        borderRadius: "10px",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-
-        flexWrap: "nowrap",
-        whiteSpace: "nowrap",
-
-        overflowX: "auto",
-        overflowY: "visible",
-        WebkitOverflowScrolling: "touch",
-      }}
-    >
-      {/* Files */}
-      <Button
+    <section className="top-controls-bar" aria-label="Search and tools">
+      {/* Back to files */}
+      <button
+        type="button"
+        className="dv-btn"
         onClick={() => {
           dispatch(clearSelectedFile());
-          window.history.back()
-        }}
-        variant="outlined"
-        startIcon={<ArrowLeft size={18} />}
-        sx={{
-          height: 46,
-          px: 2,
-          borderRadius: 999,
-          borderColor: color_border,
-          background: color_white,
-          color: color_secondary,
-          fontWeight: 900,
-          textTransform: "none",
-          flexShrink: 0,
-          "&:hover": { background: color_white_smoke, borderColor: color_secondary },
+          window.history.back();
         }}
       >
+        <ArrowLeft size={18} aria-hidden="true" />
         Files
-      </Button>
+      </button>
 
-      {/* Search */}
-      <TextField
-        variant="outlined"
-        placeholder="Search records..."
-        value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") onSearch();
-        }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Search size={18} color={dark_grey} />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position="end">
-              <Box sx={{ display: "flex", gap: 0.75 }}>
-                {searchText.trim() && (
-                  <IconButton
-                    onClick={clearSearch}
-                    size="small"
-                    aria-label="Clear search"
-                    sx={{
-                      width: 36,
-                      height: 36,
-                      borderRadius: 2,
-                      border: `1px solid ${color_border}`,
-                      background: color_white,
-                      color: dark_grey,
-                      fontSize: 16,
-                      fontWeight: 900,
-                    }}
-                  >
-                    x
-                  </IconButton>
-                )}
-
-                <IconButton
-                  onClick={() => onSearch()}
-                  size="small"
-                  aria-label="Search"
-                  sx={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: 2,
-                    border: `1px solid ${color_border}`,
-                    background: color_white,
-                    color: dark_grey,
-                  }}
-                >
-                  <Search size={18} />
-                </IconButton>
-
-                <IconButton
-                  aria-label={isRecording ? "Stop voice search" : "Start voice search"}
-                  title={isRecording ? "Stop voice search" : "Start voice search"}
-                  size="small"
-                  onClick={() => {
-                    if (!isRecording) startVoice();
-                    else stopVoice();
-                  }}
-                  sx={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: 2,
-                    border: `1px solid ${color_border}`,
-                    background: color_white,
-                    color: isRecording ? color_primary : dark_grey,
-                  }}
-                >
-                  {isRecording ? <MicOff size={18} /> : <Mic size={18} />}
-                </IconButton>
-              </Box>
-            </InputAdornment>
-          ),
-        }}
-        sx={{
-          flex: "1 1 520px",
-          minWidth: isMobile ? 220 : 360,
-          maxWidth: isMobile ? 520 : 760,
-          "& .MuiOutlinedInput-root": {
-            height: 46,
-            borderRadius: 999,
-            background: color_white,
-            "& fieldset": { borderColor: color_border },
-            "&:hover fieldset": { borderColor: color_secondary },
-            "&.Mui-focused fieldset": { borderColor: color_secondary, borderWidth: 2 },
-          },
-          "& input::placeholder": { color: color_text_light, opacity: 1 },
-        }}
-      />
-
-      {/* split nav button */}
-      <IconButton
-        disabled={matchesCount === 0}
-        onClick={(e) => {
-          if (matchesCount === 0) return;
-          const rect = (e.currentTarget as HTMLButtonElement).getBoundingClientRect();
-          const y = (e as any).clientY - rect.top;
-          if (y < rect.height / 2) onNavigateMatch("prev");
-          else onNavigateMatch("next");
-        }}
-        title="Top: previous result • Bottom: next result"
-        aria-label="Result navigation"
-        disableRipple
-        sx={{
-          width: 46,
-          height: 46,
-          borderRadius: 999,
-          border: `1px solid ${color_border}`,
-          background: color_white,
-          color: dark_grey,
-          flexShrink: 0,
-          overflow: "hidden",
-          padding: 0,
-          "&:hover": { background: color_white_smoke },
-          "&.Mui-disabled": { opacity: 0.45 },
-        }}
-      >
-        <Box
-          sx={{
-            width: "100%",
-            height: "100%",
-            display: "grid",
-            gridTemplateRows: "1fr 1fr",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              lineHeight: 0,
-              borderBottom: `1px solid ${color_border}`,
-              pointerEvents: "none",
-            }}
-          >
-            <ChevronUp size={18} />
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              lineHeight: 0,
-              pointerEvents: "none",
-            }}
-          >
-            <ChevronDown size={18} />
-          </Box>
-        </Box>
-      </IconButton>
-
-      {/* NIA slot + tiny indicator */}
-      <Box
-        sx={{
-          flexShrink: 0,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 0.25,
-          height: "auto",
-          lineHeight: 1,
-        }}
-      >
-        <div className="nia-slot">
-          <NIAChatTrigger setOpen={setNiaOpen} unreadCount={niaUnreadCount} />
-        </div>
-
-        {/* small indicator (compact, subtle, non-ugly) */}
-        <Box
-          onClick={() => setNiaOpen(true)}
-          role="button"
-          aria-label="Talk to NIA"
-          tabIndex={0}
+      {/* Search field with result count + navigation */}
+      <div className={`dv-search${isMobile ? " dv-search-mobile" : ""}`}>
+        <button type="button" className="dv-icon-btn dv-search-go" aria-label="Search" onClick={() => onSearch()}>
+          <Search size={18} aria-hidden="true" />
+        </button>
+        <label htmlFor="dv-search-input" className="dv-visually-hidden">
+          Search records
+        </label>
+        <input
+          id="dv-search-input"
+          type="text"
+          className="dv-search-input"
+          placeholder="Search records..."
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") setNiaOpen(true);
+            if (e.key === "Enter") onSearch();
           }}
-          sx={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 0.6,
-            px: 1,
-            py: "2px",
-            borderRadius: 999,
-            border: `1px solid ${color_border}`,
-            background: color_white,
-            cursor: "pointer",
-            userSelect: "none",
-            maxWidth: 120,
-            "&:hover": { background: color_white_smoke, borderColor: color_secondary },
-            "&:focus-visible": {
-              outline: `2px solid ${color_secondary}`,
-              outlineOffset: 2,
-            },
+        />
+        <span className="dv-search-count" aria-live="polite">
+          {matchesCount > 0 ? resultsText : totalRecordsText}
+        </span>
+        {hasSearch && (
+          <button type="button" className="dv-icon-btn" aria-label="Clear search" onClick={clearSearch}>
+            <X size={18} aria-hidden="true" />
+          </button>
+        )}
+        <button
+          type="button"
+          className="dv-icon-btn"
+          aria-label="Previous result"
+          disabled={matchesCount === 0}
+          onClick={() => onNavigateMatch("prev")}
+        >
+          <ChevronUp size={18} aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          className="dv-icon-btn"
+          aria-label="Next result"
+          disabled={matchesCount === 0}
+          onClick={() => onNavigateMatch("next")}
+        >
+          <ChevronDown size={18} aria-hidden="true" />
+        </button>
+        <span className="dv-search-divider" aria-hidden="true" />
+        <button
+          type="button"
+          className={`dv-icon-btn${isRecording ? " dv-icon-btn-recording" : ""}`}
+          aria-label={isRecording ? "Stop voice search" : "Start voice search"}
+          title={isRecording ? "Stop voice search" : "Start voice search"}
+          onClick={() => {
+            if (!isRecording) startVoice();
+            else stopVoice();
           }}
         >
-          {niaUnreadCount > 0 && (
-            <Box
-              component="span"
-              aria-label={`${niaUnreadCount} unread NIA answers`}
-              sx={{
-                minWidth: 18,
-                height: 18,
-                px: 0.7,
-                borderRadius: 999,
-                background: color_secondary,
-                color: color_white,
-                fontSize: 10,
-                fontWeight: 900,
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}
-            >
-              {niaUnreadCount > 9 ? "9+" : niaUnreadCount}
-            </Box>
-          )}
-          <Box
-            sx={{
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
-              background: color_secondary,
-              flexShrink: 0,
-            }}
-          />
-          <Typography
-            sx={{
-              fontSize: 11,
-              fontWeight: 900,
-              color: color_black_light,
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              lineHeight: 1.1,
-            }}
-          >
-            Talk to NIA
-          </Typography>
-        </Box>
-      </Box>
+          {isRecording ? <MicOff size={18} aria-hidden="true" /> : <Mic size={18} aria-hidden="true" />}
+        </button>
+      </div>
 
-      {/* Results pill */}
-      {/* Results + Total (exact like design: total is below the pill) */}
-      <Box
-        sx={{
-          flexShrink: 0,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 0.25,
-          lineHeight: 1,
-        }}
-      >
-        {/* Results pill */}
-        <Box
-          sx={{
-            height: 46,
-            width: 110,
-            px: 1.5,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 999,
-            border: `1px solid ${color_secondary}`, // blue border like screenshot
-            background: color_white,               // white background like screenshot
-            fontWeight: 900,
-            color: color_secondary,                // blue text like screenshot
-            flexShrink: 0,
-            whiteSpace: "nowrap",
-            fontVariantNumeric: "tabular-nums",
-          }}
-        >
-          {resultsText}
-        </Box>
+      {/* NIA assistant */}
+      <button type="button" className="dv-btn dv-btn-soft dv-nia" onClick={() => setNiaOpen(true)}>
+        <NiaMark size={30} />
+        Ask NIA
+        {niaUnreadCount > 0 && (
+          <span className="dv-nia-badge" aria-label={`${niaUnreadCount} unread NIA answers`}>
+            {niaUnreadCount > 9 ? "9+" : niaUnreadCount}
+          </span>
+        )}
+      </button>
 
-        <Typography
-          sx={{
-            fontSize: 11,
-            fontWeight: 900,
-            color: color_text_light,
-            letterSpacing: 0.3,
-            whiteSpace: "nowrap",
-            textTransform: "uppercase",
-            lineHeight: 1,
-            mt: "2px",
-            textAlign: "center",
-          }}
-        >
-          {totalRecordsText}
-        </Typography>
-      </Box>
-
-
-
-      {/* Zoom */}
-      <Button
-        onClick={() => onZoomChange(Math.min(28, fontSize + 2))}
-        variant="outlined"
-        sx={{
-          height: 46,
-          px: 2,
-          borderRadius: 999,
-          borderColor: color_border,
-          background: color_white,
-          color: color_black_light,
-          fontWeight: 900,
-          textTransform: "none",
-          flexShrink: 0,
-          "&:hover": { background: color_white_smoke, borderColor: color_secondary },
-        }}
-      >
-        ZOOM IN
-      </Button>
-
-      <Button
-        onClick={() => onZoomChange(Math.max(12, fontSize - 2))}
-        variant="outlined"
-        sx={{
-          height: 46,
-          px: 2,
-          borderRadius: 999,
-          borderColor: color_border,
-          background: color_white,
-          color: color_black_light,
-          fontWeight: 900,
-          textTransform: "none",
-          flexShrink: 0,
-          "&:hover": { background: color_white_smoke, borderColor: color_secondary },
-        }}
-      >
-        ZOOM OUT
-      </Button>
+      {/* Zoom (kept as labelled buttons for older users) */}
+      <button type="button" className="dv-btn" onClick={() => onZoomChange(Math.max(12, fontSize - 2))}>
+        <ZoomOut size={18} aria-hidden="true" />
+        Zoom out
+      </button>
+      <button type="button" className="dv-btn" onClick={() => onZoomChange(Math.min(28, fontSize + 2))}>
+        <ZoomIn size={18} aria-hidden="true" />
+        Zoom in
+      </button>
 
       {/* Download */}
-      <Button
-        onClick={() => void handleDownload()}
-        variant="contained"
-        startIcon={<Download size={18} />}
-        sx={{
-          height: 46,
-          px: 2.25,
-          borderRadius: 999,
-          background: color_secondary,
-          color: color_white,
-          fontWeight: 900,
-          textTransform: "none",
-          flexShrink: 0,
-          "&:hover": { background: color_secondary_dark },
-        }}
-      >
+      <button type="button" className="dv-btn" onClick={() => void handleDownload()}>
+        <Download size={18} aria-hidden="true" />
         Download
-      </Button>
-    </div>
+      </button>
+    </section>
   );
 }

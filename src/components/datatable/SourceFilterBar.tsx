@@ -2,13 +2,13 @@
 
 import React from "react";
 import { Box, Tooltip } from "@mui/material";
-import { SOURCE_COLORS, SOURCE_ACRONYM_DETAILS } from "./sourceColors";
+import { SOURCE_ACRONYM_DETAILS, getSourceDisplayName, getSourceTint } from "./sourceColors";
 import {
-  color_black,
-  color_light_gray,
-  color_secondary,
-  color_text_secondary,
-  color_white,
+  color_dv_primary,
+  color_dv_surface,
+  color_dv_control_border,
+  color_dv_text,
+  color_dv_text_muted,
 } from "../../constants/colors";
 
 type Props = {
@@ -16,8 +16,6 @@ type Props = {
   sourceFilter: string | null;
   setSourceFilter: (v: string | null) => void;
 };
-
-
 
 const getFriendlySourceLabel = (source: string) => {
   const detail = SOURCE_ACRONYM_DETAILS.find(({ acronym }) =>
@@ -33,198 +31,130 @@ const getFriendlySourceLabel = (source: string) => {
   return { expandedLabel, acronym: detail.acronym, fullName: detail.fullName };
 };
 
-export default function SourceFilterBar({
-  availableSources,
-  sourceFilter,
-  setSourceFilter,
-}: Props) {
+const pillBase: React.CSSProperties = {
+  height: 40,
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 8,
+  padding: "0 14px",
+  borderRadius: 999,
+  fontFamily: "inherit",
+  fontSize: 14,
+  fontWeight: 500,
+  cursor: "pointer",
+  whiteSpace: "nowrap",
+  flexShrink: 0,
+};
+
+export default function SourceFilterBar({ availableSources, sourceFilter, setSourceFilter }: Props) {
   if (!availableSources || availableSources.length === 0) return null;
 
+  const allSelected = sourceFilter === null;
+
   return (
-    <>
-      <style>
-        {`
-          .source-filter-scroll {
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-          }
+    <section aria-label="Filter by source" className="dv-source-bar">
+      <span className="dv-source-label">Filter by source</span>
 
-          .source-filter-scroll::-webkit-scrollbar {
-            display: none;
-          }
-        `}
-      </style>
-
-      <div
-        style={{
-          display: "flex",
-          gap: "12px",
-          alignItems: "center",
-          marginBottom: "12px",
-          flexWrap: "wrap",
-          width: "100%",
-        }}
-      >
-        <span
+      <div className="dv-source-pills" data-testid="source-filter-scroll" aria-label="Source filters">
+        <button
+          type="button"
+          className="dv-source-pill"
+          aria-pressed={allSelected}
+          onClick={() => setSourceFilter(null)}
           style={{
-            fontWeight: "bold",
-            flexShrink: 0,
+            ...pillBase,
+            background: allSelected ? color_dv_primary : color_dv_surface,
+            color: allSelected ? "#FFFFFF" : color_dv_text,
+            border: `1px solid ${allSelected ? color_dv_primary : color_dv_control_border}`,
           }}
         >
-          Filter by Source:
-        </span>
+          All sources
+        </button>
 
-        <div
-          style={{
-            position: "relative",
-            flex: "1 1 320px",
-            minWidth: 0,
-            maxWidth: "100%",
-            padding: "4px",
-            borderRadius: "999px",
-            border: "1px solid rgba(0, 75, 156, 0.12)",
-            background: `linear-gradient(180deg, ${color_white} 0%, ${color_light_gray} 100%)`,
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.9)",
-          }}
-        >
-          <div
-            className="source-filter-scroll"
-            data-testid="source-filter-scroll"
-            aria-label="Source filters"
-            style={{
-              display: "flex",
-              gap: "12px",
-              alignItems: "center",
-              overflowX: "auto",
-              overflowY: "hidden",
-              flexWrap: "nowrap",
-              whiteSpace: "nowrap",
-              minWidth: 0,
-              padding: "2px 22px 4px 2px",
-              scrollBehavior: "smooth",
-              WebkitOverflowScrolling: "touch",
-              scrollSnapType: "x proximity",
-              maskImage:
-                "linear-gradient(to right, transparent 0, black 18px, black calc(100% - 28px), transparent 100%)",
-              WebkitMaskImage:
-                "linear-gradient(to right, transparent 0, black 18px, black calc(100% - 28px), transparent 100%)",
-            }}
-          >
+        {availableSources.map((key) => {
+          const selected = sourceFilter === key;
+          const tint = getSourceTint(key);
+          const sourceLabel = getFriendlySourceLabel(key);
+
+          const button = (
             <button
-              onClick={() => setSourceFilter(null)}
+              key={key}
+              type="button"
+              className="dv-source-pill"
+              aria-pressed={selected}
+              aria-label={key}
+              onClick={() => setSourceFilter(key)}
               style={{
-                padding: "4px 14px",
-                borderRadius: "6px",
-                fontSize: "0.8rem",
-                border:
-                  sourceFilter === null
-                    ? `3px solid ${color_black}`
-                    : `1px solid ${color_light_gray}`,
-                background: color_white,
-                color: color_black,
-                cursor: "pointer",
-                fontWeight: 600,
-                boxShadow:
-                  sourceFilter === null
-                    ? "0 0 6px rgba(0,0,0,0.3)"
-                    : "none",
-                flexShrink: 0,
-                whiteSpace: "nowrap",
-                scrollSnapAlign: "start",
+                ...pillBase,
+                background: selected ? color_dv_primary : tint.bg,
+                color: selected ? "#FFFFFF" : tint.fg,
+                border: `1px solid ${selected ? color_dv_primary : "transparent"}`,
               }}
             >
-              All
+              <span
+                aria-hidden="true"
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: "50%",
+                  background: selected ? "#FFFFFF" : tint.dot,
+                  flexShrink: 0,
+                }}
+              />
+              {getSourceDisplayName(key)}
             </button>
+          );
 
-            {availableSources.map((key) => {
-              const sourceLabel = getFriendlySourceLabel(key);
-              const button = (
-                <button
-                  key={key}
-                  onClick={() => setSourceFilter(key)}
-                  style={{
-                    fontSize: "0.7rem",
-                    padding: "4px 14px",
-                    borderRadius: "6px",
-                    border:
-                      sourceFilter === key
-                        ? "3px solid #000"
-                        : "1px solid #ccc",
-                    background: SOURCE_COLORS[key],
-                    color: color_white,
-                    cursor: "pointer",
-                    fontWeight: 600,
-                    boxShadow:
-                      sourceFilter === key
-                        ? "0 0 6px rgba(0,0,0,0.4)"
-                        : "none",
-                    textShadow:
-                      "0 1px 2px rgba(0,0,0,0.3)",
-                    flexShrink: 0,
-                    whiteSpace: "nowrap",
-                    scrollSnapAlign: "start",
-                  }}
-                >
-                  {key}
-                </button>
-              );
+          if (!sourceLabel.acronym) return button;
 
-              if (!sourceLabel.acronym) return button;
-
-              return (
-                <Tooltip
-                  key={key}
-                  arrow
-                  describeChild
-                  title={
-                    <Box sx={{ p: 0.4 }}>
-                      <Box
-                        component="span"
-                        sx={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          px: 0.8,
-                          py: 0.2,
-                          mb: 0.6,
-                          borderRadius: "999px",
-                          backgroundColor: color_secondary,
-                          color: color_white,
-                          fontSize: "0.72rem",
-                          fontWeight: 900,
-                          letterSpacing: "0.03em",
-                        }}
-                      >
-                        {sourceLabel.acronym}
-                      </Box>
-                      <Box sx={{ color: color_text_secondary, fontSize: "0.86rem", fontWeight: 700 }}>
-                        {sourceLabel.expandedLabel}
-                      </Box>
-                    </Box>
-                  }
-                  slotProps={{
-                    tooltip: {
-                      sx: {
-                        backgroundColor: color_white,
-                        border: "1px solid rgba(0, 75, 156, 0.18)",
-                        borderRadius: "10px",
-                        boxShadow: "0 12px 28px rgba(15, 23, 42, 0.18)",
-                        maxWidth: 360,
-                      },
-                    },
-                    arrow: {
-                      sx: {
-                        color: color_white,
-                      },
-                    },
-                  }}
-                >
-                  {button}
-                </Tooltip>
-              );
-            })}
-          </div>
-        </div>
+          return (
+            <Tooltip
+              key={key}
+              arrow
+              describeChild
+              title={
+                <Box sx={{ p: 0.4 }}>
+                  <Box
+                    component="span"
+                    sx={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      px: 0.8,
+                      py: 0.2,
+                      mb: 0.6,
+                      borderRadius: "999px",
+                      backgroundColor: color_dv_primary,
+                      color: "#FFFFFF",
+                      fontSize: "0.75rem",
+                      fontWeight: 600,
+                      letterSpacing: "0.03em",
+                    }}
+                  >
+                    {sourceLabel.acronym}
+                  </Box>
+                  <Box sx={{ color: color_dv_text_muted, fontSize: "0.875rem", fontWeight: 500 }}>
+                    {sourceLabel.expandedLabel}
+                  </Box>
+                </Box>
+              }
+              slotProps={{
+                tooltip: {
+                  sx: {
+                    backgroundColor: "#FFFFFF",
+                    border: "1px solid #E3E6EB",
+                    borderRadius: "10px",
+                    boxShadow: "0 12px 28px rgba(15, 23, 42, 0.14)",
+                    maxWidth: 360,
+                  },
+                },
+                arrow: { sx: { color: "#FFFFFF" } },
+              }}
+            >
+              {button}
+            </Tooltip>
+          );
+        })}
       </div>
-    </>
+    </section>
   );
 }

@@ -10,17 +10,15 @@ import useFetch from "../../../hooks/useFetch";
 import Loader from "../../Loader";
 
 import {
-  color_secondary,
-  color_white,
-  color_white_smoke,
-  color_focus_ring,
-} from "../../../constants/colors";
-import {
   ADD_INFO_DIALOG_ACTIONS_SX,
   ADD_INFO_DIALOG_CONTENT_SX,
   ADD_INFO_DIALOG_HEADER_SX,
   ADD_INFO_DIALOG_PAPER_SX,
+  ADD_INFO_DIALOG_SUBTITLE_SX,
+  ADD_INFO_DIALOG_TITLE_SX,
+  ADD_INFO_GHOST_BUTTON_SX,
   ADD_INFO_PRIMARY_ACTION_BUTTON_SX,
+  ADD_INFO_REQUIRED_COLOR,
   ADD_INFO_SECONDARY_ACTION_BUTTON_SX,
 } from "./styles";
 
@@ -270,7 +268,7 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
 
   const headerText = isNewEntry ? concatFrom(formValues) : concatFrom(formValues) || concatFrom(row);
 
-  const dialogTitle = isNewEntry ? "Add New Student" : `Add Information – ${headerText}`;
+  const dialogTitle = isNewEntry ? "Add new student" : `Add information – ${headerText}`;
 
   useEffect(() => {
     if (editData && !editError) {
@@ -681,48 +679,8 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
     );
   };
 
-  if (configEntry?.loading || !config) return <Loader loading={true} text="Loading configuration..." />;
-  if (!addInfoEnabled) return null;
+  const renderColumn = (c: any, t: string): React.ReactNode => {
 
-
-  return (
-    <>
-      {editLoading && <Loader loading={editLoading} />}
-
-      <Dialog
-        open
-        fullWidth
-        maxWidth={false}
-        PaperProps={{
-          sx: {
-            width: isMobile ? "100%" : "62%",
-            maxHeight: "92vh",
-            ...ADD_INFO_DIALOG_PAPER_SX,
-          },
-        }}
-      >
-        <Box
-          sx={{
-            ...ADD_INFO_DIALOG_HEADER_SX,
-            px: 2.5,
-            py: 1.6,
-          }}
-        >
-          <Typography sx={{ color: color_white, fontWeight: 900, fontSize: "1.15rem" }}>{dialogTitle}</Typography>
-        </Box>
-
-        <DialogContent
-          sx={{
-            ...ADD_INFO_DIALOG_CONTENT_SX,
-            p: 2.5,
-            display: "flex",
-            flexDirection: "column",
-            gap: 1.75,
-          }}
-        >
-          {/* ✅ Render in EXACT config order, only editable items */}
-          {editableColumnsOrdered.map((c: any) => {
-            const t = String(c?.type || "");
             const name = String(c?.name || "");
             const required = isNewEntry && requiredSet.has(name);
 
@@ -832,35 +790,103 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
               );
             }
             return null;
+  };
+
+  if (configEntry?.loading || !config) return <Loader loading={true} text="Loading configuration..." />;
+  if (!addInfoEnabled) return null;
+
+
+  return (
+    <>
+      {editLoading && <Loader loading={editLoading} />}
+
+      <Dialog
+        open
+        fullWidth
+        maxWidth={false}
+        aria-labelledby="add-info-dialog-title"
+        PaperProps={{
+          sx: {
+            width: "100%",
+            maxWidth: 880,
+            maxHeight: isMobile ? "100%" : "92vh",
+            m: isMobile ? 0 : 4,
+            ...ADD_INFO_DIALOG_PAPER_SX,
+            ...(isMobile ? { borderRadius: 0, height: "100%" } : {}),
+          },
+        }}
+      >
+        <Box
+          sx={{
+            ...ADD_INFO_DIALOG_HEADER_SX,
+            px: { xs: 2.5, sm: 4 },
+            pt: 3,
+            pb: 2.5,
+          }}
+        >
+          <Typography id="add-info-dialog-title" component="h2" sx={ADD_INFO_DIALOG_TITLE_SX}>
+            {dialogTitle}
+          </Typography>
+          {isNewEntry && requiredSet.size > 0 ? (
+            <Typography sx={ADD_INFO_DIALOG_SUBTITLE_SX}>
+              Fields marked <span style={{ color: ADD_INFO_REQUIRED_COLOR }}>*</span> are required. Everything else
+              can be added now or later.
+            </Typography>
+          ) : !isNewEntry ? (
+            <Typography sx={ADD_INFO_DIALOG_SUBTITLE_SX}>
+              Change anything that is missing or inaccurate. Your changes are reviewed before they appear.
+            </Typography>
+          ) : null}
+        </Box>
+
+        <DialogContent
+          sx={{
+            ...ADD_INFO_DIALOG_CONTENT_SX,
+            px: { xs: 2.5, sm: 4 },
+            py: 3,
+            display: "grid",
+            gridTemplateColumns: { xs: "minmax(0, 1fr)", sm: "repeat(2, minmax(0, 1fr))" },
+            columnGap: 2,
+            rowGap: 2.5,
+            alignContent: "start",
+          }}
+        >
+          {/* ✅ Render in EXACT config order, only editable items */}
+          {editableColumnsOrdered.map((c: any, colIdx: number) => {
+            const t = String(c?.type || "");
+            // Short single-line fields sit two per row; everything else spans the full width.
+            // Upload cards also sit side by side on wider screens (as in the design).
+            const halfWidth = (isBaseFieldType(t) && (t === "input" || t === "text" || t === "")) || t === "photo_upload" || t === "doc_upload";
+            const spanFull = !halfWidth;
+            const cell = renderColumn(c, t);
+            if (!cell) return null;
+            return (
+              <Box
+                key={String(c?.name || c?.display_name || colIdx)}
+                sx={{ gridColumn: spanFull ? "1 / -1" : "auto", minWidth: 0 }}
+              >
+                {cell}
+              </Box>
+            );
           })}
         </DialogContent>
 
         <DialogActions
           sx={{
             ...ADD_INFO_DIALOG_ACTIONS_SX,
-            p: 2,
+            px: { xs: 2, sm: 4 },
+            py: 2,
             display: "flex",
             justifyContent: "space-between",
+            gap: 1,
+            "& > :not(style) ~ :not(style)": { ml: 0 },
           }}
         >
-          <Button
-            onClick={() => setConfirmResetAll(true)}
-            startIcon={<RestartAlt />}
-            sx={{
-              textTransform: "none",
-              fontWeight: 900,
-              borderRadius: "10px",
-              border: `1px solid ${color_secondary}`,
-              color: color_secondary,
-              background: color_white,
-              "&:hover": { background: color_white_smoke },
-              "&:focus-visible": { outline: `3px solid ${color_focus_ring}`, outlineOffset: "2px" },
-            }}
-          >
-            Reset All
+          <Button onClick={() => setConfirmResetAll(true)} startIcon={<RestartAlt />} sx={ADD_INFO_GHOST_BUTTON_SX}>
+            Reset all
           </Button>
 
-          <Box sx={{ display: "flex", gap: 1.5 }}>
+          <Box sx={{ display: "flex", gap: 1 }}>
             <Button
               onClick={onClose}
               sx={{
@@ -873,10 +899,7 @@ export default function AddInfoForm({ row, file, onClose }: AddInfoFormProps) {
             <Button
               variant="contained"
               onClick={handleSaveClick}
-              sx={{
-                ...ADD_INFO_PRIMARY_ACTION_BUTTON_SX,
-                px: 3,
-              }}
+              sx={ADD_INFO_PRIMARY_ACTION_BUTTON_SX}
             >
               Save
             </Button>

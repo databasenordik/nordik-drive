@@ -164,7 +164,7 @@ function Signup() {
       <AuthWrapper>
         <AuthLogosHeader mb={1.25} />
 
-        <AuthTitle fontSize="1.35rem" mb={1.5} fontWeight={800}>
+        <AuthTitle fontSize={22} mb={1.5}>
           Create a new account
         </AuthTitle>
 
@@ -219,13 +219,13 @@ function Signup() {
               p: 1.5,
               borderRadius: 2,
               border: `1px solid ${color_border}`,
-              backgroundColor: color_background,
+              backgroundColor: "#F7F8FA",
             }}
           >
             <Typography
               sx={{
-                fontSize: "0.95rem",
-                fontWeight: 900,
+                fontSize: 15,
+                fontWeight: 600,
                 color: color_text_primary,
                 lineHeight: 1.35,
               }}
@@ -309,14 +309,16 @@ function Signup() {
                         onClick={() => removeRow(idx)}
                         aria-label="Remove community"
                         sx={{
-                          minWidth: 46,
-                          height: 46,
-                          borderRadius: 2,
+                          minWidth: 44,
+                          height: 44,
+                          mt: 1,
+                          borderRadius: "10px",
                           textTransform: "none",
                           border: `1px solid ${color_border}`,
-                          fontWeight: 900,
-                          color: color_text_primary,
-                          backgroundColor: color_white,
+                          fontWeight: 500,
+                          color: color_text_secondary,
+                          backgroundColor: `${color_white} !important`,
+                          "&:hover": { backgroundColor: "#F7F8FA !important" },
                         }}
                       >
                         ✕
@@ -328,13 +330,16 @@ function Signup() {
                     <Button
                       onClick={addRow}
                       sx={{
+                        height: 40,
                         textTransform: "none",
-                        borderRadius: 2,
-                        fontWeight: 900,
-                        px: 2,
-                        border: `1px solid ${color_secondary}`,
-                        color: color_secondary,
-                        backgroundColor: color_white,
+                        borderRadius: "10px",
+                        fontSize: 14,
+                        fontWeight: 500,
+                        px: 1.75,
+                        border: `1px solid ${color_border}`,
+                        color: `${color_secondary} !important`,
+                        backgroundColor: `${color_white} !important`,
+                        "&:hover": { backgroundColor: "#F7F8FA !important" },
                       }}
                     >
                       + Add another community
@@ -349,8 +354,8 @@ function Signup() {
             }}
           />
 
-          <AuthPrimaryButton type="submit" sx={{ mt: 2, mb: 1.25, height: "auto", py: 1.3 }}>
-            SIGN UP
+          <AuthPrimaryButton type="submit" sx={{ mt: 2, mb: 1.25 }}>
+            Sign up
           </AuthPrimaryButton>
 
           <OrDivider my={1.75} dividerColor={color_border} textColor={color_text_secondary} />

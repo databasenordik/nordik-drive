@@ -2,7 +2,7 @@
 
 import React from "react";
 import { TextField } from "@mui/material";
-import { color_border, color_text_primary, color_white } from "../../../constants/colors";
+import { ADD_INFO_INPUT_SX } from "./styles";
 
 type Props = {
   value: string;
@@ -10,28 +10,23 @@ type Props = {
   multiline?: boolean;
   rows?: number;
   placeholder?: string;
+  disabled?: boolean;
 };
 
-export default function TextFieldRow({ value, onChange, multiline, rows, placeholder }: Props) {
+export default function TextFieldRow({ value, onChange, multiline, rows, placeholder, disabled }: Props) {
   return (
     <TextField
       fullWidth
       value={value || ""}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
+      disabled={disabled}
       multiline={!!multiline}
       rows={multiline ? rows ?? 4 : 1}
-      sx={{
-        background: color_white,
-        borderRadius: "10px",
-        "& .MuiOutlinedInput-notchedOutline": { borderColor: color_border },
-        "& .MuiInputBase-input": {
-          fontSize: "1.05rem",
-          fontWeight: 800,
-          color: color_text_primary,
-          padding: "12px",
-        },
-      }}
+      sx={[
+        ADD_INFO_INPUT_SX as any,
+        multiline ? { "& .MuiInputBase-input": { lineHeight: 1.5 } } : {},
+      ]}
     />
   );
 }

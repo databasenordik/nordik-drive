@@ -16,6 +16,8 @@ import {
   color_text_secondary,
   color_white,
   color_white_smoke,
+  color_danger,
+  color_danger_dark,
 } from "../../../constants/colors";
 
 export type ReviewUiAction = "" | ReviewDecisionStatus | "moreInfo";
@@ -46,9 +48,9 @@ type Props = {
 
 const actionBtnSx = (active: boolean, tone: "approve" | "reject" | "more") => {
   const bg =
-    tone === "approve" ? color_secondary : tone === "reject" ? color_primary : color_white;
+    tone === "approve" ? color_secondary : tone === "reject" ? color_danger : color_white;
   const hover =
-    tone === "approve" ? color_secondary_dark : tone === "reject" ? color_primary : color_white_smoke;
+    tone === "approve" ? color_secondary_dark : tone === "reject" ? color_danger_dark : color_white_smoke;
   const color = tone === "more" ? color_text_primary : color_white;
 
   return {

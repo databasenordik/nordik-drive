@@ -27,7 +27,7 @@ export default function Logout() {
         user: {
           name: `${user.firstname} ${user.lastname}`,
           email: user.email,
-          image: `https://ui-avatars.com/api/?name=${user.firstname}+${user.lastname}&background=004B9C&color=fff&size=64`,
+          image: `https://ui-avatars.com/api/?name=${user.firstname}+${user.lastname}&background=1F3A6E&color=fff&size=64`,
         },
       });
     }

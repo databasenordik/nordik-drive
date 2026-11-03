@@ -18,30 +18,11 @@ import { setSelectedFile } from "../../store/auth/fileSlice";
 import { apiUrl } from "../../config/api";
 
 import {
-  color_primary,
-  color_secondary,
   header_height,
   header_mobile_height,
-
-  // existing
   color_white,
-  color_black,
-  color_text_primary,
-  color_text_secondary,
-
-  // new constants you’ll add
-  color_card_border_soft,
-  color_overlay_white_80,
-  color_public_accent,
-  color_confidential_accent,
-  color_public_badge_bg,
-  color_confidential_badge_bg,
-  color_badge_text_on_dark,
-  color_public_card_bg,
-  color_confidential_card_bg,
-  color_public_icon_bg,
-  color_confidential_icon_bg,
   color_focus_ring,
+  color_overlay_white_80,
 } from "../../constants/colors";
 
 import useFetch from "../../hooks/useFetch";
@@ -55,6 +36,10 @@ interface FileType {
   community_filter: boolean;
   id: number;
 }
+
+// Background photo tint keeps its original blue/burgundy wash.
+const ORIGINAL_BLUE = "#004B9C";
+const ORIGINAL_BURGUNDY = "#A61D33";
 
 const hexToRgba = (hex: string, alpha: number) => {
   const h = hex.replace("#", "");
@@ -141,13 +126,15 @@ const FileList = () => {
   const publicFiles = useMemo(() => allFiles.filter((f) => !f.private), [allFiles]);
   const confidentialFiles = useMemo(() => allFiles.filter((f) => f.private), [allFiles]);
 
+  // Public = soft blue, Confidential = soft burgundy (matches the file-card design)
+  const FILE_TONES = {
+    public: { tint: "#E3ECFB", icon: "#1D4ED8", badgeText: "#1E3A8A" },
+    confidential: { tint: "#FDE4E6", icon: "#A61D33", badgeText: "#A61D33" },
+  } as const;
+
   const renderFileCard = (file: FileType, isConfidential: boolean) => {
     const isSelected = file.filename === selectedFile?.filename;
-
-    const accent = isConfidential ? color_confidential_accent : color_public_accent;
-    const cardBg = isConfidential ? color_confidential_card_bg : color_public_card_bg;
-    const iconBg = isConfidential ? color_confidential_icon_bg : color_public_icon_bg;
-    const badgeBg = isConfidential ? color_confidential_badge_bg : color_public_badge_bg;
+    const tone = isConfidential ? FILE_TONES.confidential : FILE_TONES.public;
 
     const a11yLabel = `${file.filename}. ${isConfidential ? "Confidential" : "Public"}. ${
       isSelected ? "Selected" : "Not selected"
@@ -168,22 +155,20 @@ const FileList = () => {
           }
         }}
         onFocus={() => speak(`${file.filename}, ${isConfidential ? "Confidential" : "Public"}`)}
+        elevation={0}
         sx={{
           cursor: "pointer",
-          borderRadius: 2,
-          borderLeft: `6px solid ${accent}`,
-          backgroundColor: cardBg,
-
-          border: isSelected ? `2px solid ${accent}` : `1px solid ${color_card_border_soft}`,
-          boxShadow: isSelected ? `0 0 0 3px ${hexToRgba(accent, 0.18)}` : "none",
-
-          transition: "border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease",
+          borderRadius: "8px",
+          backgroundColor: color_white,
+          border: "1px solid #E5E9F0",
+          boxShadow: "0 1px 2px rgba(16, 24, 40, 0.04)",
+          outline: isSelected ? "2px dashed #93B4F0" : "none",
+          outlineOffset: "3px",
+          transition: "box-shadow 0.15s ease, border-color 0.15s ease",
           "&:hover": {
-            borderColor: accent,
-            transform: "translateY(-1px)",
+            borderColor: "#D5DCE6",
+            boxShadow: "0 6px 18px rgba(16, 24, 40, 0.10)",
           },
-
-          // Strong keyboard focus ring (not color-only: it’s a visible outline)
           "&:focus-visible": {
             outline: `3px solid ${color_focus_ring}`,
             outlineOffset: "3px",
@@ -199,31 +184,30 @@ const FileList = () => {
             "&:last-child": { pb: 2 },
           }}
         >
-          {/* Icon (already a non-color cue) */}
           <Box
+            aria-hidden="true"
             sx={{
               width: 44,
               height: 44,
-              borderRadius: 1.5,
-              backgroundColor: iconBg,
+              borderRadius: "12px",
+              backgroundColor: tone.tint,
+              color: tone.icon,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: accent,
               flexShrink: 0,
             }}
           >
             {isConfidential ? <LockIcon /> : <FolderIcon />}
           </Box>
 
-          {/* Text */}
           <Box sx={{ flex: 1, minWidth: 0 }}>
             <Typography
               sx={{
-                fontWeight: 700,
+                fontWeight: 500,
                 fontSize: "0.95rem",
                 mb: 0.5,
-                color: color_text_primary,
+                color: "#111827",
                 wordBreak: "break-word",
               }}
             >
@@ -231,24 +215,52 @@ const FileList = () => {
             </Typography>
 
             <Chip
-              label={isConfidential ? "CONFIDENTIAL" : "PUBLIC"}
+              label={isConfidential ? "Confidential" : "Public"}
               size="small"
               sx={{
                 height: 22,
                 fontSize: "0.7rem",
-                fontWeight: 700,
-
-                // High-contrast badge (passes better than white on bright orange/red)
-                backgroundColor: badgeBg,
-                color: color_badge_text_on_dark,
-
-                // Add border to help in low-saturation situations
-                border: `1px solid ${hexToRgba(color_black, 0.12)}`,
+                fontWeight: 600,
+                backgroundColor: tone.tint,
+                color: tone.badgeText,
               }}
             />
           </Box>
         </CardContent>
       </Card>
+    );
+  };
+
+  const sectionTitleSx = {
+    mb: 2.5,
+    fontSize: { xs: "1.6rem", sm: "1.9rem" },
+    fontWeight: 700,
+    color: "#111827",
+    display: "flex",
+    alignItems: "center",
+    gap: 1.5,
+  } as const;
+
+  const SectionIcon = ({ confidential }: { confidential: boolean }) => {
+    const tone = confidential ? FILE_TONES.confidential : FILE_TONES.public;
+    return (
+      <Box
+        aria-hidden="true"
+        sx={{
+          width: 36,
+          height: 36,
+          borderRadius: "10px",
+          backgroundColor: tone.tint,
+          color: tone.icon,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
+          "& svg": { fontSize: 18 },
+        }}
+      >
+        {confidential ? <LockIcon /> : <FolderIcon />}
+      </Box>
     );
   };
 
@@ -266,11 +278,11 @@ const FileList = () => {
           backgroundImage: `
             linear-gradient(
               135deg,
-              ${hexToRgba(color_secondary, 0.1)} 0%,
-              ${hexToRgba(color_primary, 0.06)} 25%,
-              ${hexToRgba(color_secondary, 0.04)} 50%,
-              ${hexToRgba(color_primary, 0.08)} 75%,
-              ${hexToRgba(color_secondary, 0.05)} 100%
+              ${hexToRgba(ORIGINAL_BLUE, 0.1)} 0%,
+              ${hexToRgba(ORIGINAL_BURGUNDY, 0.06)} 25%,
+              ${hexToRgba(ORIGINAL_BLUE, 0.04)} 50%,
+              ${hexToRgba(ORIGINAL_BURGUNDY, 0.08)} 75%,
+              ${hexToRgba(ORIGINAL_BLUE, 0.05)} 100%
             ),
             url("Copy of 2018 Reunion.jpg")
           `,
@@ -311,18 +323,8 @@ const FileList = () => {
           {/* Public Section */}
           {publicFiles.length > 0 && (
             <Box sx={{ mb: 5 }}>
-              <Typography
-                sx={{
-                  mb: 2.5,
-                  fontSize: { xs: "1.6rem", sm: "1.9rem" },
-                  fontWeight: 800,
-                  color: color_text_primary,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                }}
-              >
-                <FolderIcon sx={{ color: color_secondary }} />
+              <Typography component="h1" sx={sectionTitleSx}>
+                <SectionIcon confidential={false} />
                 Community Records
               </Typography>
 
@@ -345,19 +347,14 @@ const FileList = () => {
           {/* Confidential Section */}
           {confidentialFiles.length > 0 && (
             <Box>
-              <Typography
-                sx={{
-                  mb: 2.5,
-                  fontSize: { xs: "1.6rem", sm: "1.9rem" },
-                  fontWeight: 800,
-                  color: color_text_primary,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                }}
-              >
-                <LockIcon sx={{ color: color_secondary }} />
-                Community Records (Confidential)
+              <Typography component="h2" sx={sectionTitleSx}>
+                <SectionIcon confidential />
+                <span>
+                  Community Records{" "}
+                  <Box component="span" sx={{ color: "#6B7280", fontWeight: 600 }}>
+                    (Confidential)
+                  </Box>
+                </span>
               </Typography>
 
               <Box

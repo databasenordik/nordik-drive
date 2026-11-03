@@ -1,6 +1,13 @@
 "use client";
 import styled from 'styled-components'
-import { color_primary, color_secondary, color_secondary_dark } from '../constants/colors'
+import {
+  color_primary,
+  color_secondary,
+  color_white,
+  color_nav_text,
+  color_nav_active,
+  color_nav_hover,
+} from '../constants/colors'
 import { NavLink } from 'react-router-dom';
 
 export const LinkButton = styled.button`
@@ -56,26 +63,39 @@ export const SecondaryButton = styled.button`
 
 
 export const HeaderLink = styled(NavLink)<{ fullWidth?: boolean }>`
-  color: #003366;
-  font-size: 1.1rem;
+  color: ${color_nav_text};
+  font-size: 15px;
   font-weight: 500;
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  gap: 8px;
+  height: 44px; /* minimum touch target */
+  box-sizing: border-box;
+  white-space: nowrap;
   text-decoration: none;
-  padding: 12px 16px;
-  border-radius: 6px;
+  padding: 0 16px;
+  border-radius: 10px;
   width: ${(props) => (props.fullWidth ? "100%" : "auto")};
-  transition: background-color 0.2s ease;
+  transition: background-color 0.15s ease, color 0.15s ease;
 
-  &:hover {
-    background-color: ${color_secondary};
-    color: white;
+  svg {
+    font-size: 18px;
   }
 
-  &.active {
-    background-color: ${color_secondary_dark};
-    color: white;
-    font-weight: 600;
+  &:hover {
+    background-color: ${color_nav_hover};
+    color: ${color_nav_active};
+  }
+
+  &.active,
+  &.active:hover {
+    background-color: ${color_nav_active};
+    color: ${color_white};
+  }
+
+  &:focus-visible {
+    outline: 3px solid ${color_nav_active};
+    outline-offset: 2px;
   }
 
   @media screen and (max-width: 600px){

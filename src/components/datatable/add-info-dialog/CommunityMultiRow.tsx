@@ -1,15 +1,11 @@
 "use client";
 
 import React from "react";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, IconButton, TextField } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 import Autocomplete from "@mui/material/Autocomplete";
-import {
-  color_border,
-  color_secondary,
-  color_text_primary,
-  color_white,
-  color_focus_ring,
-} from "../../../constants/colors";
+import { ADD_INFO_ADD_BUTTON_SX, ADD_INFO_INPUT_SX, ADD_INFO_REMOVE_BUTTON_SX } from "./styles";
 
 type CommunityMultiConfig = {
   placeholder?: string;
@@ -67,7 +63,7 @@ export default function CommunityMultiRow({
   const addLabel = config?.add_label || "+ Add Community";
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
       {safe.map((val, idx) => (
         <Box key={idx} sx={{ display: "flex", gap: 1, alignItems: "stretch" }}>
           <Autocomplete
@@ -100,48 +96,27 @@ export default function CommunityMultiRow({
                     void commit(idx, v);
                   }
                 }}
-                sx={{
-                  background: color_white,
-                  borderRadius: "10px",
-                  "& .MuiOutlinedInput-notchedOutline": { borderColor: color_border },
-                  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: color_focus_ring,
-                    borderWidth: "2px",
-                  },
-                  "& .MuiInputBase-input": {
-                    fontSize: "1.05rem",
-                    fontWeight: 800,
-                    color: color_text_primary,
-                    padding: "12px",
-                  },
-                }}
+                sx={[
+                  ADD_INFO_INPUT_SX as any,
+                  { "& .MuiAutocomplete-inputRoot.MuiOutlinedInput-root": { py: 0, pl: 0 } },
+                  { "& .MuiAutocomplete-inputRoot .MuiAutocomplete-input": { padding: "10px 12px" } },
+                ]}
               />
             )}
           />
 
-          <Button
+          <IconButton
             disabled={disabled}
+            aria-label="Remove community"
             onClick={() => {
               if (disabled) return;
               const next = safe.filter((_, i) => i !== idx);
               onChange(next.length ? next : [""]);
             }}
-            sx={{
-              minWidth: 54,
-              borderRadius: "10px",
-              textTransform: "none",
-              fontWeight: 900,
-              border: `1px solid ${color_border}`,
-              color: color_text_primary,
-              background: color_white,
-              "&:focus-visible": {
-                outline: `3px solid ${color_focus_ring}`,
-                outlineOffset: "2px",
-              },
-            }}
+            sx={ADD_INFO_REMOVE_BUTTON_SX}
           >
-            ✕
-          </Button>
+            <CloseIcon sx={{ fontSize: 18 }} />
+          </IconButton>
         </Box>
       ))}
 
@@ -152,20 +127,11 @@ export default function CommunityMultiRow({
             if (disabled) return;
             onChange([...safe, ""]);
           }}
-          sx={{
-            textTransform: "none",
-            fontWeight: 900,
-            borderRadius: "10px",
-            border: `1px dashed ${color_secondary}`,
-            color: color_secondary,
-            background: color_white,
-            "&:focus-visible": {
-              outline: `3px solid ${color_focus_ring}`,
-              outlineOffset: "2px",
-            },
-          }}
+          aria-label={addLabel}
+          startIcon={<AddIcon sx={{ fontSize: "16px !important" }} />}
+          sx={ADD_INFO_ADD_BUTTON_SX}
         >
-          {addLabel}
+          {addLabel.replace(/^\+\s*/, "").replace(/\bCommunity\b/, "community")}
         </Button>
       </Box>
     </Box>

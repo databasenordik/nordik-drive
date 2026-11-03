@@ -22,6 +22,7 @@ import {
   color_text_lighter,
   color_text_primary,
   color_white,
+  color_danger,
 } from "../../../constants/colors";
 
 type Props = {
@@ -40,8 +41,8 @@ const RevokeAccessSection: React.FC<Props> = ({
   return (
     <Box sx={{ px: 3, pt: 2.25, pb: 2.5 }}>
       <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
-        <DeleteIcon sx={{ fontSize: 18, color: `${color_primary}` }} />
-        <Typography sx={{ fontWeight: 800, fontSize: 12, color: `${color_primary}`, letterSpacing: "0.06em" }}>
+        <DeleteIcon sx={{ fontSize: 18, color: `${color_danger}` }} />
+        <Typography sx={{ fontWeight: 800, fontSize: 12, color: `${color_danger}`, letterSpacing: "0.06em" }}>
           REVOKE ACCESS
         </Typography>
       </Stack>
@@ -125,7 +126,7 @@ const RevokeAccessSection: React.FC<Props> = ({
                       size="small"
                       onClick={() => openRevokeModalFn(a.id)}
                       sx={{
-                        color: `${color_primary}`,
+                        color: `${color_danger}`,
                         borderRadius: 2,
                       }}
                     >

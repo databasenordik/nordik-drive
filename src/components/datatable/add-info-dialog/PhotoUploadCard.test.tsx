@@ -115,7 +115,7 @@ describe("PhotoUploadCard", () => {
             expect(createObjectURLMock).toHaveBeenCalledWith(fileA);
         });
 
-        fireEvent.click(screen.getByRole("button", { name: "✕" }));
+        fireEvent.click(screen.getByRole("button", { name: /remove photo/i }));
 
         expect(props.onRemove).toHaveBeenCalledTimes(1);
         expect(props.onRemove).toHaveBeenCalledWith(0);
@@ -242,7 +242,7 @@ describe("PhotoUploadCard", () => {
         });
 
         const selectBtn = screen.getByRole("button", { name: /select photos/i });
-        const removeBtn = screen.getByRole("button", { name: "✕" });
+        const removeBtn = screen.getByRole("button", { name: /remove photo/i });
         const commentField = screen.getByLabelText("Comment");
         const checkbox = screen.getByRole("checkbox");
 

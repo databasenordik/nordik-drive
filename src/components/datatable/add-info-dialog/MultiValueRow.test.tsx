@@ -19,8 +19,8 @@ describe("MultiValueRow", () => {
     expect(inputs).toHaveLength(1);
     expect(inputs[0]).toHaveValue("");
 
-    expect(screen.getByRole("button", { name: "✕" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /\+ add value/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^remove/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /add value/i })).toBeInTheDocument();
   });
 
   it("renders all provided values", () => {
@@ -67,7 +67,7 @@ describe("MultiValueRow", () => {
       />
     );
 
-    const removeButtons = screen.getAllByRole("button", { name: "✕" });
+    const removeButtons = screen.getAllByRole("button", { name: /^remove/i });
     fireEvent.click(removeButtons[1]);
 
     expect(onChange).toHaveBeenCalledTimes(1);
@@ -85,7 +85,7 @@ describe("MultiValueRow", () => {
       />
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "✕" }));
+    fireEvent.click(screen.getByRole("button", { name: /^remove/i }));
 
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith([""]);
@@ -102,7 +102,7 @@ describe("MultiValueRow", () => {
       />
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /\+ add item/i }));
+    fireEvent.click(screen.getByRole("button", { name: /add item/i }));
 
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith(["Alpha", ""]);
@@ -119,7 +119,7 @@ describe("MultiValueRow", () => {
       />
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /\+ add item/i }));
+    fireEvent.click(screen.getByRole("button", { name: /add item/i }));
 
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith(["", ""]);

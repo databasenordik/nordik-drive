@@ -84,8 +84,8 @@ describe("FileList", () => {
 
     render(<FileList />);
 
-    expect(await screen.findByText(/Community Records$/i)).toBeInTheDocument();
-    expect(screen.getByText(/Community Records \(Confidential\)/i)).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: /^Community Records$/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Community Records \(Confidential\)/i })).toBeInTheDocument();
 
     expect(screen.getByRole("button", { name: /PublicFile\.pdf/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /SecretFile\.pdf/i })).toBeInTheDocument();

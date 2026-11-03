@@ -90,12 +90,16 @@ jest.mock("react-redux", () => ({
     useSelector: jest.fn(),
 }));
 
-jest.mock("./sourceColors", () => ({
-    SOURCE_COLORS: {
-        SRC1: "#123456",
-        SRC2: "#654321",
-    },
-}));
+jest.mock("./sourceColors", () => {
+    const actual = jest.requireActual("./sourceColors");
+    return {
+        ...actual,
+        SOURCE_COLORS: {
+            SRC1: "#123456",
+            SRC2: "#654321",
+        },
+    };
+});
 
 jest.mock("../../store/auth/fileSlice", () => ({
     setCommunities: (...args: any[]) => mockSetCommunities(...args),
@@ -677,7 +681,7 @@ describe("DataGrid", () => {
         expect(screen.getByTestId("available-sources")).toHaveTextContent("SRC1|SRC2");
     });
 
-    it("shows community mode when enabled, dispatches unique sorted communities, and locks body scroll", async () => {
+    it("shows community mode when enabled with the filter collapsed, and dispatches unique sorted communities", async () => {
         mockFileState.selectedFile.community_filter = true;
 
         renderComponent();
@@ -685,7 +689,9 @@ describe("DataGrid", () => {
         expect(screen.getByTestId("community-action-bar")).toBeInTheDocument();
         expect(screen.queryByTestId("source-filter-bar")).not.toBeInTheDocument();
         expect(screen.getByTestId("community-filter-panel")).toHaveTextContent("enabled:true");
-        expect(document.body.style.overflow).toBe("hidden");
+        expect(screen.getByTestId("community-filter-panel")).toHaveTextContent("open:false");
+        expect(screen.getByTestId("community-open")).toHaveTextContent("false");
+        expect(document.body.style.overflow).toBe("");
 
         await waitFor(() => {
             expect(mockSetCommunities).toHaveBeenCalledWith({
@@ -700,7 +706,7 @@ describe("DataGrid", () => {
         );
     });
 
-    it("toggles community filter closed and restores body overflow", async () => {
+    it("opens the community filter (locking body scroll) and closes it again", async () => {
         mockFileState.selectedFile.community_filter = true;
 
         renderComponent();
@@ -708,9 +714,15 @@ describe("DataGrid", () => {
         fireEvent.click(screen.getByText("toggle-community-filter"));
 
         await waitFor(() => {
+            expect(screen.getByTestId("community-open")).toHaveTextContent("true");
+        });
+        expect(document.body.style.overflow).toBe("hidden");
+
+        fireEvent.click(screen.getByText("toggle-community-filter"));
+
+        await waitFor(() => {
             expect(screen.getByTestId("community-open")).toHaveTextContent("false");
         });
-
         expect(document.body.style.overflow).toBe("");
     });
 
@@ -839,7 +851,7 @@ describe("DataGrid", () => {
         expect(listeningText).not.toBeVisible();
     });
 
-    it("default text cell highlights search text and applies source background color", () => {
+    it("default text cell highlights search text and shows the source as a tinted pill", () => {
         renderComponent();
 
         act(() => {
@@ -850,7 +862,10 @@ describe("DataGrid", () => {
 
         const highlighted = within(ui.container).getByText("Ali");
         expect(highlighted).toHaveStyle("background-color: yellow");
-        expect(ui.container.firstChild).toHaveStyle("background-color: #123456");
+        const pill = ui.container.querySelector(".dv-source-value") as HTMLElement;
+        expect(pill).toBeInTheDocument();
+        expect(pill).toHaveAttribute("title", "SRC1");
+        expect(pill.querySelector(".dv-source-dot")).toBeInTheDocument();
     });
 
     it("single website URL cell opens a website in a new tab", () => {

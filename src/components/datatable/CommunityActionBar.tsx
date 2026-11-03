@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ChevronUp, ChevronDown, Plus, Info } from "lucide-react";
+import { ChevronUp, ChevronDown, SlidersHorizontal, UserPlus } from "lucide-react";
 
 type Props = {
   filterOpen: boolean;
@@ -9,35 +9,33 @@ type Props = {
   onAddStudent: () => void;
 };
 
+/* "Hide filter" + "Add student" row. */
 export default function CommunityActionBar({ filterOpen, setFilterOpen, onAddStudent }: Props) {
   return (
     <div className="community-action-bar">
       <button
-        className="community-action-btn"
+        className="dv-btn"
         onClick={() => setFilterOpen((p) => !p)}
         aria-expanded={filterOpen}
         type="button"
       >
-        {filterOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        <SlidersHorizontal size={18} aria-hidden="true" />
         {filterOpen ? "Hide filter" : "Show filter"}
-      </button>
-
-      <button
-        className="community-action-btn"
-        type="button"
-        onClick={onAddStudent}
-      >
-        <Plus size={16} />
-        Add Student
-      </button>
-
-      <div className="community-action-msg" role="note">
-        <Info size={18} />
-        <span className="community-action-msg-text">
-          Aanii, Boozhoo, Wachéye, Sago! We welcome you to add and/or edit any information in the
-          Shingwauk student list that is missing or inaccurate. Chi-miigwetch!
+        <span className="dv-btn-trailing" aria-hidden="true">
+          {filterOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
         </span>
-      </div>
+      </button>
+
+      <button className="dv-btn dv-btn-primary" type="button" onClick={onAddStudent}>
+        <UserPlus size={18} aria-hidden="true" />
+        Add student
+      </button>
+
+      <p className="community-action-msg" role="note">
+        <span className="community-action-msg-greeting">Aanii, Boozhoo, Wachéye, Sago!</span>{" "}
+        We welcome you to add and/or edit any information in the Shingwauk student list that is missing or
+        inaccurate. Chi-miigwetch!
+      </p>
     </div>
   );
 }
