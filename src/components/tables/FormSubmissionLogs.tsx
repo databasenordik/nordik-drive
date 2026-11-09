@@ -25,7 +25,6 @@ import {
   color_white_smoke,
   color_text_primary,
   color_text_secondary,
-  color_background,
 } from "../../constants/colors";
 
 import ConfigFormModal from "../datatable/config-form-modal.tsx/ConfigFormModal";
@@ -326,14 +325,12 @@ export default function FormSubmissionLogs() {
       <Box
         sx={{
           height: "100%",
-          p: { xs: 1, md: 1.25 },
           boxSizing: "border-box",
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
           minHeight: 0,
           gap: 1,
-          background: color_background,
         }}
       >
         {!showFilters ? (
@@ -353,7 +350,7 @@ export default function FormSubmissionLogs() {
                 label={`Search (${filterSummary.length} filter${filterSummary.length === 1 ? "" : "s"})`}
                 size="small"
                 sx={{
-                  fontWeight: 900,
+                  fontWeight: 600,
                   borderRadius: "10px",
                   background: color_white,
                   border: `1px solid ${color_border}`,
@@ -367,7 +364,7 @@ export default function FormSubmissionLogs() {
                   label={item}
                   size="small"
                   sx={{
-                    fontWeight: 800,
+                    fontWeight: 600,
                     borderRadius: "10px",
                     background: color_white,
                     border: `1px solid ${color_border}`,
@@ -381,7 +378,7 @@ export default function FormSubmissionLogs() {
                   label={`+${filterSummary.length - 2} more`}
                   size="small"
                   sx={{
-                    fontWeight: 800,
+                    fontWeight: 400,
                     borderRadius: "10px",
                     background: color_white,
                     border: `1px solid ${color_border}`,
@@ -396,7 +393,7 @@ export default function FormSubmissionLogs() {
               onClick={() => setShowFilters(true)}
               sx={{
                 textTransform: "none",
-                fontWeight: 900,
+                fontWeight: 600,
                 borderRadius: "10px",
                 background: color_secondary,
                 "&:hover": { background: color_secondary_dark },
@@ -553,7 +550,7 @@ export default function FormSubmissionLogs() {
                 onClick={handleApply}
                 sx={{
                   textTransform: "none",
-                  fontWeight: 900,
+                  fontWeight: 600,
                   borderRadius: "10px",
                   background: color_secondary,
                   minWidth: 100,
@@ -567,7 +564,7 @@ export default function FormSubmissionLogs() {
                 onClick={handleReset}
                 sx={{
                   textTransform: "none",
-                  fontWeight: 900,
+                  fontWeight: 600,
                   borderRadius: "10px",
                   backgroundColor: color_white,
                   border: `1px solid ${color_border}`,

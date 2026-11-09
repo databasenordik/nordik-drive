@@ -29,7 +29,6 @@ import SupportRequestsTable, { SupportRequestsTableColumn } from "../../componen
 import { apiUrl } from "../../config/api";
 import { apiRequest } from "../../hooks/useFetch";
 import {
-  color_background,
   color_border,
   color_secondary,
   color_secondary_dark,
@@ -215,7 +214,7 @@ export default function AdminSupportRequests() {
         cellSx: { minWidth: 220, whiteSpace: "normal" },
         render: (request) => (
           <Box>
-            <Typography sx={{ fontWeight: 900, color: color_text_primary, lineHeight: 1.35 }}>
+            <Typography sx={{ fontWeight: 600, color: color_text_primary, lineHeight: 1.35 }}>
               {request.subject}
             </Typography>
             <Typography sx={{ mt: 0.4, fontSize: "0.76rem", color: color_text_light }}>
@@ -230,7 +229,7 @@ export default function AdminSupportRequests() {
         cellSx: { minWidth: 220, whiteSpace: "normal" },
         render: (request) => (
           <Box>
-            <Typography sx={{ fontWeight: 800, color: color_text_primary }}>
+            <Typography sx={{ fontWeight: 600, color: color_text_primary }}>
               {request.requester_name}
             </Typography>
             <Typography sx={{ mt: 0.35, fontSize: "0.76rem", color: color_text_secondary }}>
@@ -262,7 +261,7 @@ export default function AdminSupportRequests() {
             <Chip
               label={status.label}
               size="small"
-              sx={{ borderRadius: "999px", fontWeight: 900, ...status.sx }}
+              sx={{ borderRadius: "999px", fontWeight: 600, ...status.sx }}
             />
           );
         },
@@ -274,7 +273,7 @@ export default function AdminSupportRequests() {
         render: (request) =>
           request.assigned_team ? (
             <Box>
-              <Typography sx={{ fontWeight: 800, color: color_text_primary }}>
+              <Typography sx={{ fontWeight: 600, color: color_text_primary }}>
                 {request.assigned_team}
               </Typography>
               <Typography sx={{ mt: 0.35, fontSize: "0.76rem", color: color_text_light }}>
@@ -317,7 +316,7 @@ export default function AdminSupportRequests() {
               ...REQUEST_HUB_PRIMARY_BUTTON_SX,
               minWidth: 96,
               borderRadius: "10px",
-              fontWeight: 950,
+              fontWeight: 600,
               px: 2.1,
               py: 0.75,
             }}
@@ -335,10 +334,8 @@ export default function AdminSupportRequests() {
       sx={{
         height: "100%",
         minHeight: 0,
-        p: { xs: 1, md: 1.25 },
         boxSizing: "border-box",
         overflow: "auto",
-        background: color_background,
       }}
     >
       <Loader loading={loading || saving} />
@@ -430,19 +427,19 @@ export default function AdminSupportRequests() {
                     flex: 1,
                     minWidth: 0,
                     p: 1.45,
-                    borderRadius: "18px",
+                    borderRadius: "12px",
                     justifyContent: "flex-start",
                     textAlign: "left",
                     textTransform: "none",
                     background: selected
-                      ? `linear-gradient(180deg, ${color_secondary} 0%, ${color_secondary_dark} 100%)`
+                      ? color_secondary
                       : color_white,
                     border: `1px solid ${selected ? color_secondary_dark : color_border}`,
                     color: selected ? color_white : color_text_primary,
                     boxShadow: selected ? "0 12px 24px rgba(0, 58, 122, 0.22)" : "none",
                     "&:hover": {
                       background: selected
-                        ? `linear-gradient(180deg, ${color_secondary} 0%, ${color_secondary_dark} 100%)`
+                        ? color_secondary
                         : color_white,
                     },
                   }}
@@ -452,7 +449,7 @@ export default function AdminSupportRequests() {
                       mr: 1.15,
                       width: 42,
                       height: 42,
-                      borderRadius: "14px",
+                      borderRadius: "12px",
                       display: "grid",
                       placeItems: "center",
                       color: selected ? color_white : chip.accent,
@@ -465,7 +462,7 @@ export default function AdminSupportRequests() {
                   <Box sx={{ minWidth: 0, flex: 1 }}>
                     <Typography
                       sx={{
-                        fontWeight: 950,
+                        fontWeight: 600,
                         fontSize: 15,
                         color: selected ? color_white : color_text_primary,
                       }}
@@ -475,7 +472,7 @@ export default function AdminSupportRequests() {
                     <Typography
                       sx={{
                         mt: 0.2,
-                        fontWeight: 700,
+                        fontWeight: 600,
                         fontSize: 12.5,
                         color: selected ? "rgba(255,255,255,0.84)" : color_text_light,
                       }}
@@ -495,7 +492,7 @@ export default function AdminSupportRequests() {
                   >
                     <Typography
                       sx={{
-                        fontWeight: 950,
+                        fontWeight: 600,
                         fontSize: 12.5,
                         color: selected ? color_white : color_text_primary,
                       }}
@@ -527,7 +524,7 @@ export default function AdminSupportRequests() {
                   height: 40,
                   borderRadius: "12px",
                   background: color_white,
-                  fontWeight: 700,
+                  fontWeight: 600,
                   fontSize: 13.5,
                 },
                 "& .MuiOutlinedInput-notchedOutline": { borderColor: color_border },
@@ -589,11 +586,11 @@ export default function AdminSupportRequests() {
                 py: 1.75,
               }}
             >
-              <Typography sx={{ color: color_white, fontWeight: 950, fontSize: 18 }}>
+              <Typography sx={{ color: color_white, fontWeight: 600, fontSize: 18 }}>
                 Manage Support Request #{activeRequest.id}
               </Typography>
               <Typography
-                sx={{ color: "rgba(255,255,255,0.84)", fontWeight: 700, fontSize: 13, mt: 0.3 }}
+                sx={{ color: "rgba(255,255,255,0.84)", fontWeight: 600, fontSize: 13, mt: 0.3 }}
               >
                 Updating the request emails the user. Forwarding also emails the selected team.
               </Typography>
@@ -606,17 +603,17 @@ export default function AdminSupportRequests() {
               }}
             >
               <Stack spacing={1.55}>
-                <Box sx={{ ...REQUEST_HUB_PANEL_SX, p: 1.35, borderRadius: "15px" }}>
-                  <Typography sx={{ color: color_text_primary, fontWeight: 950, fontSize: 16 }}>
+                <Box sx={{ ...REQUEST_HUB_PANEL_SX, p: 1.35, borderRadius: "12px" }}>
+                  <Typography sx={{ color: color_text_primary, fontWeight: 600, fontSize: 16 }}>
                     {activeRequest.subject}
                   </Typography>
                   <Typography
-                    sx={{ color: color_text_secondary, fontWeight: 800, fontSize: 13.2, mt: 0.35 }}
+                    sx={{ color: color_text_secondary, fontWeight: 400, fontSize: 13.2, mt: 0.35 }}
                   >
                     {activeRequest.requester_name} - {activeRequest.requester_email}
                   </Typography>
                   <Typography
-                    sx={{ color: color_text_light, fontWeight: 700, fontSize: 12.6, mt: 0.25 }}
+                    sx={{ color: color_text_light, fontWeight: 400, fontSize: 12.6, mt: 0.25 }}
                   >
                     {getSupportRequestTypeLabel(activeRequest.request_type)} - Submitted{" "}
                     {formatSupportRequestDate(activeRequest.created_at)}
@@ -624,7 +621,7 @@ export default function AdminSupportRequests() {
                   <Typography
                     sx={{
                       color: color_text_secondary,
-                      fontWeight: 700,
+                      fontWeight: 400,
                       fontSize: 13.5,
                       mt: 1.05,
                       lineHeight: 1.65,
@@ -676,7 +673,7 @@ export default function AdminSupportRequests() {
                   sx={{
                     ...REQUEST_HUB_PANEL_SX,
                     p: 1.4,
-                    borderRadius: "16px",
+                    borderRadius: "12px",
                     border: `1px solid ${draft.status === SUPPORT_REQUEST_STATUS.IN_PROGRESS ? color_secondary : color_border}`,
                     background:
                       draft.status === SUPPORT_REQUEST_STATUS.IN_PROGRESS
@@ -684,13 +681,13 @@ export default function AdminSupportRequests() {
                         : color_white,
                   }}
                 >
-                  <Typography sx={{ color: color_text_primary, fontWeight: 950, fontSize: 14.5 }}>
+                  <Typography sx={{ color: color_text_primary, fontWeight: 600, fontSize: 14.5 }}>
                     Forward to associated team
                   </Typography>
                   <Typography
                     sx={{
                       color: color_text_light,
-                      fontWeight: 700,
+                      fontWeight: 400,
                       fontSize: 12.8,
                       mt: 0.25,
                       mb: 1.15,
@@ -752,7 +749,7 @@ export default function AdminSupportRequests() {
                 variant="contained"
                 sx={{
                   ...REQUEST_HUB_PRIMARY_BUTTON_SX,
-                  fontWeight: 950,
+                  fontWeight: 600,
                   borderRadius: "10px",
                 }}
               >

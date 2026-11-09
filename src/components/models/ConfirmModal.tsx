@@ -89,7 +89,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         id="confirmation-dialog-title"
         sx={{
           textAlign: "center",
-          fontWeight: 800,
+          fontWeight: 600,
           fontSize: isMobile ? "1.1rem" : "1.25rem",
           lineHeight: 1.2,
           p: 0,
@@ -149,7 +149,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
             height: 40,
             borderRadius: 2,
             textTransform: "none",
-            fontWeight: 700,
+            fontWeight: 600,
             boxShadow: "none",
             backgroundColor: `${color_secondary}`, // deep blue like screenshot
             "&:hover": {

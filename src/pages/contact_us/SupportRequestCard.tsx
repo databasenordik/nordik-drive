@@ -216,7 +216,7 @@ const SupportRequestCard = ({
         sx={{
           ...REQUEST_HUB_HEADER_SX,
           borderBottom: "none",
-          borderRadius: "20px",
+          borderRadius: "12px",
           p: { xs: 1.7, md: 1.9 },
         }}
       >
@@ -265,12 +265,12 @@ const SupportRequestCard = ({
           sx={{
             px: 1.6,
             py: 1.2,
-            borderRadius: "14px",
+            borderRadius: "12px",
             border: `1px solid rgba(22, 101, 52, 0.16)`,
             background: "rgba(240, 253, 244, 0.95)",
           }}
         >
-          <Typography sx={{ color: "#166534", fontWeight: 800, fontSize: 14.2 }}>
+          <Typography sx={{ color: "#166534", fontWeight: 600, fontSize: 14.2 }}>
             {successMessage}
           </Typography>
         </Box>
@@ -347,7 +347,7 @@ const SupportRequestCard = ({
             sx={{
               ...REQUEST_HUB_PANEL_SX,
               p: 1.6,
-              borderRadius: "18px",
+              borderRadius: "12px",
               background: color_white_smoke,
               border: `1px dashed ${errors.screenshot ? color_error : color_border}`,
             }}
@@ -362,7 +362,7 @@ const SupportRequestCard = ({
                 <Typography
                   sx={{
                     fontSize: 14.5,
-                    fontWeight: 900,
+                    fontWeight: 600,
                     color: color_text_primary,
                     mb: 0.35,
                   }}
@@ -374,7 +374,7 @@ const SupportRequestCard = ({
                     fontSize: 13.2,
                     lineHeight: 1.6,
                     color: color_text_secondary,
-                    fontWeight: 700,
+                    fontWeight: 400,
                   }}
                 >
                   Attach a PNG, JPG, or WEBP image up to 5 MB if it helps explain the issue.
@@ -387,7 +387,7 @@ const SupportRequestCard = ({
                 sx={{
                   ...REQUEST_HUB_SECONDARY_BUTTON_SX,
                   alignSelf: { xs: "stretch", sm: "center" },
-                  borderRadius: "14px",
+                  borderRadius: "12px",
                   px: 2.1,
                   py: 1,
                   color: color_secondary,
@@ -405,7 +405,7 @@ const SupportRequestCard = ({
             </Stack>
 
             {errors.screenshot ? (
-              <Typography role="alert" sx={{ color: color_error, fontWeight: 700, mt: 1.1 }}>
+              <Typography role="alert" sx={{ color: color_error, fontWeight: 600, mt: 1.1 }}>
                 {errors.screenshot}
               </Typography>
             ) : null}
@@ -416,7 +416,7 @@ const SupportRequestCard = ({
                   ...REQUEST_HUB_PANEL_SX,
                   mt: 1.4,
                   p: 1.2,
-                  borderRadius: "16px",
+                  borderRadius: "12px",
                   display: "flex",
                   gap: 1.2,
                   alignItems: "center",
@@ -442,7 +442,7 @@ const SupportRequestCard = ({
                   <Typography
                     sx={{
                       fontSize: 14,
-                      fontWeight: 900,
+                      fontWeight: 600,
                       color: color_text_primary,
                       overflow: "hidden",
                       textOverflow: "ellipsis",
@@ -456,7 +456,7 @@ const SupportRequestCard = ({
                       mt: 0.3,
                       fontSize: 12.8,
                       color: color_text_secondary,
-                      fontWeight: 700,
+                      fontWeight: 400,
                     }}
                   >
                     {formatFileSize(selectedScreenshot.size)}
@@ -484,7 +484,7 @@ const SupportRequestCard = ({
               sx={{
                 fontSize: 12.8,
                 color: color_text_secondary,
-                fontWeight: 700,
+                fontWeight: 400,
               }}
             >
               We'll send your request to the support team and follow up by email.
@@ -504,7 +504,7 @@ const SupportRequestCard = ({
                 ...REQUEST_HUB_PRIMARY_BUTTON_SX,
                 alignSelf: { xs: "stretch", sm: "center" },
                 minWidth: 170,
-                borderRadius: "14px",
+                borderRadius: "12px",
                 px: 2.4,
                 py: 1.05,
                 fontSize: 15.2,
@@ -529,10 +529,10 @@ const SupportRequestCard = ({
   return (
     <Card
       sx={{
-        borderRadius: "22px",
+        borderRadius: "12px",
         background: color_white,
         border: `1px solid ${color_border}`,
-        boxShadow: "0 16px 30px rgba(0,0,0,0.08)",
+        boxShadow: "none",
       }}
     >
       <CardContent sx={{ px: { xs: 2.2, md: 2.6 }, py: { xs: 2.3, md: 2.7 } }}>

@@ -10,7 +10,8 @@ export const GridWrapper = styled.div`
         font-weight: bold;
     }
     
-    @media screen and (max-width: 600px){
+    /* Header bar is 56px up to 900px wide (menu drawer) */
+    @media screen and (max-width: 900px){
         margin-top: ${header_mobile_height};
         height: calc(100vh - ${header_mobile_height});
     }

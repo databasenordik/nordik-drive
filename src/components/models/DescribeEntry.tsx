@@ -177,7 +177,7 @@ function DescribeDialog({
                         }}
                     >
                         <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                            <div style={{ fontSize: 16, fontWeight: 900, letterSpacing: 0.2 }}>
+                            <div style={{ fontSize: 16, fontWeight: 600, letterSpacing: 0.2 }}>
                                 {title || DESCRIBE_DIALOG_FALLBACK_TITLE}
                             </div>
                         </div>
@@ -230,7 +230,7 @@ function DescribeDialog({
                                     background: color_white,
                                     cursor: "pointer",
                                     fontSize: 18,
-                                    fontWeight: 900,
+                                    fontWeight: 600,
                                     color: color_black,
                                 }}
                                 aria-label={DESCRIBE_DIALOG_CLOSE_LABEL}
@@ -274,7 +274,7 @@ function DescribeDialog({
                                 fontSize: 12,
                                 color: color_black_light,
                                 opacity: 0.8,
-                                fontWeight: 700,
+                                fontWeight: 600,
                             }}
                         >
                             {DESCRIBE_DIALOG_AUDIO_TIP}
@@ -295,7 +295,7 @@ function DescribeDialog({
                             <div
                                 style={{
                                     fontSize: 15,
-                                    fontWeight: 900,
+                                    fontWeight: 600,
                                     color: color_black,
                                 }}
                             >
@@ -338,7 +338,7 @@ function DescribeDialog({
                                     cursor: disableDocuments ? "not-allowed" : "pointer",
                                     minWidth: 220,
                                     fontSize: "14px",
-                                    fontWeight: 700,
+                                    fontWeight: 600,
                                     opacity: disableDocuments ? 0.6 : 1,
                                     alignSelf: "flex-start",
                                 }}

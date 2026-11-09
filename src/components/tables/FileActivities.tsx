@@ -33,7 +33,6 @@ import {
 } from "./FileActivitiesShared";
 
 import {
-  color_background,
   color_secondary,
   color_secondary_dark,
   color_text_primary,
@@ -261,7 +260,7 @@ export default function FileActivities({
   // styles
   const primaryBtnSx = {
     textTransform: "none",
-    fontWeight: 900,
+    fontWeight: 600,
     borderRadius: "10px",
     background: color_secondary,
     color: color_white,
@@ -270,7 +269,7 @@ export default function FileActivities({
 
   const secondaryBtnSx = {
     textTransform: "none",
-    fontWeight: 900,
+    fontWeight: 600,
     borderRadius: "10px",
     backgroundColor: color_white,
     border: `1px solid ${color_secondary_dark}`,
@@ -505,15 +504,13 @@ export default function FileActivities({
 
       <Box
         sx={{
-          height: "100%",
-          p: { xs: 1, md: 1.25 },
+          height: { xs: "auto", md: "100%" },
           boxSizing: "border-box",
-          overflow: "hidden",
+          overflow: { xs: "visible", md: "hidden" },
           display: "flex",
           flexDirection: "column",
           minHeight: 0,
-          gap: 1,
-          background: color_background,
+          gap: 1.5,
         }}
       >
         <FileActivitiesTopBar

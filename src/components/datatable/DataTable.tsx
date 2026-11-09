@@ -222,6 +222,8 @@ export default function DataGrid({ rowData }: DataGridProps) {
   // Community filter starts collapsed; "Show filter" opens it.
   const [filterOpen, setFilterOpen] = useState(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  // The header bar is 56px tall up to 900px wide (menu drawer), 72px above that.
+  const [isCompactHeader, setIsCompactHeader] = useState<boolean>(false);
   const [overlayTop, setOverlayTop] = useState<number>(0);
   const [overlayHeight, setOverlayHeight] = useState<number>(360);
 
@@ -565,7 +567,10 @@ export default function DataGrid({ rowData }: DataGridProps) {
   }, []);
 
   useEffect(() => {
-    const onResize = () => setIsMobile(window.innerWidth <= 768);
+    const onResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      setIsCompactHeader(window.innerWidth <= 900);
+    };
     onResize();
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
@@ -1082,7 +1087,7 @@ export default function DataGrid({ rowData }: DataGridProps) {
         className="dv-page"
         style={{
           boxSizing: "border-box",
-          height: `calc(100vh - ${isMobile ? header_mobile_height : header_height})`,
+          height: `calc(100vh - ${isCompactHeader ? header_mobile_height : header_height})`,
           overflow: "hidden",
           position: "relative",
         }}

@@ -182,7 +182,7 @@ const ReplaceFileModal: React.FC<ReplaceFileModalProps> = ({ open, onClose, file
             backgroundColor: "#FFFFFF",
           }}
         >
-          <Typography sx={{ fontWeight: 800, color: COLORS.title, fontSize: "1rem" }}>
+          <Typography sx={{ fontWeight: 600, color: COLORS.title, fontSize: "1rem" }}>
             {title}
           </Typography>
 
@@ -222,7 +222,7 @@ const ReplaceFileModal: React.FC<ReplaceFileModalProps> = ({ open, onClose, file
                 <CloudUploadOutlinedIcon sx={{ color: color_secondary }} />
               </IconCircle>
 
-              <Typography sx={{ fontWeight: 800, color: COLORS.title, fontSize: "0.9rem" }}>
+              <Typography sx={{ fontWeight: 600, color: COLORS.title, fontSize: "0.9rem" }}>
                 {selectedFile ? selectedFile.name : "Click or drag a file here"}
               </Typography>
 
@@ -250,8 +250,8 @@ const ReplaceFileModal: React.FC<ReplaceFileModalProps> = ({ open, onClose, file
             disabled={loading}
             variant="outlined"
             sx={{
-              textTransform: "uppercase",
-              fontWeight: 800,
+              textTransform: "none",
+              fontWeight: 600,
               fontSize: "0.72rem",
               borderRadius: 1,
               px: 2,
@@ -281,8 +281,8 @@ const ReplaceFileModal: React.FC<ReplaceFileModalProps> = ({ open, onClose, file
             variant="contained"
             disableElevation
             sx={{
-              textTransform: "uppercase",
-              fontWeight: 900,
+              textTransform: "none",
+              fontWeight: 600,
               fontSize: "0.72rem",
               borderRadius: 1,
               px: 2.2,

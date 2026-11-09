@@ -189,7 +189,7 @@ const MyRequestDetailsModal: React.FC<MyRequestDetailsModalProps> = ({ open, req
         backgroundColor: "rgba(39,174,96,0.14)",
         color: "#166534",
         border: "1px solid rgba(39,174,96,0.28)",
-        fontWeight: 900,
+        fontWeight: 600,
       };
     }
 
@@ -198,7 +198,7 @@ const MyRequestDetailsModal: React.FC<MyRequestDetailsModalProps> = ({ open, req
         backgroundColor: "rgba(166,29,51,0.12)",
         color: "#A61D33",
         border: "1px solid rgba(166,29,51,0.24)",
-        fontWeight: 900,
+        fontWeight: 600,
       };
     }
 
@@ -206,14 +206,14 @@ const MyRequestDetailsModal: React.FC<MyRequestDetailsModalProps> = ({ open, req
       backgroundColor: color_background,
       color: color_text_light,
       border: `1px solid ${color_border}`,
-      fontWeight: 900,
+      fontWeight: 600,
     };
   };
 
    // read-only button styles (no red)
   const viewBtnSx = {
     textTransform: "none",
-    fontWeight: 900,
+    fontWeight: 600,
     backgroundColor: color_white,
     color: color_text_secondary,
     borderColor: color_border,
@@ -227,7 +227,7 @@ const MyRequestDetailsModal: React.FC<MyRequestDetailsModalProps> = ({ open, req
 
   const closeBtnSx = {
     textTransform: "none",
-    fontWeight: 900,
+    fontWeight: 600,
     backgroundColor: color_white,
     color: color_text_secondary,
     border: `1px solid ${color_border}`,
@@ -305,13 +305,13 @@ const MyRequestDetailsModal: React.FC<MyRequestDetailsModalProps> = ({ open, req
                   backgroundColor: color_background,
                   color: color_text_secondary,
                   border: `1px solid ${color_border}`,
-                  fontWeight: 900,
+                  fontWeight: 400,
                 }}
               />
             </Box>
 
             {(request.details || []).length === 0 ? (
-              <Typography sx={{ color: color_text_light, fontWeight: 800 }}>
+              <Typography sx={{ color: color_text_light, fontWeight: 400 }}>
                 No field changes in this request.
               </Typography>
             ) : (
@@ -341,10 +341,10 @@ const MyRequestDetailsModal: React.FC<MyRequestDetailsModalProps> = ({ open, req
                         }}
                       >
                         <Box sx={{ minWidth: 0 }}>
-                          <Typography sx={{ color: color_text_light, fontSize: "0.74rem", fontWeight: 900 }}>
+                          <Typography sx={{ color: color_text_light, fontSize: "0.74rem", fontWeight: 400 }}>
                             Row {d.row_id}
                           </Typography>
-                          <Typography sx={{ color: color_text_primary, fontWeight: 900, lineHeight: 1.35 }}>
+                          <Typography sx={{ color: color_text_primary, fontWeight: 600, lineHeight: 1.35 }}>
                             {d.field_name}
                           </Typography>
                         </Box>
@@ -374,10 +374,10 @@ const MyRequestDetailsModal: React.FC<MyRequestDetailsModalProps> = ({ open, req
                             minWidth: 0,
                           }}
                         >
-                          <Typography sx={{ color: color_text_light, fontSize: "0.72rem", fontWeight: 900, mb: 0.4 }}>
+                          <Typography sx={{ color: color_text_light, fontSize: "0.72rem", fontWeight: 400, mb: 0.4 }}>
                             Old Value
                           </Typography>
-                          <Typography sx={{ color: color_text_secondary, fontWeight: 800, wordBreak: "break-word" }}>
+                          <Typography sx={{ color: color_text_secondary, fontWeight: 400, wordBreak: "break-word" }}>
                             {d.old_value ? d.old_value : <i>(empty)</i>}
                           </Typography>
                         </Box>
@@ -391,10 +391,10 @@ const MyRequestDetailsModal: React.FC<MyRequestDetailsModalProps> = ({ open, req
                             minWidth: 0,
                           }}
                         >
-                          <Typography sx={{ color: color_text_light, fontSize: "0.72rem", fontWeight: 900, mb: 0.4 }}>
+                          <Typography sx={{ color: color_text_light, fontSize: "0.72rem", fontWeight: 400, mb: 0.4 }}>
                             New Value
                           </Typography>
-                          <Typography sx={{ color: color_text_primary, fontWeight: 900, wordBreak: "break-word" }}>
+                          <Typography sx={{ color: color_text_primary, fontWeight: 600, wordBreak: "break-word" }}>
                             {d.new_value ? d.new_value : <i>(empty)</i>}
                           </Typography>
                         </Box>
@@ -408,15 +408,15 @@ const MyRequestDetailsModal: React.FC<MyRequestDetailsModalProps> = ({ open, req
                           backgroundColor: color_white,
                         }}
                       >
-                        <Typography sx={{ color: color_text_light, fontSize: "0.72rem", fontWeight: 900, mb: 0.4 }}>
+                        <Typography sx={{ color: color_text_light, fontSize: "0.72rem", fontWeight: 400, mb: 0.4 }}>
                           Reviewer Comment
                         </Typography>
                         {reviewerComment ? (
-                          <Typography sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word", color: color_text_secondary, fontWeight: 800 }}>
+                          <Typography sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word", color: color_text_secondary, fontWeight: 400 }}>
                             {reviewerComment}
                           </Typography>
                         ) : (
-                          <Typography sx={{ color: color_text_light, fontStyle: "italic", fontWeight: 700 }}>
+                          <Typography sx={{ color: color_text_light, fontStyle: "italic", fontWeight: 400 }}>
                             No review comment
                           </Typography>
                         )}
@@ -444,16 +444,16 @@ const MyRequestDetailsModal: React.FC<MyRequestDetailsModalProps> = ({ open, req
               </Box>
 
               {stories.length === 0 ? (
-                <Typography sx={{ color: color_text_light, fontWeight: 800 }}>No story content was found for this request.</Typography>
+                <Typography sx={{ color: color_text_light, fontWeight: 400 }}>No story content was found for this request.</Typography>
               ) : (
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                   {stories.map((story: any, index: number) => (
                     <Box key={story.id || index} sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 1, border: `1px solid ${color_border}`, borderRadius: 1.5, p: 1.25 }}>
                       <Box>
-                        <Typography sx={{ color: color_text_primary, fontWeight: 900 }}>
+                        <Typography sx={{ color: color_text_primary, fontWeight: 600 }}>
                           {story.file_name || (story.story_type === "text" ? "Written story" : story.story_type === "video" ? "Video story" : "Story document")}
                         </Typography>
-                        <Typography sx={{ color: color_text_light, fontSize: "0.78rem", fontWeight: 700 }}>
+                        <Typography sx={{ color: color_text_light, fontSize: "0.78rem", fontWeight: 400 }}>
                           {String(story.story_type || "document").toUpperCase()} • {getReviewStatusUppercaseLabel(normalizeReviewStatus(story.status))}
                         </Typography>
                       </Box>
@@ -531,7 +531,7 @@ const MyRequestDetailsModal: React.FC<MyRequestDetailsModalProps> = ({ open, req
                   whiteSpace: "pre-wrap",
                   wordBreak: "break-word",
                   color: color_text_secondary,
-                  fontWeight: 700,
+                  fontWeight: 400,
                   lineHeight: 1.5,
                 }}
               >

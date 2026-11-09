@@ -207,7 +207,6 @@ const MyRequests: React.FC = () => {
       sx={{
         height: "100%",
         minHeight: 0,
-        p: { xs: 1, md: 1.25 },
         boxSizing: "border-box",
         overflow: "hidden",
         backgroundColor: color_background,
@@ -245,15 +244,15 @@ const MyRequests: React.FC = () => {
           }}
         >
           <Box>
-            <Typography sx={{ fontWeight: 900, color: color_secondary, fontSize: "1rem" }}>
+            <Typography sx={{ fontWeight: 600, color: color_text_primary, fontSize: 17 }}>
               My Requests
             </Typography>
             <Typography
               sx={{
                 mt: 0.25,
                 color: color_text_light,
-                fontSize: "0.8rem",
-                fontWeight: 700,
+                fontSize: 14,
+                fontWeight: 400,
               }}
             >
               Check status, approvals, and uploaded files.
@@ -269,23 +268,22 @@ const MyRequests: React.FC = () => {
             sx={{
               width: { xs: "100%", sm: 360 },
               "& .MuiOutlinedInput-root": {
-                height: 36,
+                height: 44,
                 borderRadius: "10px",
-                backgroundColor: color_background,
-                fontSize: "0.82rem",
+                backgroundColor: color_white,
+                fontSize: 15,
                 color: color_text_primary,
               },
               "& .MuiOutlinedInput-notchedOutline": { borderColor: color_border },
               "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
                 borderColor: color_secondary,
-                borderWidth: 2,
               },
               "& input::placeholder": { color: color_text_light, opacity: 1 },
             }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <SearchIcon sx={{ fontSize: 18, color: color_text_light }} />
+                  <SearchIcon sx={{ fontSize: 20, color: color_text_light }} />
                 </InputAdornment>
               ),
             }}
@@ -303,7 +301,7 @@ const MyRequests: React.FC = () => {
             sx={{
               ml: 0,
               color: color_text_primary,
-              "& .MuiFormControlLabel-label": { fontWeight: 800, fontSize: "0.82rem" },
+              "& .MuiFormControlLabel-label": { fontWeight: 500, fontSize: 15 },
             }}
           />
         </Box>
@@ -337,14 +335,14 @@ const MyRequests: React.FC = () => {
                 backgroundColor: color_white,
               }}
             >
-              <Typography sx={{ fontWeight: 900, color: color_text_primary }}>
+              <Typography sx={{ fontWeight: 600, color: color_text_primary }}>
                 No {selectedStatus} requests found.
               </Typography>
               <Typography
                 sx={{
                   mt: 0.5,
                   color: color_text_light,
-                  fontWeight: 700,
+                  fontWeight: 400,
                   fontSize: "0.85rem",
                 }}
               >
@@ -357,7 +355,7 @@ const MyRequests: React.FC = () => {
                 sx={{
                   mt: 1.5,
                   textTransform: "none",
-                  fontWeight: 900,
+                  fontWeight: 600,
                   borderRadius: 2,
                   backgroundColor: color_secondary,
                   "&:hover": { backgroundColor: color_secondary_dark },
@@ -394,7 +392,7 @@ const MyRequests: React.FC = () => {
                       <Box sx={{ minWidth: 0 }}>
                         <Typography
                           sx={{
-                            fontWeight: 900,
+                            fontWeight: 600,
                             color: color_text_primary,
                             fontSize: "0.95rem",
                             overflow: "hidden",
@@ -411,7 +409,7 @@ const MyRequests: React.FC = () => {
                           sx={{
                             mt: 0.25,
                             color: color_text_light,
-                            fontWeight: 800,
+                            fontWeight: 400,
                             fontSize: "0.8rem",
                           }}
                         >
@@ -430,7 +428,7 @@ const MyRequests: React.FC = () => {
                           sx={{
                             height: 24,
                             fontSize: "0.72rem",
-                            fontWeight: 900,
+                            fontWeight: 600,
                             borderRadius: "999px",
                             ...chip.sx,
                           }}
@@ -441,7 +439,7 @@ const MyRequests: React.FC = () => {
                           variant="contained"
                           sx={{
                             textTransform: "none",
-                            fontWeight: 900,
+                            fontWeight: 600,
                             borderRadius: 2,
                             backgroundColor: color_secondary,
                             "&:hover": { backgroundColor: color_secondary_dark },

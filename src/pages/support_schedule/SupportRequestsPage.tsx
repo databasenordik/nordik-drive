@@ -64,7 +64,7 @@ function DetailItem({ label, children }: { label: string; children: React.ReactN
       <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 0.25 }}>
         {label}
       </Typography>
-      <Typography variant="body2" fontWeight={700}>{children}</Typography>
+      <Typography variant="body2" fontWeight={600}>{children}</Typography>
     </Box>
   );
 }
@@ -157,12 +157,12 @@ export default function SupportRequestsPage({ embedded = false }: SupportRequest
   return (
     <Container
       maxWidth={embedded ? false : "lg"}
-      sx={embedded ? { height: "100%", overflowY: "auto", py: 2 } : { pt: { xs: 11, md: 14 }, pb: 6 }}
+      sx={embedded ? { height: "100%", overflowY: "auto", py: 0.5, px: { xs: 0, sm: 0 } } : { pt: { xs: 11, md: 14 }, pb: 6 }}
     >
       <Stack spacing={2.5}>
         <Stack direction={{ xs: "column", sm: "row" }} justifyContent="space-between" alignItems={{ sm: "center" }} spacing={1.5}>
           <Box>
-            <Typography variant="h4" fontWeight={900}>Support Calls</Typography>
+            <Typography variant="h4" fontWeight={600}>Support Calls</Typography>
             <Typography color="text.secondary">{requestSummary}</Typography>
           </Box>
           <Stack direction="row" spacing={1}>
@@ -178,23 +178,23 @@ export default function SupportRequestsPage({ embedded = false }: SupportRequest
             <Table size="small" aria-label="Support-call requests" sx={{ minWidth: 920 }}>
               <TableHead>
                 <TableRow sx={{ backgroundColor: "action.hover" }}>
-                  <TableCell sx={{ fontWeight: 800 }}>Support needed</TableCell>
-                  <TableCell sx={{ fontWeight: 800 }}>Requested by</TableCell>
-                  <TableCell sx={{ fontWeight: 800 }}>Scheduled time</TableCell>
-                  <TableCell sx={{ fontWeight: 800 }}>Support person</TableCell>
-                  <TableCell sx={{ fontWeight: 800 }}>Status</TableCell>
-                  <TableCell align="right" sx={{ fontWeight: 800 }}>Actions</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Support needed</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Requested by</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Scheduled time</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Support person</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
+                  <TableCell align="right" sx={{ fontWeight: 600 }}>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {requests.map((request) => (
                   <TableRow key={request.id} hover>
                     <TableCell sx={{ maxWidth: 260 }}>
-                      <Typography variant="body2" fontWeight={800} noWrap>{request.subject}</Typography>
+                      <Typography variant="body2" fontWeight={600} noWrap>{request.subject}</Typography>
                       <Typography variant="caption" color="text.secondary">{requestTypeLabel(request)}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2" fontWeight={700}>{personName(request.requested_by)}</Typography>
+                      <Typography variant="body2" fontWeight={600}>{personName(request.requested_by)}</Typography>
                       {request.requested_by?.email && <Typography variant="caption" color="text.secondary">{request.requested_by.email}</Typography>}
                     </TableCell>
                     <TableCell>{displayDateTime(request.call?.scheduled_start_time || request.preferred_start_time)}</TableCell>
@@ -230,7 +230,7 @@ export default function SupportRequestsPage({ embedded = false }: SupportRequest
           <DialogTitle>
             <Stack direction={{ xs: "column", sm: "row" }} justifyContent="space-between" alignItems={{ sm: "center" }} spacing={1}>
               <Box>
-                <Typography variant="h6" fontWeight={850}>{detailsTarget.subject}</Typography>
+                <Typography variant="h6" fontWeight={600}>{detailsTarget.subject}</Typography>
                 <Typography variant="body2" color="text.secondary">Support-call details</Typography>
               </Box>
               <Chip size="small" label={statusLabel(detailsTarget.status)} color={statusColor(detailsTarget.status)} sx={{ textTransform: "capitalize", alignSelf: { xs: "flex-start", sm: "center" } }} />
@@ -248,7 +248,7 @@ export default function SupportRequestsPage({ embedded = false }: SupportRequest
                 <DetailItem label="Request route">{requestTypeLabel(detailsTarget)}</DetailItem>
               </Box>
               <Box>
-                <Typography variant="subtitle2" fontWeight={800} sx={{ mb: 0.75 }}>What support is needed</Typography>
+                <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 0.75 }}>What support is needed</Typography>
                 <Paper variant="outlined" sx={{ p: 1.5, whiteSpace: "pre-wrap", color: "text.secondary" }}>
                   {detailsTarget.description || "No additional details were provided."}
                 </Paper>
@@ -261,7 +261,7 @@ export default function SupportRequestsPage({ embedded = false }: SupportRequest
                 <Alert severity="success" icon={false}>
                   <Stack direction={{ xs: "column", sm: "row" }} justifyContent="space-between" alignItems={{ sm: "center" }} spacing={1}>
                     <Box>
-                      <Typography variant="body2" fontWeight={800}>Zoom meeting is ready</Typography>
+                      <Typography variant="body2" fontWeight={600}>Zoom meeting is ready</Typography>
                       {detailsTarget.call.zoom_passcode && <Typography variant="caption">Passcode: {detailsTarget.call.zoom_passcode}</Typography>}
                     </Box>
                     <Button component="a" href={detailsTarget.call.zoom_join_url} target="_blank" rel="noopener noreferrer" variant="outlined" size="small">Open participant link</Button>

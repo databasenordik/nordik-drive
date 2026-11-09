@@ -1,6 +1,11 @@
 import { Button } from '@mui/material';
 import styled from 'styled-components';
-import { color_primary, color_secondary } from '../../constants/colors';
+import {
+  color_secondary,
+  color_dv_control_border,
+  color_dv_header_bg,
+  color_dv_text_faint,
+} from '../../constants/colors';
 import React from 'react';
 
 import { Slot } from "@radix-ui/react-slot"
@@ -8,18 +13,37 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "../../lib/helper"
 
+// Outline buttons in the navy design: white, thin grey border, navy text.
 export const FileButton = styled(Button)`
-    border: 2px solid ${color_secondary} !important;
+    border: 1px solid ${color_dv_control_border} !important;
     color: ${color_secondary} !important;
     background: white !important;
-    font-weight: bold;
+    font-weight: 500;
+    border-radius: 10px !important;
+    min-height: 40px;
+    box-shadow: none !important;
+
+    &:hover {
+        background: ${color_dv_header_bg} !important;
+    }
+
+    &.Mui-disabled {
+        color: ${color_dv_text_faint} !important;
+    }
 `
 
 export const CloseButton = styled(Button)`
-    border: 2px solid ${color_secondary} !important;
+    border: 1px solid ${color_dv_control_border} !important;
     color: ${color_secondary} !important;
     background: white !important;
-    font-weight: bold;
+    font-weight: 500;
+    border-radius: 10px !important;
+    min-height: 40px;
+    box-shadow: none !important;
+
+    &:hover {
+        background: ${color_dv_header_bg} !important;
+    }
 `
 
 const buttonVariants = cva(

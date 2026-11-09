@@ -178,7 +178,7 @@ export default function ActivityVisualization({
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <Typography sx={{ ...ACTIVITY_HEADER_TITLE_SX, fontSize: 14, fontWeight: 800 }}>
+          <Typography sx={{ ...ACTIVITY_HEADER_TITLE_SX, fontSize: 14, fontWeight: 600 }}>
             {ACTIVITY_VISUALIZATION_TITLE}
           </Typography>
           <Typography
@@ -354,7 +354,7 @@ export default function ActivityVisualization({
                         data-testid={`activity-viz-row-label-${index}`}
                         title={item.label}
                         sx={{
-                          fontWeight: 800,
+                          fontWeight: 600,
                           fontSize: 12,
                           color: color_text_primary,
                           overflow: "hidden",
@@ -373,7 +373,7 @@ export default function ActivityVisualization({
                           sx={{
                             height: 22,
                             borderRadius: "8px",
-                            fontWeight: 900,
+                            fontWeight: 600,
                             backgroundColor: color_background,
                             border: `1px solid ${color_border}`,
                             color: color_text_primary,
@@ -386,7 +386,7 @@ export default function ActivityVisualization({
                           sx={{
                             height: 22,
                             borderRadius: "8px",
-                            fontWeight: 900,
+                            fontWeight: 600,
                             backgroundColor: color_background,
                             border: `1px solid ${color_border}`,
                             color: color_text_primary,

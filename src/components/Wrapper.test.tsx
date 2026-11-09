@@ -39,7 +39,7 @@ describe("Wrappers styled-components", () => {
     expect(css).toContain(`height:calc(100vh-${header_height})`);
     expect(css).toContain(`margin-top:${header_height}`);
     expect(css).toContain(".ag-header-cell-label{font-weight:bold;}");
-    expect(css).toContain("@mediascreenand(max-width:600px){");
+    expect(css).toContain("@mediascreenand(max-width:900px){");
     expect(css).toContain(`margin-top:${header_mobile_height}`);
     expect(css).toContain(`height:calc(100vh-${header_mobile_height})`);
   });

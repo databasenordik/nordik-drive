@@ -11,11 +11,9 @@ import {
   ListItemText,
   Typography,
   Divider,
-  Chip,
 } from "@mui/material";
 
 import CloseIcon from "@mui/icons-material/Close";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import FolderIcon from "@mui/icons-material/Folder";
 import DescriptionIcon from "@mui/icons-material/Description";
@@ -23,14 +21,14 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import { header_height, header_mobile_height } from "../../constants/colors";
 import {
   color_border,
-  color_secondary_dark,
   color_white,
-  color_white_smoke,
-  color_text_primary,
   color_text_secondary,
   color_text_light,
   color_background,
 } from "../../constants/colors";
+
+import SectionSwitcher from "../shared/SectionSwitcher";
+import { UI_NAV_ITEM_SX } from "../../theme/ui";
 
 // existing components (unchanged)
 import UserActivity from "./UserActivity";
@@ -55,9 +53,9 @@ export default function AdminActivitiesHub() {
 
   const items = useMemo(
     () => [
-      { key: "GENERAL" as const, label: "General logs", icon: <ViewListIcon /> },
-      { key: "FILE_MANAGEMENT" as const, label: "File management logs", icon: <FolderIcon /> },
-      { key: "FORM_SUBMISSION" as const, label: "Form submission logs", icon: <DescriptionIcon /> },
+      { key: "GENERAL" as const, label: "General logs", short: "General", icon: <ViewListIcon /> },
+      { key: "FILE_MANAGEMENT" as const, label: "File management logs", short: "File management", icon: <FolderIcon /> },
+      { key: "FORM_SUBMISSION" as const, label: "Form submission logs", short: "Form submissions", icon: <DescriptionIcon /> },
     ],
     []
   );
@@ -72,42 +70,29 @@ export default function AdminActivitiesHub() {
       sx={{
         height: `calc(100vh - ${topOffset})`,
         mt: topOffset,
-        p: { xs: 1.5, md: 2 },
+        px: { xs: 1.5, sm: 2, md: 3 },
+        py: { xs: 1.5, md: 2 },
         boxSizing: "border-box",
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
-        gap: 1.25,
+        gap: 1.5,
         position: "relative",
         background: color_background,
+        width: "100%",
+        maxWidth: 1440,
+        mx: "auto",
       }}
     >
-      {/* Always-visible "reopen navigation" icon (already correctly below header because container is offset) */}
-      <IconButton
-        onClick={() => setNavOpen(true)}
-        aria-label="Open navigation"
-        title="Open navigation"
-        sx={{
-          position: "absolute",
-          right: { xs: 10, md: 14 },
-          top: { xs: 10, md: 14 },
-          zIndex: 2,
-          width: 44,
-          height: 44,
-          borderRadius: "12px",
-          background: color_white,
-          border: `1px solid ${color_border}`,
-          color: color_text_primary,
-          boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
-          "&:hover": { background: color_white_smoke },
-        }}
-      >
-        <MoreVertIcon />
-      </IconButton>
+      <SectionSwitcher
+        page="User activity"
+        current={items.find((it) => it.key === view)?.short ?? ""}
+        onOpen={() => setNavOpen(true)}
+      />
 
       {/* Body */}
-      <Box sx={{ flex: 1, minHeight: 0, overflow: "hidden" }}>
-        <Box sx={{ height: "100%", overflow: "hidden" }}>
+      <Box sx={{ flex: 1, minHeight: 0, overflow: { xs: "auto", md: "hidden" } }}>
+        <Box sx={{ height: "100%", overflow: { xs: "visible", md: "hidden" } }}>
           {view === "GENERAL" && <UserActivity />}
           {view === "FILE_MANAGEMENT" && (
             <AdminFileEditRequests
@@ -136,10 +121,11 @@ export default function AdminActivitiesHub() {
           "& .MuiDrawer-paper": {
             top: topOffset,
             height: `calc(100vh - ${topOffset})`,
-            width: 360,
+            width: { xs: "88vw", sm: 340 },
+            maxWidth: 340,
             background: color_white,
             borderLeft: `1px solid ${color_border}`,
-            boxShadow: "0 10px 24px rgba(0,0,0,0.18)",
+            boxShadow: "none",
           },
         }}
       >
@@ -155,11 +141,11 @@ export default function AdminActivitiesHub() {
               background: color_white,
             }}
           >
-            <Typography sx={{ fontWeight: 1000, letterSpacing: 1, color: color_text_light, fontSize: 12 }}>
+            <Typography sx={{ fontWeight: 500, letterSpacing: "0.06em", color: color_text_light, fontSize: 12 }}>
               NAVIGATION
             </Typography>
 
-            <IconButton onClick={() => setNavOpen(false)} aria-label="Close navigation">
+            <IconButton onClick={() => setNavOpen(false)} aria-label="Close navigation" sx={{ width: 44, height: 44 }}>
               <CloseIcon />
             </IconButton>
           </Box>
@@ -167,8 +153,8 @@ export default function AdminActivitiesHub() {
           <Divider sx={{ borderColor: color_border }} />
 
           {/* Items */}
-          <Box sx={{ p: 1.75 }}>
-            <List sx={{ display: "flex", flexDirection: "column", gap: 1.2 }}>
+          <Box sx={{ p: 1.5 }}>
+            <List sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
               {items.map((it) => {
                 const selected = view === it.key;
                 return (
@@ -176,35 +162,11 @@ export default function AdminActivitiesHub() {
                     key={it.key}
                     selected={selected}
                     onClick={() => handleSelect(it.key)}
-                    sx={{
-                      borderRadius: "16px",
-                      py: 1.35,
-
-                      border: `1px solid ${color_border}`,
-                      backgroundColor: color_white,
-                      color: color_text_primary,
-
-                      "&:hover": { backgroundColor: color_white_smoke },
-
-                      "& .MuiListItemIcon-root": { color: color_text_secondary },
-                      "& .MuiListItemText-primary": { color: "inherit", fontWeight: 950 },
-
-                      "&.Mui-selected": {
-                        backgroundColor: color_secondary_dark,
-                        borderColor: color_secondary_dark,
-                        color: color_white,
-                      },
-                      "&.Mui-selected:hover": {
-                        backgroundColor: color_secondary_dark,
-                      },
-                      "&.Mui-selected .MuiListItemIcon-root": {
-                        color: color_white,
-                      },
-                    }}
+                    sx={UI_NAV_ITEM_SX}
                   >
                     <ListItemIcon
                       sx={{
-                        minWidth: 44,
+                        minWidth: 40,
                         color: selected ? color_white : color_text_secondary,
                       }}
                     >
@@ -214,7 +176,7 @@ export default function AdminActivitiesHub() {
                     <ListItemText
                       primary={it.label}
                       primaryTypographyProps={{
-                        fontWeight: 950,
+                        fontWeight: 500,
                         fontSize: 15,
                       }}
                     />

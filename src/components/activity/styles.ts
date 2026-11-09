@@ -20,7 +20,7 @@ export const ACTIVITY_ROOT_SX: ActivitySx = {
 };
 
 export const ACTIVITY_HEADER_TITLE_SX: ActivitySx = {
-  fontWeight: 900,
+  fontWeight: 600,
   color: color_text_primary,
 };
 
@@ -29,7 +29,7 @@ export const ACTIVITY_HEADER_SUBTITLE_SX: ActivitySx = {
 };
 
 export const ACTIVITY_SECTION_TITLE_SX: ActivitySx = {
-  fontWeight: 900,
+  fontWeight: 600,
   color: color_text_primary,
 };
 
@@ -44,7 +44,7 @@ export const ACTIVITY_EMPTY_TEXT_SX: ActivitySx = {
 };
 
 export const ACTIVITY_EVENTS_CHIP_SX: ActivitySx = {
-  fontWeight: 900,
+  fontWeight: 600,
   height: 26,
   borderRadius: "10px",
   backgroundColor: color_background,
@@ -53,7 +53,7 @@ export const ACTIVITY_EVENTS_CHIP_SX: ActivitySx = {
 };
 
 export const FILE_ACTIVITY_PENDING_CHIP_SX: ActivitySx = {
-  fontWeight: 900,
+  fontWeight: 600,
   borderRadius: "10px",
   background: color_white,
   border: `1px solid ${color_secondary}`,

@@ -80,7 +80,7 @@ export function PhotoGrid({
       return {
         height: 26,
         fontSize: "0.78rem",
-        fontWeight: 900,
+        fontWeight: 600,
         borderRadius: "999px",
         color: color_success,
         backgroundColor: "rgba(39, 174, 96, 0.12)",
@@ -91,7 +91,7 @@ export function PhotoGrid({
       return {
         height: 26,
         fontSize: "0.78rem",
-        fontWeight: 900,
+        fontWeight: 600,
         borderRadius: "999px",
         color: color_primary,
         backgroundColor: "rgba(166, 29, 51, 0.10)",
@@ -101,7 +101,7 @@ export function PhotoGrid({
     return {
       height: 26,
       fontSize: "0.78rem",
-      fontWeight: 900,
+      fontWeight: 600,
       borderRadius: "999px",
       color: color_text_secondary,
       backgroundColor: "rgba(148, 163, 184, 0.18)",
@@ -114,7 +114,7 @@ export function PhotoGrid({
 
   const defaultApproveBtnSx = {
     textTransform: "none",
-    fontWeight: 900,
+    fontWeight: 600,
     borderRadius: "10px",
     background: color_secondary,
     color: color_white,
@@ -123,7 +123,7 @@ export function PhotoGrid({
 
   const defaultRejectBtnSx = {
     textTransform: "none",
-    fontWeight: 900,
+    fontWeight: 600,
     borderRadius: "10px",
     background: color_primary,
     color: color_white,
@@ -132,7 +132,7 @@ export function PhotoGrid({
 
   const defaultPrimaryBtnSx = {
     textTransform: "none",
-    fontWeight: 900,
+    fontWeight: 600,
     borderRadius: "10px",
     background: color_secondary,
     color: color_white,
@@ -175,7 +175,7 @@ export function PhotoGrid({
           <Typography
             sx={{
               fontSize: "0.78rem",
-              fontWeight: 900,
+              fontWeight: 400,
               color: color_text_light,
               mb: 0.35,
               letterSpacing: "0.02em",
@@ -188,7 +188,7 @@ export function PhotoGrid({
           <Typography
             sx={{
               fontSize: "0.98rem",
-              fontWeight: 800,
+              fontWeight: 600,
               color: hasValue ? color_text_primary : color_text_secondary,
               lineHeight: 1.45,
               wordBreak: "break-word",
@@ -208,7 +208,7 @@ export function PhotoGrid({
 
   return (
     <Box>
-      <Typography variant="h6" sx={{ mt: 3, mb: 1, fontWeight: 900, color: color_text_primary }}>
+      <Typography variant="h6" sx={{ mt: 3, mb: 1, fontWeight: 600, color: color_text_primary }}>
         {title}
       </Typography>
 
@@ -224,12 +224,12 @@ export function PhotoGrid({
         {loading ? (
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             <CircularProgress size={18} />
-            <Typography sx={{ fontWeight: 800, color: color_text_primary }}>
+            <Typography sx={{ fontWeight: 600, color: color_text_primary }}>
               Loading photos...
             </Typography>
           </Box>
         ) : photos.length === 0 ? (
-          <Typography sx={{ color: color_text_secondary, fontWeight: 800 }}>
+          <Typography sx={{ color: color_text_secondary, fontWeight: 400 }}>
             {emptyText}
           </Typography>
         ) : (
@@ -269,11 +269,11 @@ export function PhotoGrid({
                     cursor: "pointer",
                     backgroundColor: color_white,
                     border: `1px solid ${cardBorderColor}`,
-                    boxShadow: "0 8px 18px rgba(2,6,23,0.06)",
+                    boxShadow: "none",
                     display: "flex",
                     flexDirection: "column",
                     height: "100%",
-                    "&:hover": { boxShadow: "0 12px 26px rgba(2,6,23,0.10)" },
+                    "&:hover": { boxShadow: "none" },
                     ...cardSx,
                   }}
                 >
@@ -317,7 +317,7 @@ export function PhotoGrid({
                       <Typography
                         sx={{
                           fontSize: "0.86rem",
-                          fontWeight: 900,
+                          fontWeight: 400,
                           color: color_text_light,
                         }}
                       >

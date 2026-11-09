@@ -51,7 +51,11 @@ import {
   color_text_primary,
   color_text_secondary,
   color_text_light,
-  color_background,
+  color_dv_border,
+  color_dv_control_border,
+  color_dv_divider,
+  color_dv_header_bg,
+  color_dv_text_muted,
 } from "../../constants/colors";
 import { readOnlyAgGridModules, registerAgGridModules } from "../../lib/agGridModules";
 
@@ -386,15 +390,14 @@ export default function UserActivity({
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Box
           sx={{
-            height: "100%",
-            p: { xs: 1, md: 1.25 },
+            // Fills the workspace on desktop; on tablet and phone the page scrolls instead
+            height: { xs: "auto", md: "100%" },
             boxSizing: "border-box",
-            overflow: "hidden",
+            overflow: { xs: "visible", md: "hidden" },
             display: "flex",
             flexDirection: "column",
             minHeight: 0,
-            gap: 1,
-            background: color_background,
+            gap: 1.5,
           }}
         >
           {/*  Top row like screenshot */}
@@ -416,10 +419,12 @@ export default function UserActivity({
                   label={`Search (${filterSummary.length} filter${filterSummary.length === 1 ? "" : "s"})`}
                   size="small"
                   sx={{
-                    fontWeight: 900,
-                    borderRadius: "10px",
+                    height: 36,
+                    fontSize: 14,
+                    fontWeight: 500,
+                    borderRadius: "999px",
                     background: color_white,
-                    border: `1px solid ${color_border}`,
+                    border: `1px solid ${color_dv_control_border}`,
                     color: color_text_primary,
                   }}
                 />
@@ -433,10 +438,12 @@ export default function UserActivity({
                       label={t}
                       size="small"
                       sx={{
-                        fontWeight: 800,
-                        borderRadius: "10px",
+                        height: 36,
+                        fontSize: 14,
+                        fontWeight: 500,
+                        borderRadius: "999px",
                         background: color_white,
-                        border: `1px solid ${color_border}`,
+                        border: `1px solid ${color_dv_control_border}`,
                         color: color_text_primary,
                       }}
                     />
@@ -447,10 +454,12 @@ export default function UserActivity({
                     label={`+${filterSummary.length - 1} more`}
                     size="small"
                     sx={{
-                      fontWeight: 800,
-                      borderRadius: "10px",
+                      height: 36,
+                      fontSize: 14,
+                      fontWeight: 500,
+                      borderRadius: "999px",
                       background: color_white,
-                      border: `1px solid ${color_border}`,
+                      border: `1px solid ${color_dv_control_border}`,
                       color: color_text_secondary,
                     }}
                   />
@@ -464,10 +473,14 @@ export default function UserActivity({
                   onClick={() => setShowFilters(true)}
                   sx={{
                     textTransform: "none",
-                    fontWeight: 900,
+                    fontWeight: 500,
+                    fontSize: 15,
+                    minHeight: 44,
+                    px: 2,
                     borderRadius: "10px",
+                    boxShadow: "none",
                     background: color_secondary,
-                    "&:hover": { background: color_secondary_dark },
+                    "&:hover": { background: color_secondary_dark, boxShadow: "none" },
                   }}
                 >
                   Edit search
@@ -482,14 +495,14 @@ export default function UserActivity({
                 gap: 1,
                 flexWrap: "wrap",
                 alignItems: "center",
-                background: color_white_smoke,
-                border: `1px solid ${color_border}`,
-                padding: "8px 10px",
+                background: color_white,
+                border: `1px solid ${color_dv_border}`,
+                padding: "12px",
                 borderRadius: "12px",
                 flexShrink: 0,
               }}
             >
-              <FormControl size="small" sx={{ minWidth: 170 }}>
+              <FormControl size="small" sx={{ minWidth: { xs: "100%", sm: 170 } }}>
                 <InputLabel>User</InputLabel>
                 <Select label="User" value={userId} onChange={(e) => setUserId(String(e.target.value))}>
                   <MenuItem value="">All users</MenuItem>
@@ -501,7 +514,7 @@ export default function UserActivity({
                 </Select>
               </FormControl>
 
-              <FormControl size="small" sx={{ minWidth: 180 }}>
+              <FormControl size="small" sx={{ minWidth: { xs: "100%", sm: 180 } }}>
                 <InputLabel>Community</InputLabel>
                 <Select
                   label="Community"
@@ -517,7 +530,7 @@ export default function UserActivity({
                 </Select>
               </FormControl>
 
-              <FormControl size="small" sx={{ minWidth: 210 }}>
+              <FormControl size="small" sx={{ minWidth: { xs: "100%", sm: 210 } }}>
                 <InputLabel>Filename</InputLabel>
                 <Select
                   label="Filename"
@@ -533,7 +546,7 @@ export default function UserActivity({
                 </Select>
               </FormControl>
 
-              <FormControl size="small" sx={{ minWidth: 170 }}>
+              <FormControl size="small" sx={{ minWidth: { xs: "100%", sm: 170 } }}>
                 <InputLabel>Action</InputLabel>
                 <Select label="Action" value={action} onChange={(e) => setAction(String(e.target.value))}>
                   <MenuItem value="">All actions</MenuItem>
@@ -547,7 +560,7 @@ export default function UserActivity({
 
               <Divider flexItem orientation="vertical" sx={{ mx: 0.25, borderColor: color_border }} />
 
-              <FormControl size="small" sx={{ minWidth: 160 }}>
+              <FormControl size="small" sx={{ minWidth: { xs: "100%", sm: 160 } }}>
                 <InputLabel>Time</InputLabel>
                 <Select
                   label="Time"
@@ -585,10 +598,13 @@ export default function UserActivity({
                 onClick={handleApply}
                 sx={{
                   textTransform: "none",
-                  fontWeight: 900,
+                  fontWeight: 500,
+                  minHeight: 40,
+                  px: 2,
                   borderRadius: "10px",
+                  boxShadow: "none",
                   background: color_secondary,
-                  "&:hover": { background: color_secondary_dark },
+                  "&:hover": { background: color_secondary_dark, boxShadow: "none" },
                 }}
               >
                 Apply
@@ -598,12 +614,14 @@ export default function UserActivity({
                 onClick={handleReset}
                 sx={{
                   textTransform: "none",
-                  fontWeight: 900,
+                  fontWeight: 500,
+                  minHeight: 40,
+                  px: 2,
                   borderRadius: "10px",
                   backgroundColor: color_white,
-                  border: `1px solid ${color_border}`,
+                  border: `1px solid ${color_dv_control_border}`,
                   color: color_text_primary,
-                  "&:hover": { backgroundColor: color_white_smoke },
+                  "&:hover": { backgroundColor: color_dv_header_bg },
                 }}
               >
                 Reset
@@ -625,13 +643,12 @@ export default function UserActivity({
           {/*  Outer panel like screenshot */}
           <Box
             sx={{
-              flex: 1,
+              flex: { xs: "none", md: 1 },
               minHeight: 0,
-              borderRadius: "10px",
+              borderRadius: "12px",
               overflow: "hidden",
-              border: `2px solid ${color_secondary}`,
-              background: color_white_smoke,
-              padding: 1,
+              border: `1px solid ${color_dv_border}`,
+              background: color_white,
               display: "flex",
             }}
           >
@@ -641,40 +658,45 @@ export default function UserActivity({
               sx={{
                 flex: 1,
                 minHeight: 0,
-                borderRadius: "8px",
-                overflow: "hidden",
-                border: `1px solid ${color_border}`,
+                overflow: { xs: "visible", md: "hidden" },
                 background: color_white,
                 display: "flex",
+                // Side by side on desktop; logs above the chart on tablet and phone
+                flexDirection: { xs: "column", md: "row" },
               }}
             >
               {/* Left card: Logs */}
               <Box
                 sx={{
-                  width: `${leftPct}%`,
-                  minWidth: 360,
+                  width: { xs: "100%", md: `${leftPct}%` },
+                  minWidth: { xs: 0, md: 360 },
+                  height: { xs: 520, md: "auto" },
+                  flexShrink: 0,
                   display: "flex",
                   flexDirection: "column",
                   minHeight: 0,
-                  borderRight: `1px solid ${color_border}`,
+                  borderRight: { xs: "none", md: `1px solid ${color_dv_divider}` },
+                  borderBottom: { xs: `1px solid ${color_dv_divider}`, md: "none" },
                   background: color_white,
                 }}
               >
                 <Box
                   sx={{
-                    px: 1.25,
-                    py: 0.9,
-                    borderBottom: `1px solid ${color_border}`,
+                    px: { xs: 1.5, md: 2 },
+                    py: 1.25,
+                    borderBottom: `1px solid ${color_dv_divider}`,
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
+                    flexWrap: "wrap",
+                    gap: 1,
                     background: color_white,
                     flexShrink: 0,
                   }}
                 >
                   <Box sx={{ display: "flex", alignItems: "baseline", gap: 1 }}>
-                    <Typography sx={{ fontWeight: 900, color: color_text_primary }}>Logs</Typography>
-                    <Typography sx={{ fontSize: 12, color: color_text_light }}>
+                    <Typography sx={{ fontWeight: 600, fontSize: 17, color: color_text_primary }}>Logs</Typography>
+                    <Typography sx={{ fontSize: 13, color: color_text_light }}>
                       {logData.length} rows (page {currentPage}/{totalPages})
                     </Typography>
                   </Box>
@@ -712,22 +734,24 @@ export default function UserActivity({
               <Box
                 onMouseDown={() => (draggingRef.current = true)}
                 sx={{
-                  width: 10,
+                  display: { xs: "none", md: "block" },
+                  width: 8,
+                  flexShrink: 0,
                   cursor: "col-resize",
-                  background: color_white_smoke,
-                  borderLeft: `1px solid ${color_border}`,
-                  borderRight: `1px solid ${color_border}`,
+                  background: color_dv_header_bg,
+                  borderLeft: `1px solid ${color_dv_divider}`,
+                  borderRight: `1px solid ${color_dv_divider}`,
                 }}
               />
 
               {/* Right card: Visualization */}
               <Box
                 sx={{
-                  width: `${rightPct}%`,
-                  minWidth: 320,
+                  width: { xs: "100%", md: `${rightPct}%` },
+                  minWidth: { xs: 0, md: 320 },
+                  minHeight: { xs: 420, md: 0 },
                   display: "flex",
                   flexDirection: "column",
-                  minHeight: 0,
                   background: color_white,
                 }}
               >
@@ -740,9 +764,9 @@ export default function UserActivity({
           <style>
             {`
               .ag-theme-quartz .ag-header-cell {
-                background-color: ${color_background} !important;
-                font-weight: 900 !important;
-                color: ${color_secondary_dark} !important;
+                background-color: ${color_dv_header_bg} !important;
+                font-weight: 500 !important;
+                color: ${color_dv_text_muted} !important;
               }
               .ag-theme-quartz .ag-header-row {
                 border-bottom: 1px solid ${color_border} !important;

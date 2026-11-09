@@ -23,7 +23,6 @@ import SupportRequestCard from "../contact_us/SupportRequestCard";
 import { apiUrl } from "../../config/api";
 import { apiRequest } from "../../hooks/useFetch";
 import {
-  color_background,
   color_border,
   color_secondary,
   color_secondary_dark,
@@ -130,7 +129,7 @@ export default function MySupportRequests() {
         cellSx: { minWidth: 220, whiteSpace: "normal" },
         render: (request) => (
           <Box>
-            <Typography sx={{ fontWeight: 900, color: color_text_primary, lineHeight: 1.35 }}>
+            <Typography sx={{ fontWeight: 600, color: color_text_primary, lineHeight: 1.35 }}>
               {request.subject}
             </Typography>
             <Typography sx={{ mt: 0.4, fontSize: "0.76rem", color: color_text_light }}>
@@ -162,7 +161,7 @@ export default function MySupportRequests() {
             <Chip
               label={status.label}
               size="small"
-              sx={{ borderRadius: "999px", fontWeight: 900, ...status.sx }}
+              sx={{ borderRadius: "999px", fontWeight: 600, ...status.sx }}
             />
           );
         },
@@ -223,9 +222,7 @@ export default function MySupportRequests() {
       sx={{
         height: "100%",
         minHeight: 0,
-        p: { xs: 1, md: 1.25 },
         boxSizing: "border-box",
-        background: color_background,
         overflow: "auto",
       }}
     >
@@ -310,18 +307,18 @@ export default function MySupportRequests() {
                   onClick={() => setSelectedFilter(option.key)}
                   sx={{
                     textTransform: "none",
-                    fontWeight: 900,
+                    fontWeight: 600,
                     borderRadius: "12px",
                     px: 1.5,
                     py: 0.8,
                     color: selected ? color_white : color_text_secondary,
                     background: selected
-                      ? `linear-gradient(180deg, ${color_secondary} 0%, ${color_secondary_dark} 100%)`
+                      ? color_secondary
                       : color_white,
                     border: `1px solid ${selected ? color_secondary_dark : color_border}`,
                     "&:hover": {
                       background: selected
-                        ? `linear-gradient(180deg, ${color_secondary} 0%, ${color_secondary_dark} 100%)`
+                        ? color_secondary
                         : color_white_smoke,
                     },
                   }}
@@ -372,7 +369,7 @@ export default function MySupportRequests() {
             alignItems: "center",
           }}
         >
-          <Typography sx={{ color: color_white, fontWeight: 950 }}>
+          <Typography sx={{ color: color_white, fontWeight: 600 }}>
             Create Support Request
           </Typography>
           <IconButton

@@ -110,7 +110,7 @@ export default function FormSubmissionGrid({
               width: "100%",
               height: "32px",
               fontSize: "12px",
-              fontWeight: 700,
+              fontWeight: 600,
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -141,11 +141,10 @@ export default function FormSubmissionGrid({
         sx={{
           flex: 1,
           minHeight: 0,
-          borderRadius: "10px",
+          borderRadius: "12px",
           overflow: "hidden",
-          border: `2px solid ${color_secondary}`,
-          background: color_white_smoke,
-          padding: 1,
+          border: "1px solid #E3E6EB", // card border (navy design)
+          background: color_white,
           display: "flex",
         }}
       >
@@ -153,9 +152,7 @@ export default function FormSubmissionGrid({
           sx={{
             flex: 1,
             minHeight: 0,
-            borderRadius: "8px",
             overflow: "hidden",
-            border: `1px solid ${color_border}`,
             background: color_white,
             display: "flex",
             flexDirection: "column",
@@ -163,8 +160,8 @@ export default function FormSubmissionGrid({
         >
           <Box
             sx={{
-              px: 1.25,
-              py: 0.9,
+              px: { xs: 1.5, md: 2 },
+              py: 1.25,
               borderBottom: `1px solid ${color_border}`,
               display: "flex",
               justifyContent: "space-between",
@@ -174,7 +171,7 @@ export default function FormSubmissionGrid({
             }}
           >
             <Box sx={{ display: "flex", alignItems: "baseline", gap: 1 }}>
-              <Typography sx={{ fontWeight: 900, color: color_text_primary }}>
+              <Typography sx={{ fontWeight: 600, fontSize: 17, color: color_text_primary }}>
                 {title}
               </Typography>
               <Typography sx={{ fontSize: 12, color: color_text_light }}>
@@ -216,7 +213,7 @@ export default function FormSubmissionGrid({
         {`
           .ag-theme-quartz .ag-header-cell {
             background-color: ${color_background} !important;
-            font-weight: 900 !important;
+            font-weight: 600 !important;
             color: ${color_secondary_dark} !important;
           }
           .ag-theme-quartz .ag-header-row {

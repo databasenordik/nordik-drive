@@ -56,7 +56,7 @@ export default function FileActivitiesTopBar({
         sx={{
           "& .MuiToggleButton-root": {
             textTransform: "none",
-            fontWeight: 900,
+            fontWeight: 600,
             borderRadius: "10px",
             px: 1.2,
             py: 0.6,
@@ -77,7 +77,7 @@ export default function FileActivitiesTopBar({
           label={`Requests: ${totalRequests} | Changes: ${totalChanges}`}
           size="small"
           sx={{
-            fontWeight: 900,
+            fontWeight: 600,
             borderRadius: "10px",
             background: color_white,
             border: `1px solid ${color_border}`,

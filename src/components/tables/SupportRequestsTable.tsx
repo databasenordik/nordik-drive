@@ -4,7 +4,6 @@ import { Box, Chip, Table, TableBody, TableCell, TableContainer, TableHead, Tabl
 import {
   color_background,
   color_border,
-  color_secondary,
   color_text_light,
   color_text_primary,
   color_text_secondary,
@@ -35,9 +34,9 @@ type SupportRequestsTableProps = {
 };
 
 const headCellSx = {
-  fontWeight: 900,
+  fontWeight: 600,
   fontSize: "0.68rem",
-  textTransform: "uppercase" as const,
+  textTransform: "none" as const,
   letterSpacing: "0.04em",
   color: color_text_light,
   backgroundColor: color_background,
@@ -76,9 +75,8 @@ export default function SupportRequestsTable({
         minHeight: 0,
         borderRadius: "12px",
         overflow: "hidden",
-        border: `2px solid ${color_secondary}`,
-        background: color_white_smoke,
-        p: 1,
+        border: "1px solid #E3E6EB", // card border (navy design)
+        background: color_white,
         display: "flex",
       }}
     >
@@ -86,9 +84,7 @@ export default function SupportRequestsTable({
         sx={{
           flex: 1,
           minHeight: 0,
-          borderRadius: "8px",
           overflow: "hidden",
-          border: `1px solid ${color_border}`,
           background: color_white,
           display: "flex",
           flexDirection: "column",
@@ -96,8 +92,8 @@ export default function SupportRequestsTable({
       >
         <Box
           sx={{
-            px: 1.25,
-            py: 0.95,
+            px: { xs: 1.5, md: 2 },
+            py: 1.25,
             borderBottom: `1px solid ${color_border}`,
             display: "flex",
             justifyContent: "space-between",
@@ -109,13 +105,13 @@ export default function SupportRequestsTable({
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
-            <Typography sx={{ fontWeight: 900, color: color_text_primary }}>{title}</Typography>
+            <Typography sx={{ fontWeight: 600, fontSize: 17, color: color_text_primary }}>{title}</Typography>
             <Chip
               label={`Total Requests: ${totalItems}`}
               size="small"
               sx={{
-                fontWeight: 900,
-                borderRadius: "10px",
+                fontWeight: 500,
+                borderRadius: "999px",
                 background: color_white,
                 border: `1px solid ${color_border}`,
                 color: color_text_primary,
@@ -125,8 +121,8 @@ export default function SupportRequestsTable({
               label={`Page ${currentPage} of ${totalPages}`}
               size="small"
               sx={{
-                fontWeight: 800,
-                borderRadius: "10px",
+                fontWeight: 400,
+                borderRadius: "999px",
                 background: color_white,
                 border: `1px solid ${color_border}`,
                 color: color_text_secondary,

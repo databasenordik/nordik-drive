@@ -250,22 +250,22 @@ function DocumentPreviewSurface({
           sx={{
             width: 58,
             height: 58,
-            borderRadius: "18px",
+            borderRadius: "12px",
             display: "grid",
             placeItems: "center",
             background: accent,
             color: color_white,
-            boxShadow: "0 14px 28px rgba(15, 23, 42, 0.14)",
+            boxShadow: "none",
           }}
         >
           <Icon fontSize="medium" />
         </Box>
 
-        <Typography sx={{ fontWeight: 900, color: color_text_primary, fontSize: "0.98rem" }}>
+        <Typography sx={{ fontWeight: 600, color: color_text_primary, fontSize: "0.98rem" }}>
           {previewTitle(resolvedPreviewMime)}
         </Typography>
 
-        <Typography sx={{ color: color_text_light, fontWeight: 700, fontSize: "0.84rem" }}>
+        <Typography sx={{ color: color_text_light, fontWeight: 400, fontSize: "0.84rem" }}>
           {body}
         </Typography>
       </Box>
@@ -354,7 +354,7 @@ function DocumentPreviewSurface({
             sx={{
               m: 0,
               fontSize: "0.8rem",
-              fontWeight: 700,
+              fontWeight: 600,
               lineHeight: 1.5,
               color: color_text_primary,
               fontFamily:
@@ -420,16 +420,16 @@ function DocumentPreviewSurface({
           {remoteLoading ? (
             <>
               <CircularProgress size={20} />
-              <Typography sx={{ color: color_text_light, fontWeight: 800, fontSize: "0.82rem" }}>
+              <Typography sx={{ color: color_text_light, fontWeight: 400, fontSize: "0.82rem" }}>
                 Preparing preview...
               </Typography>
             </>
           ) : (
             <>
-              <Typography sx={{ color: color_text_primary, fontWeight: 900, fontSize: "0.9rem" }}>
+              <Typography sx={{ color: color_text_primary, fontWeight: 600, fontSize: "0.9rem" }}>
                 Preview unavailable
               </Typography>
-              <Typography sx={{ color: color_text_light, fontWeight: 700, fontSize: "0.8rem" }}>
+              <Typography sx={{ color: color_text_light, fontWeight: 400, fontSize: "0.8rem" }}>
                 {remoteError}
               </Typography>
             </>
@@ -446,7 +446,7 @@ function DocumentPreviewSurface({
           right: 10,
           height: 28,
           borderRadius: "999px",
-          fontWeight: 900,
+          fontWeight: 600,
           color: color_text_primary,
           backgroundColor: "rgba(255,255,255,0.9)",
           border: `1px solid rgba(148, 163, 184, 0.28)`,
@@ -467,9 +467,9 @@ function DocumentPreviewSurface({
         <Typography
           sx={{
             fontSize: "0.76rem",
-            fontWeight: 900,
+            fontWeight: 600,
             letterSpacing: "0.08em",
-            textTransform: "uppercase",
+            textTransform: "none",
             color: "rgba(255,255,255,0.72)",
           }}
         >
@@ -531,7 +531,7 @@ export function DocumentGrid({
       return {
         height: 30,
         fontSize: "0.85rem",
-        fontWeight: 900,
+        fontWeight: 600,
         borderRadius: "999px",
         color: color_success,
         backgroundColor: "rgba(39, 174, 96, 0.12)",
@@ -542,7 +542,7 @@ export function DocumentGrid({
       return {
         height: 30,
         fontSize: "0.85rem",
-        fontWeight: 900,
+        fontWeight: 600,
         borderRadius: "999px",
         color: color_primary,
         backgroundColor: "rgba(166, 29, 51, 0.10)",
@@ -552,7 +552,7 @@ export function DocumentGrid({
     return {
       height: 30,
       fontSize: "0.85rem",
-      fontWeight: 900,
+      fontWeight: 600,
       borderRadius: "999px",
       color: color_text_primary,
       backgroundColor: "rgba(243, 156, 18, 0.14)",
@@ -565,7 +565,7 @@ export function DocumentGrid({
 
   const defaultViewBtnSx = {
     textTransform: "none",
-    fontWeight: 900,
+    fontWeight: 600,
     backgroundColor: color_white,
     color: color_text_secondary,
     border: `1px solid ${color_border}`,
@@ -580,7 +580,7 @@ export function DocumentGrid({
   const softChipSx = {
     height: 30,
     fontSize: "0.85rem",
-    fontWeight: 900,
+    fontWeight: 600,
     borderRadius: "999px",
     color: color_text_primary,
     backgroundColor: "rgba(148, 163, 184, 0.18)",
@@ -590,7 +590,7 @@ export function DocumentGrid({
   const metaChipSx = {
     height: 28,
     fontSize: "0.78rem",
-    fontWeight: 900,
+    fontWeight: 600,
     borderRadius: "999px",
     color: color_text_secondary,
     backgroundColor: "rgba(255, 255, 255, 0.8)",
@@ -599,7 +599,7 @@ export function DocumentGrid({
 
   const defaultApproveBtnSx = {
     textTransform: "none",
-    fontWeight: 900,
+    fontWeight: 600,
     borderRadius: "10px",
     background: color_secondary,
     color: color_white,
@@ -608,7 +608,7 @@ export function DocumentGrid({
 
   const defaultRejectBtnSx = {
     textTransform: "none",
-    fontWeight: 900,
+    fontWeight: 600,
     borderRadius: "10px",
     background: color_primary,
     color: color_white,
@@ -617,7 +617,7 @@ export function DocumentGrid({
 
   const defaultPrimaryBtnSx = {
     textTransform: "none",
-    fontWeight: 900,
+    fontWeight: 600,
     borderRadius: "10px",
     background: color_secondary,
     color: color_white,
@@ -661,7 +661,7 @@ export function DocumentGrid({
           <Typography
             sx={{
               fontSize: "0.78rem",
-              fontWeight: 900,
+              fontWeight: 400,
               color: color_text_light,
               mb: 0.35,
               letterSpacing: "0.02em",
@@ -674,7 +674,7 @@ export function DocumentGrid({
           <Typography
             sx={{
               fontSize: "0.98rem",
-              fontWeight: 800,
+              fontWeight: 600,
               color: hasValue ? color_text_primary : color_text_secondary,
               lineHeight: 1.45,
               wordBreak: "break-word",
@@ -694,7 +694,7 @@ export function DocumentGrid({
 
   return (
     <Box>
-      <Typography variant="h6" sx={{ mt: 3, mb: 1, fontWeight: 900, color: color_text_primary }}>
+      <Typography variant="h6" sx={{ mt: 3, mb: 1, fontWeight: 600, color: color_text_primary }}>
         {title}
       </Typography>
 
@@ -710,12 +710,12 @@ export function DocumentGrid({
         {loading ? (
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             <CircularProgress size={18} />
-            <Typography sx={{ fontWeight: 800, color: color_text_primary }}>
+            <Typography sx={{ fontWeight: 600, color: color_text_primary }}>
               Loading documents...
             </Typography>
           </Box>
         ) : documents.length === 0 ? (
-          <Typography sx={{ color: color_text_secondary, fontWeight: 800 }}>
+          <Typography sx={{ color: color_text_secondary, fontWeight: 400 }}>
             {emptyText}
           </Typography>
         ) : (
@@ -763,13 +763,13 @@ export function DocumentGrid({
                     p: 1.2,
                     backgroundColor: color_white,
                     border: `1px solid ${cardBorderColor}`,
-                    boxShadow: "0 10px 24px rgba(2,6,23,0.08)",
+                    boxShadow: "none",
                     cursor: "pointer",
                     boxSizing: "border-box",
                     display: "flex",
                     flexDirection: "column",
                     overflow: "hidden",
-                    "&:hover": { boxShadow: "0 16px 34px rgba(2,6,23,0.14)" },
+                    "&:hover": { boxShadow: "none" },
                     ...cardSx,
                   }}
                 >
@@ -825,7 +825,7 @@ export function DocumentGrid({
                     <Typography
                       sx={{
                         mt: 1.15,
-                        fontWeight: 900,
+                        fontWeight: 600,
                         fontSize: "1.08rem",
                         lineHeight: 1.35,
                         color: color_text_primary,
@@ -848,7 +848,7 @@ export function DocumentGrid({
                         flexWrap: "wrap",
                       }}
                     >
-                      <Typography sx={{ fontWeight: 900, color: color_text_light, fontSize: "0.84rem" }}>
+                      <Typography sx={{ fontWeight: 400, color: color_text_light, fontSize: "0.84rem" }}>
                         ID: {doc.id}
                       </Typography>
 
@@ -859,7 +859,7 @@ export function DocumentGrid({
                       sx={{
                         mt: 0.75,
                         color: color_text_secondary,
-                        fontWeight: 700,
+                        fontWeight: 400,
                         fontSize: "0.82rem",
                         whiteSpace: "nowrap",
                         overflow: "hidden",

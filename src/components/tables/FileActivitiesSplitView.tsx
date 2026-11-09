@@ -11,7 +11,6 @@ import FileActivityVisualization from "../../components/activity/FileActivityVis
 import { Clause, Mode } from "./FileActivitiesShared";
 import {
   color_border,
-  color_secondary,
   color_text_secondary,
   color_white,
   color_white_smoke, 
@@ -83,13 +82,12 @@ export default function FileActivitiesSplitView({
   return (
     <Box
       sx={{
-        flex: 1,
+        flex: { xs: "none", md: 1 },
         minHeight: 0,
-        borderRadius: "10px",
+        borderRadius: "12px",
         overflow: "hidden",
-        border: `2px solid ${color_secondary}`,
-        background: color_white_smoke,
-        padding: 1,
+        border: "1px solid #E3E6EB", // card border (navy design)
+        background: color_white,
         display: "flex",
       }}
     >
@@ -98,40 +96,45 @@ export default function FileActivitiesSplitView({
         sx={{
           flex: 1,
           minHeight: 0,
-          borderRadius: "8px",
-          overflow: "hidden",
-          border: `1px solid ${color_border}`,
+          overflow: { xs: "visible", md: "hidden" },
           background: color_white,
           display: "flex",
+          // Side by side on desktop; list above the chart on tablet and phone
+          flexDirection: { xs: "column", md: "row" },
         }}
       >
         {/* Left */}
         <Box
           sx={{
-            width: `${leftPct}%`,
-            minWidth: 360,
+            width: { xs: "100%", md: `${leftPct}%` },
+            minWidth: { xs: 0, md: 360 },
+            height: { xs: 520, md: "auto" },
+            flexShrink: 0,
             display: "flex",
             flexDirection: "column",
             minHeight: 0,
-            borderRight: `1px solid ${color_border}`,
+            borderRight: { xs: "none", md: `1px solid ${color_border}` },
+            borderBottom: { xs: `1px solid ${color_border}`, md: "none" },
             background: color_white,
           }}
         >
           <Box
             sx={{
-              px: 1.25,
-              py: 0.9,
+              px: { xs: 1.5, md: 2 },
+              py: 1.25,
               borderBottom: `1px solid ${color_border}`,
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
+              flexWrap: "wrap",
+              gap: 1,
               background: color_white,
               flexShrink: 0,
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "baseline", gap: 1 }}>
-              <Typography sx={{ fontWeight: 900, color: color_text_primary }}>Requests</Typography>
-              <Typography sx={{ fontSize: 12, color: color_text_secondary }}>
+            <Box sx={{ display: "flex", alignItems: "baseline", gap: 1, flexWrap: "wrap" }}>
+              <Typography sx={{ fontWeight: 600, fontSize: 17, color: color_text_primary }}>Requests</Typography>
+              <Typography sx={{ fontSize: 13, color: color_text_secondary }}>
                 {totalRequests} requests | {totalChanges} changes (page {currentPage}/{totalPages})
               </Typography>
             </Box>
@@ -169,7 +172,9 @@ export default function FileActivitiesSplitView({
         <Box
           onMouseDown={() => (draggingRef.current = true)}
           sx={{
-            width: 10,
+            display: { xs: "none", md: "block" },
+            width: 8,
+            flexShrink: 0,
             cursor: "col-resize",
             background: color_white_smoke,
             borderLeft: `1px solid ${color_border}`,
@@ -180,11 +185,11 @@ export default function FileActivitiesSplitView({
         {/* Right */}
         <Box
           sx={{
-            width: `${rightPct}%`,
-            minWidth: 320,
+            width: { xs: "100%", md: `${rightPct}%` },
+            minWidth: { xs: 0, md: 320 },
+            minHeight: { xs: 420, md: 0 },
             display: "flex",
             flexDirection: "column",
-            minHeight: 0,
             background: color_white,
           }}
         >
@@ -203,7 +208,7 @@ export default function FileActivitiesSplitView({
             >
               <Box sx={{ textAlign: "center" }}>
                 <InsertChartOutlinedIcon sx={{ fontSize: 56, color: "#cbd5e1" }} />
-                <Typography sx={{ mt: 1, fontWeight: 900, color: color_text_secondary }}>
+                <Typography sx={{ mt: 1, fontWeight: 400, color: color_text_secondary }}>
                   Run a search to see visualization.
                 </Typography>
               </Box>
@@ -217,7 +222,7 @@ export default function FileActivitiesSplitView({
         {`
           .ag-theme-quartz .ag-header-cell {
             background-color: ${color_background} !important;
-            font-weight: 900 !important;
+            font-weight: 600 !important;
             color: ${color_secondary_dark} !important;
           }
           .ag-theme-quartz .ag-header-row {

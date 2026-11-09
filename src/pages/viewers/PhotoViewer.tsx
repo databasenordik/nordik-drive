@@ -358,8 +358,8 @@ const PhotoViewerModal: React.FC<PhotoViewerModalProps> = ({
     };
 
     const approveBtnSx = {
-        fontWeight: 900,
-        textTransform: "uppercase",
+        fontWeight: 600,
+        textTransform: "none",
         px: isSmDown ? 1.6 : 2.2,
         borderRadius: 999,
         background: color_secondary,
@@ -368,8 +368,8 @@ const PhotoViewerModal: React.FC<PhotoViewerModalProps> = ({
     };
 
     const rejectBtnSx = {
-        fontWeight: 900,
-        textTransform: "uppercase",
+        fontWeight: 600,
+        textTransform: "none",
         px: isSmDown ? 1.6 : 2.2,
         borderRadius: 999,
         background: color_primary,
@@ -378,8 +378,8 @@ const PhotoViewerModal: React.FC<PhotoViewerModalProps> = ({
     };
 
     const downloadBtnSx = {
-        fontWeight: 900,
-        textTransform: "uppercase",
+        fontWeight: 600,
+        textTransform: "none",
         px: isSmDown ? 1.6 : 2.2,
         borderRadius: 999,
         background: color_secondary,
@@ -461,7 +461,7 @@ const PhotoViewerModal: React.FC<PhotoViewerModalProps> = ({
                     <Typography sx={{ ...VIEWER_TITLE_SX, fontSize: 16 }}>
                         {PHOTO_VIEWER_TITLE}
                     </Typography>
-                    <Typography variant="caption" sx={{ color: color_text_light, fontWeight: 700 }}>
+                    <Typography variant="caption" sx={{ color: color_text_light, fontWeight: 400 }}>
                         {photos?.length ? `${currentIndex + 1} / ${photos.length}` : VIEWER_EMPTY_COUNT_TEXT}
                         {inferredRequestIds.length === 1
                             ? ` • Request #${inferredRequestIds[0]}`
@@ -489,7 +489,7 @@ const PhotoViewerModal: React.FC<PhotoViewerModalProps> = ({
             >
                 {!photos?.length ? (
                     <Box sx={{ mt: 4, color: "#fff", px: 2 }}>
-                        <Typography sx={{ fontWeight: 800 }}>{VIEWER_NO_PHOTOS_TEXT}</Typography>
+                        <Typography sx={{ fontWeight: 600 }}>{VIEWER_NO_PHOTOS_TEXT}</Typography>
                     </Box>
                 ) : (
                     <Box sx={{ width: "100%", height: "100%", display: "flex", minHeight: 0 }}>
@@ -526,7 +526,7 @@ const PhotoViewerModal: React.FC<PhotoViewerModalProps> = ({
                                     borderRadius: 999,
                                     px: 1.25,
                                     py: 1,
-                                    boxShadow: "0 12px 28px rgba(0,0,0,0.18)",
+                                    boxShadow: "none",
                                     maxWidth: "calc(100vw - 24px)",
                                     overflowX: "auto",
                                     WebkitOverflowScrolling: "touch",
@@ -562,7 +562,7 @@ const PhotoViewerModal: React.FC<PhotoViewerModalProps> = ({
                                     </span>
                                 </Tooltip>
 
-                                <Box sx={{ px: 0.5, fontWeight: 900, color: color_text_secondary }}>
+                                <Box sx={{ px: 0.5, fontWeight: 400, color: color_text_secondary }}>
                                     {Math.round(zoom * 100)}%
                                 </Box>
 
@@ -747,7 +747,7 @@ const PhotoViewerModal: React.FC<PhotoViewerModalProps> = ({
                                     p: 1.25,
                                     maxHeight: showReviewerCommentField ? "36vh" : "22vh",
                                     overflowY: "auto",
-                                    boxShadow: "0 12px 28px rgba(0,0,0,0.18)",
+                                    boxShadow: "none",
                                     display: "flex",
                                     flexDirection: "column",
                                     gap: 1,

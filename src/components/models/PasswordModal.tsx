@@ -95,7 +95,7 @@ const PasswordModal = (props: PasswordModalProps) => {
         >
           <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 1 }}>
             <Box>
-              <DialogTitle sx={{ p: 0, fontWeight: 800, fontSize: "1.1rem", color: color_secondary_dark }}>
+              <DialogTitle sx={{ p: 0, fontWeight: 600, fontSize: "1.1rem", color: color_secondary_dark }}>
                 Confirm Password
               </DialogTitle>
               <Typography sx={{ mt: 0.4, color: "rgba(0,0,0,0.65)", fontSize: "0.9rem" }}>
@@ -164,7 +164,7 @@ const PasswordModal = (props: PasswordModalProps) => {
             variant="outlined"
             sx={{
               textTransform: "none",
-              fontWeight: 800,
+              fontWeight: 600,
               borderRadius: 2,
               px: 2.2,
               height: 40,
@@ -187,15 +187,15 @@ const PasswordModal = (props: PasswordModalProps) => {
             variant="contained"
             sx={{
               textTransform: "none",
-              fontWeight: 900,
+              fontWeight: 600,
               borderRadius: 2,
               px: 2.6,
               height: 40,
               backgroundColor: color_secondary_dark,
-              boxShadow: "0 10px 24px rgba(0,58,122,0.25)",
+              boxShadow: "none",
               "&:hover": {
                 backgroundColor: color_secondary,
-                boxShadow: "0 12px 26px rgba(0,75,156,0.28)",
+                boxShadow: "none",
               },
               "&.Mui-disabled": {
                 backgroundColor: "rgba(0,0,0,0.12)",

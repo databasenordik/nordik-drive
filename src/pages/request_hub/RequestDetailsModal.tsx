@@ -435,7 +435,7 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
   // ---------------------------------------
   const approveBtnSx = {
     textTransform: "none",
-    fontWeight: 900,
+    fontWeight: 600,
     backgroundColor: color_secondary,
     color: color_white,
     borderRadius: 1,
@@ -445,7 +445,7 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
 
   const rejectBtnSx = {
     textTransform: "none",
-    fontWeight: 900,
+    fontWeight: 600,
     backgroundColor: color_primary,
     color: color_white,
     borderRadius: 1,
@@ -455,7 +455,7 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
 
   const viewBtnSx = {
     textTransform: "none",
-    fontWeight: 900,
+    fontWeight: 600,
     backgroundColor: color_white,
     color: color_text_secondary,
     borderColor: color_border,
@@ -469,7 +469,7 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
 
   const cancelBtnSx = {
     textTransform: "none",
-    fontWeight: 900,
+    fontWeight: 600,
     backgroundColor: color_white,
     color: color_text_secondary,
     border: `1px solid ${color_border}`,
@@ -487,14 +487,14 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
 
   const labelSx = {
     fontSize: "0.78rem",
-    fontWeight: 900,
+    fontWeight: 600,
     color: color_text_light,
     minWidth: 42,
   };
 
   const valueSx = {
     fontSize: "0.86rem",
-    fontWeight: 900,
+    fontWeight: 600,
     color: color_text_primary,
   };
 
@@ -517,7 +517,7 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
         backgroundColor: "rgba(39,174,96,0.14)",
         color: "#166534",
         border: "1px solid rgba(39,174,96,0.28)",
-        fontWeight: 900,
+        fontWeight: 600,
       };
     }
 
@@ -526,7 +526,7 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
         backgroundColor: "rgba(166,29,51,0.12)",
         color: color_primary,
         border: "1px solid rgba(166,29,51,0.24)",
-        fontWeight: 900,
+        fontWeight: 600,
       };
     }
 
@@ -534,7 +534,7 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
       backgroundColor: color_background,
       color: color_text_light,
       border: `1px solid ${color_border}`,
-      fontWeight: 900,
+      fontWeight: 600,
     };
   };
 
@@ -775,7 +775,7 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
 
             <Box sx={{ ...infoRowSx, mt: 0.6 }}>
               <Typography sx={labelSx}>File:</Typography>
-              <Typography sx={{ ...valueSx, fontWeight: 800 }}>
+              <Typography sx={{ ...valueSx, fontWeight: 600 }}>
                 {request.file_name || request.details?.[0]?.filename || "(unknown file)"}
               </Typography>
             </Box>
@@ -785,7 +785,7 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
                 {!request?.consent && (
                   <WarningAmberRoundedIcon sx={{ color: color_warning, mt: "1px" }} fontSize="small" />
                 )}
-                <Typography sx={{ fontWeight: 800, color: color_text_secondary, fontSize: "0.82rem" }}>
+                <Typography sx={{ fontWeight: 400, color: color_text_secondary, fontSize: "0.82rem" }}>
                   {request?.consent
                     ? "User has given consent to display additional photos in the CSAA gallery."
                     : "User has not given consent to display additional photos in the CSAA gallery."}
@@ -796,7 +796,7 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
                 {!request?.archive_consent && (
                   <WarningAmberRoundedIcon sx={{ color: color_warning, mt: "1px" }} fontSize="small" />
                 )}
-                <Typography sx={{ fontWeight: 800, color: color_text_secondary, fontSize: "0.82rem" }}>
+                <Typography sx={{ fontWeight: 400, color: color_text_secondary, fontSize: "0.82rem" }}>
                   {request?.archive_consent
                     ? "User has given consent to archive additional information and documents at the Shingwauk Residential Schools Centre."
                     : "User has NOT given consent to archive additional information and documents at the Shingwauk Residential Schools Centre."}
@@ -833,13 +833,13 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
                   backgroundColor: color_background,
                   color: color_text_secondary,
                   border: `1px solid ${color_border}`,
-                  fontWeight: 900,
+                  fontWeight: 400,
                 }}
               />
             </Box>
 
             {editableDetails.length === 0 ? (
-              <Typography sx={{ color: color_text_light, fontWeight: 800 }}>
+              <Typography sx={{ color: color_text_light, fontWeight: 400 }}>
                 No field changes in this request.
               </Typography>
             ) : (
@@ -865,10 +865,10 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
                       }}
                     >
                       <Box sx={{ minWidth: 0 }}>
-                        <Typography sx={{ color: color_text_light, fontSize: "0.74rem", fontWeight: 900 }}>
+                        <Typography sx={{ color: color_text_light, fontSize: "0.74rem", fontWeight: 400 }}>
                           Row {d.row_id}
                         </Typography>
-                        <Typography sx={{ color: color_text_primary, fontWeight: 900, lineHeight: 1.35 }}>
+                        <Typography sx={{ color: color_text_primary, fontWeight: 600, lineHeight: 1.35 }}>
                           {d.field_name}
                         </Typography>
                       </Box>
@@ -904,10 +904,10 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
                           minWidth: 0,
                         }}
                       >
-                        <Typography sx={{ color: color_text_light, fontSize: "0.72rem", fontWeight: 900, mb: 0.4 }}>
+                        <Typography sx={{ color: color_text_light, fontSize: "0.72rem", fontWeight: 400, mb: 0.4 }}>
                           Old Value
                         </Typography>
-                        <Typography sx={{ color: color_text_secondary, fontWeight: 800, wordBreak: "break-word" }}>
+                        <Typography sx={{ color: color_text_secondary, fontWeight: 400, wordBreak: "break-word" }}>
                           {d.old_value ? d.old_value : <i>(empty)</i>}
                         </Typography>
                       </Box>
@@ -924,7 +924,7 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
                             backgroundColor: color_white,
                             "& .MuiOutlinedInput-root": {
                               borderRadius: 1,
-                              fontWeight: 800,
+                              fontWeight: 400,
                               color: color_text_secondary,
                               "& fieldset": { borderColor: color_border },
                               "&:hover fieldset": { borderColor: color_text_secondary },
@@ -977,7 +977,7 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
                           backgroundColor: color_white,
                           "& .MuiOutlinedInput-root": {
                             borderRadius: 1,
-                            fontWeight: 800,
+                            fontWeight: 400,
                             color: color_text_secondary,
                             "& fieldset": { borderColor: color_border },
                             "&:hover fieldset": { borderColor: color_text_secondary },
@@ -1007,20 +1007,20 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
                 <Chip
                   size="small"
                   label={`${stories.length} ${stories.length === 1 ? "story" : "stories"}`}
-                  sx={{ backgroundColor: color_background, color: color_text_secondary, border: `1px solid ${color_border}`, fontWeight: 900 }}
+                  sx={{ backgroundColor: color_background, color: color_text_secondary, border: `1px solid ${color_border}`, fontWeight: 400 }}
                 />
               </Box>
-              <Typography sx={{ color: color_text_light, fontWeight: 700, mb: 1.25 }}>
+              <Typography sx={{ color: color_text_light, fontWeight: 400, mb: 1.25 }}>
                 Review each story before completing this request. Approved stories become visible on the student's record.
               </Typography>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                 {stories.map((story, index) => (
                   <Box key={story.id} sx={{ border: `1px solid ${color_border}`, borderRadius: 1.5, p: 1.25, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
                     <Box>
-                      <Typography sx={{ color: color_text_primary, fontWeight: 900 }}>
+                      <Typography sx={{ color: color_text_primary, fontWeight: 600 }}>
                         {story.file_name || (story.story_type === "text" ? "Written story" : story.story_type === "video" ? "Video story" : "Story document")}
                       </Typography>
-                      <Typography sx={{ color: color_text_light, fontSize: "0.78rem", fontWeight: 700 }}>
+                      <Typography sx={{ color: color_text_light, fontSize: "0.78rem", fontWeight: 400 }}>
                         {String(story.story_type || "document").toUpperCase()} • {story.status === REVIEW_STATUS_VALUES.APPROVED ? "APPROVED" : story.status === REVIEW_STATUS_VALUES.REJECTED ? "REJECTED" : "PENDING"}
                       </Typography>
                     </Box>
@@ -1113,7 +1113,7 @@ const ApproveRequestModal: React.FC<ApproveRequestModalProps> = ({
               sx={{
                 "& .MuiOutlinedInput-root": {
                   borderRadius: 1,
-                  fontWeight: 800,
+                  fontWeight: 400,
                   color: color_text_secondary,
                   "& fieldset": { borderColor: color_border },
                   "&:hover fieldset": { borderColor: color_text_secondary },

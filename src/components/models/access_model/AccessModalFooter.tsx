@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button } from "@mui/material";
 
-import { color_success_dark, color_success_darker, color_white } from "../../../constants/colors";
+import { color_primary, color_primary_dark, color_white } from "../../../constants/colors";
 
 type Props = {
   onClose: () => void;
@@ -22,15 +22,15 @@ const AccessModalFooter: React.FC<Props> = ({ onClose }) => {
         onClick={onClose}
         variant="contained"
         sx={{
-          borderRadius: 2,
+          borderRadius: "10px",
           px: 3,
-          py: 1,
-          fontWeight: 900,
-          textTransform: "uppercase",
-          fontSize: 12,
+          minHeight: 44,
+          fontWeight: 500,
+          textTransform: "none",
+          fontSize: 15,
           boxShadow: "none",
-          backgroundColor: `${color_success_dark}`,
-          "&:hover": { backgroundColor: `${color_success_darker}` },
+          backgroundColor: color_primary,
+          "&:hover": { backgroundColor: color_primary_dark, boxShadow: "none" },
         }}
       >
         Done

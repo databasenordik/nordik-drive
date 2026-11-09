@@ -75,7 +75,7 @@ const detailStatusChipSx = (status: ReviewStatusValue) => {
       backgroundColor: "rgba(39,174,96,0.14)",
       color: "#166534",
       border: "1px solid rgba(39,174,96,0.28)",
-      fontWeight: 900,
+      fontWeight: 600,
     };
   }
 
@@ -84,7 +84,7 @@ const detailStatusChipSx = (status: ReviewStatusValue) => {
       backgroundColor: "rgba(166,29,51,0.12)",
       color: "#A61D33",
       border: "1px solid rgba(166,29,51,0.24)",
-      fontWeight: 900,
+      fontWeight: 600,
     };
   }
 
@@ -92,7 +92,7 @@ const detailStatusChipSx = (status: ReviewStatusValue) => {
     backgroundColor: color_white_smoke,
     color: color_text_light,
     border: `1px solid ${color_border}`,
-    fontWeight: 900,
+    fontWeight: 600,
   };
 };
 
@@ -132,7 +132,7 @@ export default function RequestDetailsDialog({
     >
       <DialogTitle
         sx={{
-          fontWeight: 900,
+          fontWeight: 600,
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -173,13 +173,13 @@ export default function RequestDetailsDialog({
               <Box
                 sx={{
                   p: 1.25,
-                  borderRadius: "14px",
+                  borderRadius: "12px",
                   border: `1px solid ${color_border}`,
                   background: color_white,
                   display: "flex",
                   gap: 1,
                   alignItems: "center",
-                  boxShadow: "0 8px 18px rgba(2,6,23,0.06)",
+                  boxShadow: "none",
                 }}
               >
                 <Box
@@ -196,8 +196,8 @@ export default function RequestDetailsDialog({
                   <PersonIcon />
                 </Box>
                 <Box>
-                  <Typography sx={{ fontWeight: 900, color: color_text_primary }}>Created By</Typography>
-                  <Typography sx={{ fontWeight: 800, color: color_text_secondary }}>{createdByName}</Typography>
+                  <Typography sx={{ fontWeight: 600, color: color_text_primary }}>Created By</Typography>
+                  <Typography sx={{ fontWeight: 400, color: color_text_secondary }}>{createdByName}</Typography>
                   <Typography sx={{ fontSize: 12, color: color_text_light }}>
                     Requested By ID: {selectedRequest.requested_by ?? "-"}
                   </Typography>
@@ -207,13 +207,13 @@ export default function RequestDetailsDialog({
               <Box
                 sx={{
                   p: 1.25,
-                  borderRadius: "14px",
+                  borderRadius: "12px",
                   border: `1px solid ${color_border}`,
                   background: color_white,
                   display: "flex",
                   gap: 1,
                   alignItems: "center",
-                  boxShadow: "0 8px 18px rgba(2,6,23,0.06)",
+                  boxShadow: "none",
                 }}
               >
                 <Box
@@ -230,8 +230,8 @@ export default function RequestDetailsDialog({
                   <DescriptionIcon />
                 </Box>
                 <Box>
-                  <Typography sx={{ fontWeight: 900, color: color_text_primary }}>File</Typography>
-                  <Typography sx={{ fontWeight: 800, color: color_text_secondary }}>
+                  <Typography sx={{ fontWeight: 600, color: color_text_primary }}>File</Typography>
+                  <Typography sx={{ fontWeight: 400, color: color_text_secondary }}>
                     {selectedRequest.file_name ?? "-"}
                   </Typography>
                   <Typography sx={{ fontSize: 12, color: color_text_light }}>
@@ -243,7 +243,7 @@ export default function RequestDetailsDialog({
             </Box>
 
             {/* Changes table */}
-            <Typography variant="h6" sx={{ mb: 1, fontWeight: 900 }}>
+            <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
               Field Changes
             </Typography>
 
@@ -255,29 +255,29 @@ export default function RequestDetailsDialog({
               <Box
                 sx={{
                   border: `1px solid ${color_border}`,
-                  borderRadius: "14px",
+                  borderRadius: "12px",
                   overflow: "hidden",
                   background: color_white,
-                  boxShadow: "0 8px 18px rgba(2,6,23,0.06)",
+                  boxShadow: "none",
                 }}
               >
                 <Box sx={{ maxHeight: 340, overflow: "auto" }}>
                   <table style={{ width: "100%", borderCollapse: "collapse" }}>
                     <thead>
                       <tr style={{ background: color_white_smoke }}>
-                        <th style={{ textAlign: "left", padding: 12, fontWeight: 900, color: color_text_primary }}>
+                        <th style={{ textAlign: "left", padding: 12, fontWeight: 600, color: color_text_primary }}>
                           Field
                         </th>
-                        <th style={{ textAlign: "left", padding: 12, fontWeight: 900, color: color_text_primary }}>
+                        <th style={{ textAlign: "left", padding: 12, fontWeight: 600, color: color_text_primary }}>
                           Old
                         </th>
-                        <th style={{ textAlign: "left", padding: 12, fontWeight: 900, color: color_text_primary }}>
+                        <th style={{ textAlign: "left", padding: 12, fontWeight: 600, color: color_text_primary }}>
                           New
                         </th>
-                        <th style={{ textAlign: "left", padding: 12, fontWeight: 900, color: color_text_primary }}>
+                        <th style={{ textAlign: "left", padding: 12, fontWeight: 600, color: color_text_primary }}>
                           Status
                         </th>
-                        <th style={{ textAlign: "left", padding: 12, fontWeight: 900, color: color_text_primary }}>
+                        <th style={{ textAlign: "left", padding: 12, fontWeight: 600, color: color_text_primary }}>
                           Reviewer Comment
                         </th>
                       </tr>
@@ -343,7 +343,7 @@ export default function RequestDetailsDialog({
               viewLabel="View"
               viewBtnSx={{
                 textTransform: "none",
-                fontWeight: 900,
+                fontWeight: 600,
                 backgroundColor: color_white,
                 color: color_text_secondary,
                 border: `1px solid ${color_border}`,

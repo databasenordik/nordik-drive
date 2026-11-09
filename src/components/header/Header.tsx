@@ -128,10 +128,23 @@ const AppToolbar = () => {
     >
       <HeaderNav onLinkClick={() => setMobileOpen(false)} />
 
-      {/* Logout only in drawer for mobile */}
+      {/* Account menu sits in the drawer on phones */}
       {isMobile && (
-        <Box mt={2}>
+        <Box
+          sx={{
+            mt: 1,
+            pt: 2,
+            borderTop: `1px solid ${color_nav_border}`,
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+            px: 1,
+          }}
+        >
           <Logout />
+          <Box component="span" sx={{ fontSize: 15, fontWeight: 500, color: color_nav_text }}>
+            Your account
+          </Box>
         </Box>
       )}
     </Box>
@@ -157,7 +170,7 @@ const AppToolbar = () => {
             maxWidth: 1360,
             mx: "auto",
             px: { xs: 1.5, sm: 3 },
-            minHeight: { xs: 56, sm: 72 },
+            minHeight: { xs: 56, md: 72 },
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -196,8 +209,8 @@ const AppToolbar = () => {
                 src="/logo-1.png"
                 alt="Children of Shingwauk Alumni Association"
                 sx={{
-                  width: { xs: 42, sm: 58 },
-                  height: { xs: 44, sm: 60 },
+                  width: { xs: 42, md: 58 },
+                  height: { xs: 44, md: 60 },
                   objectFit: "contain",
                   flexShrink: 0,
                 }}
@@ -259,10 +272,10 @@ const AppToolbar = () => {
             )}
           </Box>
 
-          {/* CENTER: navigation (desktop / tablet) */}
+          {/* CENTER: navigation (desktop); tablet and phone use the menu drawer */}
           <Box
             sx={{
-              display: { xs: "none", sm: "flex" },
+              display: { xs: "none", md: "flex" },
               alignItems: "center",
               justifyContent: "center",
               flex: "0 1 auto",
@@ -306,8 +319,8 @@ const AppToolbar = () => {
                 alt="Nordik Institute"
                 sx={{
                   width: "auto",
-                  height: { xs: 32, sm: 44 },
-                  maxWidth: { xs: 128, sm: 176 },
+                  height: { xs: 32, md: 44 },
+                  maxWidth: { xs: 128, md: 176 },
                   objectFit: "contain",
                 }}
               />
@@ -316,14 +329,14 @@ const AppToolbar = () => {
             {/* Account menu in the bar on tablet/desktop; in the drawer on mobile */}
             {!isMobile && <Logout />}
 
-            {/* Mobile menu button */}
+            {/* Menu button (tablet and phone) */}
             <IconButton
               aria-label="Open menu"
               aria-expanded={mobileOpen}
               edge="end"
               onClick={handleDrawerToggle}
               sx={{
-                display: { sm: "none" },
+                display: { md: "none" },
                 width: 44,
                 height: 44,
                 color: color_nav_active,
@@ -339,19 +352,19 @@ const AppToolbar = () => {
         </Toolbar>
       </AppBar>
 
-      {/* Mobile Drawer */}
+      {/* Menu drawer (tablet and phone) */}
       <Drawer
         anchor="right"
         open={mobileOpen}
         onClose={handleDrawerToggle}
         ModalProps={{ keepMounted: true }}
         sx={{
-          display: { xs: "block", sm: "none" },
+          display: { xs: "block", md: "none" },
           "& .MuiDrawer-paper": {
             boxSizing: "border-box",
             width: 260,
-            top: { xs: 56, sm: 72 },
-            height: { xs: "calc(100% - 56px)", sm: "calc(100% - 72px)" },
+            top: { xs: 56, md: 72 },
+            height: { xs: "calc(100% - 56px)", md: "calc(100% - 72px)" },
           },
         }}
       >
