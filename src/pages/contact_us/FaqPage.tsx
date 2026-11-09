@@ -23,7 +23,6 @@ import { CONTACT_FAQS } from "./constants";
 import {
   color_black_light,
   color_border,
-  color_light_gray,
   color_secondary_dark,
   color_text_primary,
   color_text_secondary,
@@ -31,6 +30,8 @@ import {
   color_white_smoke,
   header_height,
   header_mobile_height,
+  color_dv_page,
+  color_dv_border,
 } from "../../constants/colors";
 
 const FaqPage = () => {
@@ -41,7 +42,7 @@ const FaqPage = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        background: `linear-gradient(180deg, ${color_white_smoke} 0%, ${color_light_gray} 100%)`,
+        background: color_dv_page,
       }}
     >
       <Container
@@ -62,16 +63,16 @@ const FaqPage = () => {
             startIcon={<ArrowBackRounded />}
             sx={{
               alignSelf: "flex-start",
-              borderRadius: "14px",
+              borderRadius: "12px",
               px: 2.2,
               py: 1.15,
               textTransform: "none",
-              fontWeight: 900,
+              fontWeight: 600,
               fontSize: 15.5,
               color: color_secondary_dark,
               background: color_white,
               border: `1px solid ${color_border}`,
-              boxShadow: "0 8px 18px rgba(0,0,0,0.06)",
+              boxShadow: "none",
               "&:hover": {
                 background: color_white,
               },
@@ -84,8 +85,8 @@ const FaqPage = () => {
             sx={{
               borderRadius: 3,
               background: color_white,
-              border: `1px solid rgba(0,0,0,0.06)`,
-              boxShadow: "0 18px 34px rgba(0,0,0,0.10)",
+              border: `1px solid ${color_dv_border}`,
+              boxShadow: "none",
               overflow: "hidden",
             }}
           >
@@ -103,12 +104,12 @@ const FaqPage = () => {
                     width: 52,
                     height: 52,
                     minWidth: 52,
-                    borderRadius: "16px",
+                    borderRadius: "12px",
                     background: color_white_smoke,
                     display: "grid",
                     placeItems: "center",
                     border: `1px solid ${color_border}`,
-                    boxShadow: "0 10px 18px rgba(0, 58, 122, 0.08)",
+                    boxShadow: "none",
                   }}
                 >
                   <HelpOutline sx={{ color: color_secondary_dark, fontSize: 28 }} />
@@ -117,8 +118,8 @@ const FaqPage = () => {
                 <Box sx={{ minWidth: 0 }}>
                   <Typography
                     sx={{
-                      fontSize: { xs: 28, md: 34 },
-                      fontWeight: 900,
+                      fontSize: { xs: 24, md: 28 },
+                      fontWeight: 600,
                       color: color_text_primary,
                       lineHeight: 1.12,
                       letterSpacing: 0.2,
@@ -133,7 +134,7 @@ const FaqPage = () => {
                       fontSize: { xs: 15.2, md: 16.2 },
                       lineHeight: 1.8,
                       color: color_text_secondary,
-                      fontWeight: 700,
+                      fontWeight: 400,
                       maxWidth: 760,
                     }}
                   >
@@ -200,7 +201,7 @@ const FaqPage = () => {
                         <Typography
                           sx={{
                             fontSize: { xs: 17, md: 18.2 },
-                            fontWeight: 900,
+                            fontWeight: 600,
                             color: color_text_primary,
                             lineHeight: 1.45,
                           }}
@@ -227,7 +228,7 @@ const FaqPage = () => {
                               fontSize: { xs: 15.4, md: 16.2 },
                               lineHeight: 1.8,
                               color: color_text_secondary,
-                              fontWeight: 700,
+                              fontWeight: 400,
                             }}
                           >
                             {item.answer}
@@ -245,8 +246,8 @@ const FaqPage = () => {
             sx={{
               borderRadius: 3,
               background: color_white,
-              border: `1px solid rgba(0,0,0,0.06)`,
-              boxShadow: "0 14px 28px rgba(0,0,0,0.08)",
+              border: `1px solid ${color_dv_border}`,
+              boxShadow: "none",
             }}
           >
             <CardContent sx={{ px: { xs: 2.4, md: 3.5 }, py: { xs: 2.4, md: 2.8 } }}>
@@ -256,7 +257,7 @@ const FaqPage = () => {
                     width: 44,
                     height: 44,
                     minWidth: 44,
-                    borderRadius: "14px",
+                    borderRadius: "12px",
                     background: color_white_smoke,
                     display: "grid",
                     placeItems: "center",
@@ -270,7 +271,7 @@ const FaqPage = () => {
                   <Typography
                     sx={{
                       fontSize: { xs: 20, md: 22 },
-                      fontWeight: 900,
+                      fontWeight: 600,
                       color: color_black_light,
                       mb: 0.7,
                     }}
@@ -283,7 +284,7 @@ const FaqPage = () => {
                       fontSize: { xs: 14.8, md: 15.4 },
                       lineHeight: 1.8,
                       color: color_text_secondary,
-                      fontWeight: 700,
+                      fontWeight: 400,
                       mb: 1.6,
                     }}
                   >
@@ -295,14 +296,14 @@ const FaqPage = () => {
                     onClick={() => navigate("/contact-us")}
                     sx={{
                       textTransform: "none",
-                      borderRadius: "14px",
+                      borderRadius: "12px",
                       px: 2.4,
                       py: 1.1,
-                      fontWeight: 900,
+                      fontWeight: 600,
                       fontSize: 15.5,
                       background: color_secondary_dark,
                       color: color_white,
-                      boxShadow: "0 10px 18px rgba(0,0,0,0.12)",
+                      boxShadow: "none",
                       "&:hover": {
                         background: color_secondary_dark,
                       },

@@ -361,7 +361,6 @@ export default function MyFormSubmissionRequests() {
         sx={{
           height: "100%",
           minHeight: 0,
-          p: { xs: 1, md: 1.25 },
           boxSizing: "border-box",
           overflow: "hidden",
           backgroundColor: color_background,
@@ -397,7 +396,7 @@ export default function MyFormSubmissionRequests() {
             }}
           >
             <Box>
-              <Typography sx={{ fontWeight: 900, color: color_secondary, fontSize: "1rem" }}>
+              <Typography sx={{ fontWeight: 600, color: color_secondary, fontSize: "1rem" }}>
                 My Form Submission Requests
               </Typography>
               <Typography
@@ -405,7 +404,7 @@ export default function MyFormSubmissionRequests() {
                   mt: 0.25,
                   color: color_text_light,
                   fontSize: "0.8rem",
-                  fontWeight: 700,
+                  fontWeight: 400,
                 }}
               >
                 Track submitted forms and reviewer updates.
@@ -473,14 +472,14 @@ export default function MyFormSubmissionRequests() {
                   backgroundColor: color_white,
                 }}
               >
-                <Typography sx={{ fontWeight: 900, color: color_text_primary }}>
+                <Typography sx={{ fontWeight: 600, color: color_text_primary }}>
                   No {selectedStatus} form submission requests found.
                 </Typography>
                 <Typography
                   sx={{
                     mt: 0.5,
                     color: color_text_light,
-                    fontWeight: 700,
+                    fontWeight: 400,
                     fontSize: "0.85rem",
                   }}
                 >
@@ -493,7 +492,7 @@ export default function MyFormSubmissionRequests() {
                   sx={{
                     mt: 1.5,
                     textTransform: "none",
-                    fontWeight: 900,
+                    fontWeight: 600,
                     borderRadius: 2,
                     backgroundColor: color_secondary,
                     "&:hover": { backgroundColor: color_secondary_dark },
@@ -532,7 +531,7 @@ export default function MyFormSubmissionRequests() {
                         <Box sx={{ minWidth: 0 }}>
                           <Typography
                             sx={{
-                              fontWeight: 900,
+                              fontWeight: 600,
                               color: color_text_primary,
                               fontSize: "0.95rem",
                               overflow: "hidden",
@@ -549,7 +548,7 @@ export default function MyFormSubmissionRequests() {
                             sx={{
                               mt: 0.25,
                               color: color_text_light,
-                              fontWeight: 800,
+                              fontWeight: 400,
                               fontSize: "0.8rem",
                             }}
                           >
@@ -567,7 +566,7 @@ export default function MyFormSubmissionRequests() {
                             sx={{
                               height: 24,
                               fontSize: "0.72rem",
-                              fontWeight: 900,
+                              fontWeight: 600,
                               borderRadius: "999px",
                               ...chip.sx,
                             }}
@@ -578,7 +577,7 @@ export default function MyFormSubmissionRequests() {
                             variant="contained"
                             sx={{
                               textTransform: "none",
-                              fontWeight: 900,
+                              fontWeight: 600,
                               borderRadius: 2,
                               backgroundColor: color_secondary,
                               "&:hover": { backgroundColor: color_secondary_dark },

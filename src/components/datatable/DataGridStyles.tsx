@@ -17,7 +17,6 @@ import {
   color_dv_banner_text,
   color_dv_header_bg,
   color_dv_row_hover,
-  color_primary,
   color_danger,
 } from "../../constants/colors";
 

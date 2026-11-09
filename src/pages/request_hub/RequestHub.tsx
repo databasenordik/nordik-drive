@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 
 import CloseIcon from "@mui/icons-material/Close";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import DescriptionIcon from "@mui/icons-material/Description";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
@@ -26,13 +25,18 @@ import {
   color_text_primary,
   color_text_secondary,
   color_white,
-  color_white_smoke,
-  color_background,
+  color_dv_page,
+  color_dv_border,
+  color_dv_divider,
+  color_dv_header_bg,
+  color_dv_text,
+  color_dv_text_muted,
 } from "../../constants/colors";
 import {
   REQUEST_HUB_NAV_HEADER_SX,
   REQUEST_HUB_NAV_ITEM_SX,
 } from "./styles";
+import SectionSwitcher from "../../components/shared/SectionSwitcher";
 
 type RequestView = "ADD_INFO" | "FORM_SUBMISSION" | "SUPPORT" | "SUPPORT_CALLS";
 
@@ -67,21 +71,25 @@ export default function RequestsHub({
       {
         key: "ADD_INFO" as const,
         label: "Add Info Requests",
+        short: "Add info requests",
         icon: <AssignmentIcon />,
       },
       {
         key: "FORM_SUBMISSION" as const,
         label: "Form Submission Requests",
+        short: "Form submission requests",
         icon: <DescriptionIcon />,
       },
       {
         key: "SUPPORT" as const,
         label: "Support Requests",
+        short: "Support requests",
         icon: <SupportAgentIcon />,
       },
       {
         key: "SUPPORT_CALLS" as const,
         label: "Support Calls",
+        short: "Support calls",
         icon: <EventAvailableRoundedIcon />,
       },
     ],
@@ -98,40 +106,28 @@ export default function RequestsHub({
       sx={{
         height: `calc(100vh - ${topOffset})`,
         mt: topOffset,
-        p: { xs: 1.5, md: 2 },
+        px: { xs: 1.5, sm: 2, md: 3 },
+        py: { xs: 1.5, md: 2 },
         boxSizing: "border-box",
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
-        gap: 1.25,
+        gap: 1.5,
         position: "relative",
-        background: color_background,
+        background: color_dv_page,
+        width: "100%",
+        maxWidth: 1440,
+        mx: "auto",
       }}
     >
-      <IconButton
-        onClick={() => setNavOpen(true)}
-        aria-label="Open navigation"
-        title="Open navigation"
-        sx={{
-          position: "absolute",
-          right: { xs: 10, md: 14 },
-          top: { xs: 10, md: 14 },
-          zIndex: 2,
-          width: 44,
-          height: 44,
-          borderRadius: "12px",
-          background: color_white,
-          border: `1px solid ${color_border}`,
-          color: color_text_primary,
-          boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
-          "&:hover": { background: color_white_smoke },
-        }}
-      >
-        <MoreVertIcon />
-      </IconButton>
+      <SectionSwitcher
+        page="Requests"
+        current={items.find((it) => it.key === view)?.short ?? ""}
+        onOpen={() => setNavOpen(true)}
+      />
 
-      <Box sx={{ flex: 1, minHeight: 0, overflow: "hidden" }}>
-        <Box sx={{ height: "100%", overflow: "hidden" }}>
+      <Box sx={{ flex: 1, minHeight: 0, overflow: { xs: "auto", md: "hidden" } }}>
+        <Box sx={{ height: "100%", overflow: { xs: "visible", md: "hidden" } }}>
           {view === "ADD_INFO" && addInfoRequests}
           {view === "FORM_SUBMISSION" &&
             (formSubmissionRequests ?? <DefaultFormSubmissionPlaceholder />)}
@@ -153,10 +149,11 @@ export default function RequestsHub({
           "& .MuiDrawer-paper": {
             top: topOffset,
             height: `calc(100vh - ${topOffset})`,
-            width: 360,
-            background: color_white_smoke,
-            borderLeft: `1px solid ${color_border}`,
-            boxShadow: "0 18px 36px rgba(0,0,0,0.18)",
+            width: { xs: "88vw", sm: 340 },
+            maxWidth: 340,
+            background: color_white,
+            borderLeft: `1px solid ${color_dv_border}`,
+            boxShadow: "none",
           },
         }}
       >
@@ -173,9 +170,9 @@ export default function RequestsHub({
           >
             <Typography
               sx={{
-                fontWeight: 1000,
-                letterSpacing: 1,
-                color: "rgba(255, 255, 255, 0.82)",
+                fontWeight: 500,
+                letterSpacing: "0.06em",
+                color: color_dv_text_muted,
                 fontSize: 12,
               }}
             >
@@ -186,18 +183,20 @@ export default function RequestsHub({
               onClick={() => setNavOpen(false)}
               aria-label="Close navigation"
               sx={{
-                color: color_white,
-                "&:hover": { background: "rgba(255, 255, 255, 0.12)" },
+                width: 44,
+                height: 44,
+                color: color_dv_text,
+                "&:hover": { background: color_dv_header_bg },
               }}
             >
               <CloseIcon />
             </IconButton>
           </Box>
 
-          <Divider sx={{ borderColor: color_border }} />
+          <Divider sx={{ borderColor: color_dv_divider }} />
 
-          <Box sx={{ p: 1.75, flex: 1 }}>
-            <List sx={{ display: "flex", flexDirection: "column", gap: 1.2 }}>
+          <Box sx={{ p: 1.5, flex: 1 }}>
+            <List sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
               {items.map((it) => {
                 const selected = view === it.key;
 
@@ -210,7 +209,7 @@ export default function RequestsHub({
                   >
                     <ListItemIcon
                       sx={{
-                        minWidth: 44,
+                        minWidth: 40,
                         color: selected ? color_white : undefined,
                       }}
                     >
@@ -220,7 +219,7 @@ export default function RequestsHub({
                     <ListItemText
                       primary={it.label}
                       primaryTypographyProps={{
-                        fontWeight: 950,
+                        fontWeight: 500,
                         fontSize: 15,
                       }}
                     />
@@ -252,7 +251,7 @@ function DefaultFormSubmissionPlaceholder() {
           width: "100%",
           maxWidth: 720,
           border: `1px dashed ${color_border}`,
-          borderRadius: "20px",
+          borderRadius: "12px",
           background: color_white,
           p: { xs: 3, md: 4 },
           textAlign: "center",
@@ -261,7 +260,7 @@ function DefaultFormSubmissionPlaceholder() {
         <Typography
           sx={{
             fontSize: { xs: 20, md: 24 },
-            fontWeight: 950,
+            fontWeight: 600,
             color: color_text_primary,
             mb: 1,
           }}
@@ -300,7 +299,7 @@ function DefaultSupportRequestsPlaceholder() {
           width: "100%",
           maxWidth: 720,
           border: `1px dashed ${color_border}`,
-          borderRadius: "20px",
+          borderRadius: "12px",
           background: color_white,
           p: { xs: 3, md: 4 },
           textAlign: "center",
@@ -309,7 +308,7 @@ function DefaultSupportRequestsPlaceholder() {
         <Typography
           sx={{
             fontSize: { xs: 20, md: 24 },
-            fontWeight: 950,
+            fontWeight: 600,
             color: color_text_primary,
             mb: 1,
           }}
@@ -341,13 +340,13 @@ function DefaultSupportCallsPlaceholder() {
           width: "100%",
           maxWidth: 720,
           border: `1px dashed ${color_border}`,
-          borderRadius: "20px",
+          borderRadius: "12px",
           background: color_white,
           p: { xs: 3, md: 4 },
           textAlign: "center",
         }}
       >
-        <Typography sx={{ fontSize: { xs: 20, md: 24 }, fontWeight: 950, color: color_text_primary, mb: 1 }}>
+        <Typography sx={{ fontSize: { xs: 20, md: 24 }, fontWeight: 600, color: color_text_primary, mb: 1 }}>
           Support Calls
         </Typography>
         <Typography sx={{ fontSize: 14, color: color_text_secondary, lineHeight: 1.7 }}>

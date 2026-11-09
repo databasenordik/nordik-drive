@@ -16,9 +16,9 @@ export function PanelBox({
       sx={{
         backgroundColor: color_white,
         border: `1px solid ${color_border}`,
-        borderRadius: "14px",
+        borderRadius: "12px",
         p: 1.5,
-        boxShadow: "0 8px 18px rgba(2,6,23,0.06)",
+        boxShadow: "none",
         ...sx,
       }}
     >

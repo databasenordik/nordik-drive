@@ -1,110 +1,115 @@
 import type { SxProps, Theme } from "@mui/material/styles";
 
 import {
-  color_border,
-  color_focus_ring,
-  color_light_gray,
-  color_secondary,
-  color_secondary_dark,
-  color_text_light,
-  color_text_primary,
-  color_white,
-  color_white_smoke,
-  shadow_auth_button,
+  color_dv_border,
+  color_dv_control_border,
+  color_dv_divider,
+  color_dv_header_bg,
+  color_dv_page,
+  color_dv_primary,
+  color_dv_primary_hover,
+  color_dv_chip_bg,
+  color_dv_surface,
+  color_dv_text,
+  color_dv_text_muted,
 } from "../../constants/colors";
+import { UI_NAV_ITEM_SX } from "../../theme/ui";
 
 type RequestHubSx = SxProps<Theme>;
 
+// Navy design: white cards with a thin grey border on a light grey page,
+// plain white headers, 600 weight titles and 10px button corners.
+
 export const REQUEST_HUB_SURFACE_SX: RequestHubSx = {
   minHeight: "100%",
-  border: `1px solid ${color_border}`,
-  borderRadius: "22px",
+  border: `1px solid ${color_dv_border}`,
+  borderRadius: "12px",
   overflow: "hidden",
-  background: color_white,
-  boxShadow: "0 18px 36px rgba(0, 0, 0, 0.06)",
+  background: color_dv_surface,
+  boxShadow: "none",
 };
 
 export const REQUEST_HUB_HEADER_SX: RequestHubSx = {
-  background: `linear-gradient(180deg, ${color_secondary} 0%, ${color_secondary_dark} 100%)`,
-  borderBottom: `1px solid ${color_border}`,
+  background: color_dv_surface,
+  borderBottom: `1px solid ${color_dv_divider}`,
 };
 
 export const REQUEST_HUB_HEADER_ICON_SX: RequestHubSx = {
-  width: 44,
-  height: 44,
-  minWidth: 44,
+  width: 40,
+  height: 40,
+  minWidth: 40,
   display: "grid",
   placeItems: "center",
-  borderRadius: "14px",
-  color: color_white,
-  background: "rgba(255, 255, 255, 0.15)",
-  border: "1px solid rgba(255, 255, 255, 0.22)",
-  boxShadow: "0 10px 18px rgba(0, 0, 0, 0.12)",
+  borderRadius: "10px",
+  color: color_dv_primary,
+  background: color_dv_chip_bg,
+  border: "none",
+  boxShadow: "none",
 };
 
 export const REQUEST_HUB_HEADER_TITLE_SX: RequestHubSx = {
-  color: color_white,
-  fontWeight: 950,
+  color: color_dv_text,
+  fontWeight: 600,
 };
 
 export const REQUEST_HUB_HEADER_SUBTITLE_SX: RequestHubSx = {
-  color: "rgba(255, 255, 255, 0.84)",
-  fontWeight: 700,
+  color: color_dv_text_muted,
+  fontWeight: 400,
 };
 
 export const REQUEST_HUB_CONTENT_SX: RequestHubSx = {
-  background: color_white_smoke,
+  background: color_dv_page,
 };
 
 export const REQUEST_HUB_PANEL_SX: RequestHubSx = {
-  border: `1px solid ${color_border}`,
-  borderRadius: "18px",
-  background: color_white,
+  border: `1px solid ${color_dv_border}`,
+  borderRadius: "12px",
+  background: color_dv_surface,
 };
 
 export const REQUEST_HUB_EMPTY_STATE_SX: RequestHubSx = {
-  border: `1px dashed ${color_border}`,
-  borderRadius: "18px",
-  background: color_white,
+  border: `1px dashed ${color_dv_control_border}`,
+  borderRadius: "12px",
+  background: color_dv_surface,
 };
 
 export const REQUEST_HUB_PRIMARY_BUTTON_SX: RequestHubSx = {
   textTransform: "none",
-  fontWeight: 900,
-  borderRadius: "12px",
-  background: color_secondary,
-  color: color_white,
-  boxShadow: shadow_auth_button,
+  fontWeight: 500,
+  borderRadius: "10px",
+  background: color_dv_primary,
+  color: "#FFFFFF",
+  boxShadow: "none",
   "&:hover": {
-    background: color_secondary_dark,
-    boxShadow: shadow_auth_button,
+    background: color_dv_primary_hover,
+    boxShadow: "none",
   },
   "&:focus-visible": {
-    outline: `3px solid ${color_focus_ring}`,
+    outline: `3px solid ${color_dv_primary}`,
     outlineOffset: "2px",
   },
 };
 
 export const REQUEST_HUB_SECONDARY_BUTTON_SX: RequestHubSx = {
   textTransform: "none",
-  fontWeight: 900,
-  borderRadius: "12px",
-  color: color_text_primary,
-  border: `1px solid ${color_border}`,
-  background: color_white,
+  fontWeight: 500,
+  borderRadius: "10px",
+  color: color_dv_text,
+  border: `1px solid ${color_dv_control_border}`,
+  background: color_dv_surface,
   "&:hover": {
-    background: color_light_gray,
+    background: color_dv_header_bg,
   },
   "&:focus-visible": {
-    outline: `3px solid ${color_focus_ring}`,
+    outline: `3px solid ${color_dv_primary}`,
     outlineOffset: "2px",
   },
 };
 
 export const REQUEST_HUB_DIALOG_PAPER_SX: RequestHubSx = {
-  borderRadius: "22px",
+  borderRadius: "16px",
   overflow: "hidden",
-  border: `1px solid ${color_border}`,
+  border: `1px solid ${color_dv_border}`,
 };
 
 export const REQUEST_HUB_DIALOG_HEADER_SX: RequestHubSx = {
@@ -112,74 +117,46 @@ export const REQUEST_HUB_DIALOG_HEADER_SX: RequestHubSx = {
 };
 
 export const REQUEST_HUB_DIALOG_CONTENT_SX: RequestHubSx = {
-  background: color_white_smoke,
+  background: color_dv_page,
 };
 
 export const REQUEST_HUB_DIALOG_ACTIONS_SX: RequestHubSx = {
-  background: color_white,
-  borderTop: `1px solid ${color_border}`,
+  background: color_dv_surface,
+  borderTop: `1px solid ${color_dv_divider}`,
 };
 
 export const REQUEST_HUB_NAV_HEADER_SX: RequestHubSx = {
-  background: `linear-gradient(180deg, ${color_secondary} 0%, ${color_secondary_dark} 100%)`,
+  background: color_dv_surface,
 };
 
-export const REQUEST_HUB_NAV_ITEM_SX: RequestHubSx = {
-  borderRadius: "16px",
-  py: 1.35,
-  border: `1px solid ${color_border}`,
-  background: color_white,
-  color: color_text_primary,
-  "&:hover": {
-    background: color_light_gray,
-    borderColor: color_secondary,
-  },
-  "& .MuiListItemIcon-root": {
-    color: color_secondary_dark,
-  },
-  "& .MuiListItemText-primary": {
-    color: "inherit",
-    fontWeight: 950,
-  },
-  "&.Mui-selected": {
-    background: `linear-gradient(180deg, ${color_secondary} 0%, ${color_secondary_dark} 100%)`,
-    borderColor: color_secondary_dark,
-    color: color_white,
-  },
-  "&.Mui-selected:hover": {
-    background: `linear-gradient(180deg, ${color_secondary} 0%, ${color_secondary_dark} 100%)`,
-  },
-  "&.Mui-selected .MuiListItemIcon-root": {
-    color: color_white,
-  },
-};
+export const REQUEST_HUB_NAV_ITEM_SX: RequestHubSx = UI_NAV_ITEM_SX;
 
 export const REQUEST_HUB_SECTION_KICKER_SX: RequestHubSx = {
-  fontSize: 12,
-  fontWeight: 900,
-  letterSpacing: "0.08em",
-  textTransform: "uppercase",
-  color: color_text_light,
+  fontSize: 13,
+  fontWeight: 500,
+  letterSpacing: 0,
+  textTransform: "none",
+  color: color_dv_text_muted,
 };
 
 export const REQUEST_DETAILS_TITLE_SX: RequestHubSx = {
-  fontWeight: 950,
+  fontWeight: 600,
   fontSize: 18,
-  color: color_text_primary,
-  lineHeight: 1.2,
+  color: color_dv_text,
+  lineHeight: 1.25,
 };
 
 export const REQUEST_DETAILS_SUBTITLE_SX: RequestHubSx = {
   mt: 0.35,
-  fontSize: 12.8,
-  fontWeight: 700,
-  color: color_text_light,
+  fontSize: 13,
+  fontWeight: 400,
+  color: color_dv_text_muted,
   lineHeight: 1.45,
 };
 
 export const REQUEST_DETAILS_SECTION_TITLE_SX: RequestHubSx = {
-  fontWeight: 900,
-  fontSize: 13,
-  color: color_text_primary,
-  lineHeight: 1.2,
+  fontWeight: 600,
+  fontSize: 14,
+  color: color_dv_text,
+  lineHeight: 1.25,
 };

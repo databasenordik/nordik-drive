@@ -229,7 +229,7 @@ export default function DownloadMediaModal({
   const SectionTitle = ({ children }: { children: React.ReactNode }) => (
     <Typography
       sx={{
-        fontWeight: 900,
+        fontWeight: 400,
         fontSize: 12,
         color: color_text_secondary,
         textTransform: "none",
@@ -257,7 +257,7 @@ export default function DownloadMediaModal({
         py: 0.6,
       }}
     >
-      <Typography sx={{ fontWeight: 800, color: color_text_primary, fontSize: 13 }}>
+      <Typography sx={{ fontWeight: 600, color: color_text_primary, fontSize: 13 }}>
         {label}
       </Typography>
 
@@ -310,7 +310,7 @@ export default function DownloadMediaModal({
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <FolderZipIcon sx={{ color: color_text_secondary }} />
-          <Typography sx={{ fontWeight: 900, color: color_black_light, fontSize: 14 }}>
+          <Typography sx={{ fontWeight: 600, color: color_black_light, fontSize: 14 }}>
             Download Photos & Documents
           </Typography>
         </Box>
@@ -320,9 +320,9 @@ export default function DownloadMediaModal({
           disabled={zipLoading}
           startIcon={<CloseIcon sx={{ fontSize: 18 }} />}
           sx={{
-            textTransform: "uppercase",
+            textTransform: "none",
             letterSpacing: "0.04em",
-            fontWeight: 900,
+            fontWeight: 400,
             fontSize: 12,
             borderRadius: "8px",
             px: 1.2,
@@ -349,7 +349,7 @@ export default function DownloadMediaModal({
             background: color_white,
           }}
         >
-          <Typography sx={{ fontSize: 12, fontWeight: 900, color: color_text_secondary, mb: 0.5 }}>
+          <Typography sx={{ fontSize: 12, fontWeight: 400, color: color_text_secondary, mb: 0.5 }}>
             Download
           </Typography>
 
@@ -414,7 +414,7 @@ export default function DownloadMediaModal({
                   label={s}
                   size="small"
                   sx={{
-                    fontWeight: 900,
+                    fontWeight: 400,
                     background: color_light_gray,
                     border: `1px solid ${color_border}`,
                     color: color_text_secondary,
@@ -432,7 +432,7 @@ export default function DownloadMediaModal({
                   border: `1px solid ${color_border}`,
                   background: color_warning_light,
                   color: color_text_primary,
-                  fontWeight: 800,
+                  fontWeight: 600,
                   fontSize: 12.5,
                   textAlign: "center",
                 }}
@@ -450,7 +450,7 @@ export default function DownloadMediaModal({
                   border: `1px solid ${color_border}`,
                   background: color_white_smoke,
                   color: color_text_primary,
-                  fontWeight: 800,
+                  fontWeight: 600,
                   fontSize: 12.5,
                   whiteSpace: "pre-wrap",
                 }}
@@ -479,7 +479,7 @@ export default function DownloadMediaModal({
           disabled={zipLoading}
           sx={{
             textTransform: "none",
-            fontWeight: 900,
+            fontWeight: 600,
             borderRadius: "10px",
             px: 2.2,
             background: color_white,
@@ -504,7 +504,7 @@ export default function DownloadMediaModal({
           disabled={zipLoading}
           sx={{
             textTransform: "none",
-            fontWeight: 900,
+            fontWeight: 600,
             borderRadius: "10px",
             px: 2.2,
             background: color_secondary,

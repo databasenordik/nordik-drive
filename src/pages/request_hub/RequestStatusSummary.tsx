@@ -78,9 +78,9 @@ export default function RequestStatusSummary({
             sx={{
               color: color_text_light,
               fontSize: "0.72rem",
-              fontWeight: 900,
+              fontWeight: 400,
               lineHeight: 1.1,
-              textTransform: "uppercase",
+              textTransform: "none",
             }}
           >
             {item.label}
@@ -88,13 +88,13 @@ export default function RequestStatusSummary({
           <Box sx={{ mt: 0.75, display: "flex", alignItems: "baseline", gap: 0.5 }}>
             <Typography
               component="span"
-              sx={{ color: item.accent, fontSize: "1.25rem", fontWeight: 950, lineHeight: 1 }}
+              sx={{ color: item.accent, fontSize: "1.25rem", fontWeight: 600, lineHeight: 1 }}
             >
               {item.count}
             </Typography>
             <Typography
               component="span"
-              sx={{ color: color_text_primary, fontSize: "0.86rem", fontWeight: 900 }}
+              sx={{ color: color_text_primary, fontSize: "0.86rem", fontWeight: 600 }}
             >
               / {item.total}
             </Typography>
@@ -108,7 +108,7 @@ export default function RequestStatusSummary({
             borderRadius: 2,
             backgroundColor: color_background,
             color: color_text_light,
-            fontWeight: 800,
+            fontWeight: 400,
             fontSize: "0.8rem",
           }}
         >

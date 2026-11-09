@@ -17,7 +17,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 
 import {
-  color_primary,
   color_text_light,
   color_text_lighter,
   color_text_primary,
@@ -42,7 +41,7 @@ const RevokeAccessSection: React.FC<Props> = ({
     <Box sx={{ px: 3, pt: 2.25, pb: 2.5 }}>
       <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
         <DeleteIcon sx={{ fontSize: 18, color: `${color_danger}` }} />
-        <Typography sx={{ fontWeight: 800, fontSize: 12, color: `${color_danger}`, letterSpacing: "0.06em" }}>
+        <Typography sx={{ fontWeight: 600, fontSize: 12, color: `${color_danger}`, letterSpacing: "0.06em" }}>
           REVOKE ACCESS
         </Typography>
       </Stack>
@@ -83,9 +82,9 @@ const RevokeAccessSection: React.FC<Props> = ({
                 "& th": {
                   fontSize: 11,
                   letterSpacing: "0.06em",
-                  textTransform: "uppercase",
+                  textTransform: "none",
                   color: `${color_text_light}`,
-                  fontWeight: 800,
+                  fontWeight: 600,
                   py: 1.1,
                   borderBottom: "1px solid #E5E7EB",
                 },
@@ -117,7 +116,7 @@ const RevokeAccessSection: React.FC<Props> = ({
               filteredAccesses.map((a: any) => (
                 <TableRow key={a.id} hover sx={{ "&:hover": { bgcolor: `${color_white}` } }}>
                   <TableCell>
-                    <Typography sx={{ fontWeight: 700, fontSize: 13.5 }}>
+                    <Typography sx={{ fontWeight: 600, fontSize: 13.5 }}>
                       {a.firstname} {a.lastname}
                     </Typography>
                   </TableCell>

@@ -211,7 +211,7 @@ const FileUploader: React.FC = () => {
       }}
     >
       <Box sx={{ p: 2, background: "#fbfcfe", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
-        <Typography sx={{ fontWeight: 800, color: "#0f172a", fontSize: "0.95rem" }}>
+        <Typography sx={{ fontWeight: 600, color: "#0f172a", fontSize: "0.95rem" }}>
           Document Upload
         </Typography>
         <Typography sx={{ color: "rgba(15, 23, 42, 0.65)", fontSize: "0.8rem", mt: 0.35 }}>
@@ -231,7 +231,7 @@ const FileUploader: React.FC = () => {
               background: "rgba(239, 246, 255, 0.92)",
             }}
           >
-            <Typography sx={{ fontWeight: 800, color: "#1d4ed8", fontSize: "0.88rem" }}>
+            <Typography sx={{ fontWeight: 600, color: "#1d4ed8", fontSize: "0.88rem" }}>
               {pendingUploadCount === 1
                 ? "1 upload is running in the background."
                 : `${pendingUploadCount} uploads are running in the background.`}
@@ -264,7 +264,7 @@ const FileUploader: React.FC = () => {
             <DropZoneLabel htmlFor={inputId} aria-label="Select files to upload">
               <Box>
                 <CloudUpload sx={{ fontSize: 56, color: color_secondary, opacity: 0.9 }} />
-                <Typography sx={{ mt: 1, fontWeight: 800, color: "#0f172a" }}>
+                <Typography sx={{ mt: 1, fontWeight: 600, color: "#0f172a" }}>
                   Drag & Drop files here
                 </Typography>
                 <Typography sx={{ mt: 0.5, fontSize: "0.8rem", color: "rgba(15, 23, 42, 0.65)" }}>
@@ -277,7 +277,7 @@ const FileUploader: React.FC = () => {
                   sx={{
                     mt: 2,
                     textTransform: "none",
-                    fontWeight: 800,
+                    fontWeight: 600,
                     borderRadius: 1.5,
                     background: color_secondary,
                     px: 2.25,
@@ -305,7 +305,7 @@ const FileUploader: React.FC = () => {
             }}
           >
             <Box sx={{ p: 2, background: "#fbfcfe", borderBottom: "1px solid rgba(0,0,0,0.08)" }}>
-              <Typography sx={{ fontWeight: 800, color: "#0f172a", fontSize: "0.95rem" }}>
+              <Typography sx={{ fontWeight: 600, color: "#0f172a", fontSize: "0.95rem" }}>
                 Selected Files
               </Typography>
               <Typography sx={{ fontSize: "0.8rem", color: "rgba(15, 23, 42, 0.65)", mt: 0.25 }}>
@@ -323,7 +323,7 @@ const FileUploader: React.FC = () => {
                     background: "#ffffff",
                   }}
                 >
-                  <Typography sx={{ fontWeight: 700, color: "rgba(15, 23, 42, 0.75)" }}>
+                  <Typography sx={{ fontWeight: 400, color: "rgba(15, 23, 42, 0.75)" }}>
                     No files selected
                   </Typography>
                   <Typography sx={{ mt: 0.5, fontSize: "0.8rem", color: "rgba(15, 23, 42, 0.60)" }}>
@@ -375,7 +375,7 @@ const FileUploader: React.FC = () => {
                                   sx={{
                                     "& .MuiFormControlLabel-label": {
                                       fontSize: "0.9rem",
-                                      fontWeight: 700,
+                                      fontWeight: 600,
                                     },
                                   }}
                                 />
@@ -392,7 +392,7 @@ const FileUploader: React.FC = () => {
                                   sx={{
                                     "& .MuiFormControlLabel-label": {
                                       fontSize: "0.9rem",
-                                      fontWeight: 700,
+                                      fontWeight: 600,
                                     },
                                   }}
                                 />
@@ -422,7 +422,7 @@ const FileUploader: React.FC = () => {
                     sx={{
                       width: "100%",
                       textTransform: "none",
-                      fontWeight: 900,
+                      fontWeight: 600,
                       borderRadius: 1.5,
                       background: color_primary,
                       boxShadow: "none",

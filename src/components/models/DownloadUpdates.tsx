@@ -33,6 +33,8 @@ import {
   color_text_primary,
   color_text_secondary,
   color_text_light,
+  color_dv_banner_bg,
+  color_dv_control_border,
 } from "../../constants/colors";
 
 //  keep types minimal + compatible with your page
@@ -153,17 +155,17 @@ export default function DownloadUpdatesModal({
 
   const selectedTileSx = {
     border: `2px solid ${color_secondary}`,
-    background: color_light_gray,
+    background: color_dv_banner_bg,
   } as const;
 
   const unselectedTileSx = {
-    border: `2px solid ${color_border}`,
+    border: `2px solid ${color_dv_control_border}`,
     background: color_white,
   } as const;
 
   const primaryBtnSx = {
     textTransform: "none",
-    fontWeight: 900,
+    fontWeight: 600,
     borderRadius: "10px",
     background: color_secondary,
     color: color_white,
@@ -173,7 +175,7 @@ export default function DownloadUpdatesModal({
 
   const cancelBtnSx = {
     textTransform: "none",
-    fontWeight: 900,
+    fontWeight: 600,
     borderRadius: "10px",
     background: color_white,
     color: color_text_primary,
@@ -221,7 +223,7 @@ export default function DownloadUpdatesModal({
       {/* Header (matches screenshot: icon + title + X) */}
       <DialogTitle
         sx={{
-          fontWeight: 900,
+          fontWeight: 600,
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -233,7 +235,7 @@ export default function DownloadUpdatesModal({
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <DownloadIcon sx={{ color: color_secondary }} />
-          <Typography sx={{ fontWeight: 900, color: color_text_primary }}>
+          <Typography sx={{ fontWeight: 600, color: color_text_primary }}>
             Download Updates
           </Typography>
         </Box>
@@ -253,7 +255,7 @@ export default function DownloadUpdatesModal({
       </DialogTitle>
 
       <DialogContent sx={{ background: color_white, py: 2 }}>
-        <Typography sx={{ fontWeight: 900, color: color_text_primary, mb: 1 }}>
+        <Typography sx={{ fontWeight: 600, color: color_text_primary, mb: 1 }}>
           Export format
         </Typography>
 
@@ -276,7 +278,7 @@ export default function DownloadUpdatesModal({
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <TableViewIcon sx={{ color: color_secondary }} />
               <Box>
-                <Typography sx={{ fontWeight: 900, color: color_text_primary }}>
+                <Typography sx={{ fontWeight: 600, color: color_text_primary }}>
                   Excel (.xlsx)
                 </Typography>
                 <Typography sx={{ fontSize: 12, color: color_text_light }}>
@@ -315,7 +317,7 @@ export default function DownloadUpdatesModal({
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <DescriptionIcon sx={{ color: color_secondary }} />
               <Box>
-                <Typography sx={{ fontWeight: 900, color: color_text_primary }}>
+                <Typography sx={{ fontWeight: 600, color: color_text_primary }}>
                   CSV (.csv)
                 </Typography>
                 <Typography sx={{ fontSize: 12, color: color_text_light }}>
@@ -345,7 +347,7 @@ export default function DownloadUpdatesModal({
             }`}
             size="small"
             sx={{
-              fontWeight: 900,
+              fontWeight: 400,
               letterSpacing: "0.02em",
               borderRadius: "999px",
               background: color_light_gray,
@@ -367,7 +369,7 @@ export default function DownloadUpdatesModal({
               p: 1.25,
             }}
           >
-            <Typography sx={{ fontWeight: 900, color: color_text_primary }}>
+            <Typography sx={{ fontWeight: 600, color: color_text_primary }}>
               Download failed
             </Typography>
             <Typography sx={{ color: color_text_secondary, fontSize: 13, mt: 0.25 }}>

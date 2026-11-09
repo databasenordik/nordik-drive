@@ -141,7 +141,7 @@ const FileVersionHistoryModal: React.FC<FileVersionHistoryModalProps> = ({
                 <HistoryIcon sx={{ fontSize: 20, color: "primary.main" }} />
               </Box>
 
-              <Typography sx={{ fontWeight: 700, fontSize: 18, color: "#111827" }}>
+              <Typography sx={{ fontWeight: 600, fontSize: 18, color: "#111827" }}>
                 File Version History
                 <Typography
                   component="span"
@@ -190,7 +190,7 @@ const FileVersionHistoryModal: React.FC<FileVersionHistoryModalProps> = ({
                 bgcolor: "#fff",
               }}
             >
-              <Table size="small" sx={{ minWidth: 700 }}>
+              <Table size="small" sx={{ minWidth: 900 }}>
                 <TableHead>
                   <TableRow
                     sx={{
@@ -198,16 +198,16 @@ const FileVersionHistoryModal: React.FC<FileVersionHistoryModalProps> = ({
                       "& th": {
                         fontSize: 11,
                         letterSpacing: "0.06em",
-                        textTransform: "uppercase",
+                        textTransform: "none",
                         color: "#6B7280",
-                        fontWeight: 700,
+                        fontWeight: 600,
                         py: 1.2,
                         borderBottom: "1px solid #E5E7EB",
                       },
                     }}
                   >
                     <TableCell width={80}>Version</TableCell>
-                    <TableCell>Filename</TableCell>
+                    <TableCell sx={{ minWidth: 240 }}>Filename</TableCell>
                     <TableCell width={110}>Size (KB)</TableCell>
                     <TableCell width={80}>Rows</TableCell>
                     <TableCell width={160}>Uploaded By</TableCell>
@@ -274,7 +274,7 @@ const FileVersionHistoryModal: React.FC<FileVersionHistoryModalProps> = ({
                               label="LATEST"
                               size="small"
                               sx={{
-                                fontWeight: 800,
+                                fontWeight: 600,
                                 fontSize: 11,
                                 bgcolor: "rgba(16,185,129,0.12)",
                                 color: "#059669",
@@ -288,8 +288,8 @@ const FileVersionHistoryModal: React.FC<FileVersionHistoryModalProps> = ({
                               startIcon={<ReplayIcon />}
                               onClick={() => handleRevert(v)}
                               sx={{
-                                textTransform: "uppercase",
-                                fontWeight: 800,
+                                textTransform: "none",
+                                fontWeight: 600,
                                 letterSpacing: "0.04em",
                                 fontSize: 11,
                                 borderRadius: 2,
@@ -345,8 +345,8 @@ const FileVersionHistoryModal: React.FC<FileVersionHistoryModalProps> = ({
               borderRadius: 2,
               px: 2,
               py: 1.5,
-              fontWeight: 700,
-              textTransform: "uppercase",
+              fontWeight: 600,
+              textTransform: "none",
               fontSize: 16,
               backgroundColor: `${color_white} !important`,
               color: `${color_text_primary} !important`,

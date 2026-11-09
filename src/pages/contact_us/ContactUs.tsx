@@ -31,7 +31,6 @@ import SupportRequestCard from "./SupportRequestCard";
 import SupportBookingForm from "../support_schedule/SupportBookingForm";
 import {
   color_white,
-  color_light_gray,
   color_white_smoke,
   color_secondary,
   color_secondary_dark,
@@ -41,6 +40,8 @@ import {
   color_black_light,
   header_height,
   header_mobile_height,
+  color_dv_page,
+  color_dv_border,
 } from "../../constants/colors";
 
 const ContactUs = () => {
@@ -71,7 +72,7 @@ const ContactUs = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        background: `linear-gradient(180deg, ${color_white_smoke} 0%, ${color_light_gray} 100%)`,
+        background: color_dv_page,
       }}
     >
       <Container
@@ -117,35 +118,22 @@ const ContactUs = () => {
               height: "fit-content",
               borderRadius: 2,
               background: color_white,
-              border: `1px solid rgba(0,0,0,0.06)`,
-              boxShadow: "0 18px 34px rgba(0,0,0,0.10)",
+              border: `1px solid ${color_dv_border}`,
+              boxShadow: "none",
               position: "relative",
               overflow: "hidden",
             }}
           >
-            {/* blue accent bar */}
-            <Box
-              sx={{
-                position: "absolute",
-                left: 0,
-                top: 0,
-                bottom: 0,
-                width: 6,
-                background: color_secondary_dark,
-              }}
-            />
-
             <CardContent
               sx={{
                 px: { xs: 3, md: 4 },
                 py: { xs: 3, md: 3.5 },
-                ml: "6px",
               }}
             >
               <Typography
                 sx={{
-                  fontSize: { xs: 28, md: 34 },
-                  fontWeight: 900,
+                  fontSize: { xs: 24, md: 28 },
+                  fontWeight: 600,
                   color: color_text_primary,
                   mb: 1.2,
                   letterSpacing: 0.2,
@@ -160,7 +148,7 @@ const ContactUs = () => {
                   lineHeight: 1.6,
                   color: color_text_secondary,
                   mb: 2.4,
-                  fontWeight: 700, //  make left texts bolder
+                  fontWeight: 400,
                 }}
               >
                 We&apos;re here to help answer your questions. Community impact can be complicated, our
@@ -183,10 +171,10 @@ const ContactUs = () => {
                     <Business sx={{ color: color_secondary_dark, fontSize: 18 }} />
                   </Box>
                   <Box>
-                    <Typography sx={{ fontSize: 13.5, fontWeight: 900, color: color_black_light }}>
+                    <Typography sx={{ fontSize: 13.5, fontWeight: 600, color: color_black_light }}>
                       Contact:
                     </Typography>
-                    <Typography sx={{ fontSize: 12.8, fontWeight: 700, color: color_text_secondary }}>
+                    <Typography sx={{ fontSize: 12.8, fontWeight: 400, color: color_text_secondary }}>
                       Administration Office
                     </Typography>
                   </Box>
@@ -207,16 +195,16 @@ const ContactUs = () => {
                     <LocationOn sx={{ color: color_secondary_dark, fontSize: 18 }} />
                   </Box>
                   <Box>
-                    <Typography sx={{ fontSize: 13.5, fontWeight: 900, color: color_black_light }}>
+                    <Typography sx={{ fontSize: 13.5, fontWeight: 600, color: color_black_light }}>
                       Community support team
                     </Typography>
-                    <Typography sx={{ fontSize: 12.8, fontWeight: 700, color: color_text_secondary }}>
+                    <Typography sx={{ fontSize: 12.8, fontWeight: 400, color: color_text_secondary }}>
                       {CONTACT_INFO.address}
                     </Typography>
-                    <Typography sx={{ fontSize: 12.8, fontWeight: 700, color: color_text_secondary }}>
+                    <Typography sx={{ fontSize: 12.8, fontWeight: 400, color: color_text_secondary }}>
                       {CONTACT_INFO.street}
                     </Typography>
-                    <Typography sx={{ fontSize: 12.8, fontWeight: 700, color: color_text_secondary }}>
+                    <Typography sx={{ fontSize: 12.8, fontWeight: 400, color: color_text_secondary }}>
                       Sault Ste. Marie P6A 2G4
                     </Typography>
                   </Box>
@@ -236,7 +224,7 @@ const ContactUs = () => {
                   >
                     <Phone sx={{ color: color_secondary_dark, fontSize: 18 }} />
                   </Box>
-                  <Typography sx={{ fontSize: 13.2, fontWeight: 900, color: color_black_light }}>
+                  <Typography sx={{ fontSize: 13.2, fontWeight: 600, color: color_black_light }}>
                     T: {CONTACT_INFO.telephone}
                   </Typography>
                 </Box>
@@ -259,7 +247,7 @@ const ContactUs = () => {
                   <Typography
                     sx={{
                       fontSize: 13.2,
-                      fontWeight: 900,
+                      fontWeight: 600,
                       color: color_secondary_dark,
                     }}
                   >
@@ -288,8 +276,8 @@ const ContactUs = () => {
               height: "fit-content",
               borderRadius: 2,
               background: color_white,
-              border: `1px solid rgba(0,0,0,0.06)`,
-              boxShadow: "0 18px 34px rgba(0,0,0,0.10)",
+              border: `1px solid ${color_dv_border}`,
+              boxShadow: "none",
             }}
           >
             <CardContent sx={{ px: { xs: 2.5, md: 3.5 }, py: { xs: 2.8, md: 3.2 } }}>
@@ -299,10 +287,10 @@ const ContactUs = () => {
                   <Box
                     sx={{
                       p: { xs: 1.8, md: 2 },
-                      borderRadius: "18px",
+                      borderRadius: "12px",
                       background: color_white_smoke,
                       border: `1px solid ${color_border}`,
-                      boxShadow: "0 10px 18px rgba(0, 0, 0, 0.05)",
+                      boxShadow: "none",
                     }}
                   >
                     <Stack spacing={1.7}>
@@ -312,12 +300,12 @@ const ContactUs = () => {
                             width: 48,
                             height: 48,
                             minWidth: 48,
-                            borderRadius: "16px",
+                            borderRadius: "12px",
                             background: color_white,
                             border: `1px solid ${color_border}`,
                             display: "grid",
                             placeItems: "center",
-                            boxShadow: "0 8px 16px rgba(0, 58, 122, 0.08)",
+                            boxShadow: "none",
                           }}
                         >
                           <SupportAgentRounded sx={{ color: color_secondary_dark, fontSize: 26 }} />
@@ -327,7 +315,7 @@ const ContactUs = () => {
                           <Typography
                             sx={{
                               fontSize: { xs: 18, md: 19 },
-                              fontWeight: 900,
+                              fontWeight: 600,
                               color: color_text_primary,
                               lineHeight: 1.3,
                               mb: 0.45,
@@ -341,7 +329,7 @@ const ContactUs = () => {
                               fontSize: { xs: 13.8, md: 14.2 },
                               lineHeight: 1.65,
                               color: color_text_secondary,
-                              fontWeight: 700,
+                              fontWeight: 400,
                             }}
                           >
                             Contact support with your question, report an issue, and attach a
@@ -356,14 +344,14 @@ const ContactUs = () => {
                         sx={{
                           alignSelf: { xs: "stretch", sm: "flex-start" },
                           textTransform: "none",
-                          borderRadius: "14px",
+                          borderRadius: "12px",
                           px: 2.2,
                           py: 1.05,
-                          fontWeight: 900,
+                          fontWeight: 600,
                           fontSize: 15.2,
                           background: color_secondary_dark,
                           color: color_white,
-                          boxShadow: "0 10px 18px rgba(0,0,0,0.12)",
+                          boxShadow: "none",
                           "&:hover": { background: color_secondary_dark },
                         }}
                       >
@@ -374,18 +362,18 @@ const ContactUs = () => {
                 </Box>
 
                 <Box sx={{ width: "100%" }}>
-                  <Box sx={{ p: { xs: 1.8, md: 2 }, borderRadius: "18px", background: color_white_smoke, border: `1px solid ${color_border}`, boxShadow: "0 10px 18px rgba(0, 0, 0, 0.05)" }}>
+                  <Box sx={{ p: { xs: 1.8, md: 2 }, borderRadius: "12px", background: color_white_smoke, border: `1px solid ${color_border}`, boxShadow: "none" }}>
                     <Stack direction={{ xs: "column", sm: "row" }} spacing={1.6} alignItems={{ xs: "stretch", sm: "center" }} justifyContent="space-between">
                       <Box sx={{ display: "flex", gap: 1.4, alignItems: "flex-start" }}>
-                        <Box sx={{ width: 48, height: 48, minWidth: 48, borderRadius: "16px", background: color_white, border: `1px solid ${color_border}`, display: "grid", placeItems: "center" }}>
+                        <Box sx={{ width: 48, height: 48, minWidth: 48, borderRadius: "12px", background: color_white, border: `1px solid ${color_border}`, display: "grid", placeItems: "center" }}>
                           <EventAvailableRounded sx={{ color: color_secondary_dark, fontSize: 26 }} />
                         </Box>
                         <Box>
-                          <Typography sx={{ fontSize: { xs: 18, md: 19 }, fontWeight: 900, color: color_text_primary, lineHeight: 1.3 }}>Prefer to talk it through?</Typography>
-                          <Typography sx={{ fontSize: { xs: 13.8, md: 14.2 }, lineHeight: 1.65, color: color_text_secondary, fontWeight: 700, mt: .45 }}>Book a support call at a time that works for you.</Typography>
+                          <Typography sx={{ fontSize: { xs: 18, md: 19 }, fontWeight: 600, color: color_text_primary, lineHeight: 1.3 }}>Prefer to talk it through?</Typography>
+                          <Typography sx={{ fontSize: { xs: 13.8, md: 14.2 }, lineHeight: 1.65, color: color_text_secondary, fontWeight: 400, mt: .45 }}>Book a support call at a time that works for you.</Typography>
                         </Box>
                       </Box>
-                      <Button onClick={() => setScheduleModalOpen(true)} startIcon={<EventAvailableRounded />} sx={{ alignSelf: { xs: "stretch", sm: "center" }, flexShrink: 0, textTransform: "none", borderRadius: "14px", px: 2.2, py: 1.05, fontWeight: 900, fontSize: 15.2, background: color_secondary_dark, color: color_white, "&:hover": { background: color_secondary_dark } }}>
+                      <Button onClick={() => setScheduleModalOpen(true)} startIcon={<EventAvailableRounded />} sx={{ alignSelf: { xs: "stretch", sm: "center" }, flexShrink: 0, textTransform: "none", borderRadius: "12px", px: 2.2, py: 1.05, fontWeight: 600, fontSize: 15.2, background: color_secondary_dark, color: color_white, "&:hover": { background: color_secondary_dark } }}>
                         Schedule a call
                       </Button>
                     </Stack>
@@ -396,10 +384,10 @@ const ContactUs = () => {
                   <Box
                     sx={{
                       p: { xs: 1.6, md: 1.8 },
-                      borderRadius: "16px",
+                      borderRadius: "12px",
                       background: color_white_smoke,
                       border: `1px solid ${color_border}`,
-                      boxShadow: "0 8px 16px rgba(0, 0, 0, 0.05)",
+                      boxShadow: "none",
                     }}
                   >
                     <Stack
@@ -412,7 +400,7 @@ const ContactUs = () => {
                         <Typography
                           sx={{
                             fontSize: { xs: 17, md: 18 },
-                            fontWeight: 900,
+                            fontWeight: 600,
                             color: color_text_primary,
                             lineHeight: 1.3,
                             mb: 0.4,
@@ -426,7 +414,7 @@ const ContactUs = () => {
                             fontSize: { xs: 14, md: 14.4 },
                             lineHeight: 1.6,
                             color: color_text_secondary,
-                            fontWeight: 700,
+                            fontWeight: 400,
                           }}
                         >
                           Read common questions and answers.
@@ -440,14 +428,14 @@ const ContactUs = () => {
                           alignSelf: { xs: "stretch", sm: "center" },
                           flexShrink: 0,
                           textTransform: "none",
-                          borderRadius: "14px",
+                          borderRadius: "12px",
                           px: 2.2,
                           py: 1.05,
-                          fontWeight: 900,
+                          fontWeight: 600,
                           fontSize: 15.2,
                           background: color_secondary_dark,
                           color: color_white,
-                          boxShadow: "0 10px 18px rgba(0,0,0,0.12)",
+                          boxShadow: "none",
                           "&:hover": { background: color_secondary_dark },
                         }}
                       >
@@ -462,7 +450,7 @@ const ContactUs = () => {
                   <Typography
                     sx={{
                       fontSize: { xs: 18, md: 20 },
-                      fontWeight: 900,
+                      fontWeight: 600,
                       color: color_text_primary,
                       mb: 1.4,
                     }}
@@ -481,10 +469,10 @@ const ContactUs = () => {
                       borderRadius: 1.6,
                       background: color_secondary_dark,
                       color: color_white,
-                      fontWeight: 900,
-                      letterSpacing: 1,
+                      fontWeight: 600,
+                      letterSpacing: 0.5,
                       fontSize: 16,
-                      boxShadow: "0 10px 18px rgba(0,0,0,0.12)",
+                      boxShadow: "none",
                       "&:hover": { background: color_secondary_dark },
                     }}
                   >
@@ -497,7 +485,7 @@ const ContactUs = () => {
                   <Typography
                     sx={{
                       fontSize: { xs: 18, md: 20 },
-                      fontWeight: 900,
+                      fontWeight: 600,
                       color: color_text_primary,
                       mb: 1.4,
                     }}
@@ -520,10 +508,10 @@ const ContactUs = () => {
                       borderRadius: 1.6,
                       background: color_secondary_dark,
                       color: color_white,
-                      fontWeight: 900,
-                      letterSpacing: 1,
+                      fontWeight: 600,
+                      letterSpacing: 0.5,
                       fontSize: 16,
-                      boxShadow: "0 10px 18px rgba(0,0,0,0.12)",
+                      boxShadow: "none",
                       "&:hover": { background: color_secondary_dark },
                     }}
                   >

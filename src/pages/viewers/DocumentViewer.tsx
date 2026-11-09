@@ -432,7 +432,7 @@ function AchieverStorySubmissionForm({
 
       {submitted ? (
         <Box sx={{ p: 2, borderRadius: 2, border: "1px solid rgba(39,174,96,0.35)", background: "rgba(39,174,96,0.10)" }}>
-          <Typography sx={{ fontWeight: 900, color: "#166534" }}>Story submitted for review.</Typography>
+          <Typography sx={{ fontWeight: 600, color: "#166534" }}>Story submitted for review.</Typography>
           <Typography sx={{ mt: 0.5, color: color_text_primary }}>It will appear in this person's stories once an administrator approves it.</Typography>
         </Box>
       ) : (
@@ -452,7 +452,7 @@ function AchieverStorySubmissionForm({
           {storyType === "text" && (
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               <Box sx={{ p: 1.5, borderRadius: 2, border: "1px solid rgba(35,82,133,0.28)", background: "rgba(35,82,133,0.07)" }}>
-                <Typography sx={{ fontWeight: 900, color: color_secondary }}>Recommended common format</Typography>
+                <Typography sx={{ fontWeight: 600, color: color_secondary }}>Recommended common format</Typography>
                 <Typography sx={{ mt: 0.5, color: color_text_primary }}>
                   Add what is known and leave anything else blank. Blank biography fields will appear as “Not recorded” in the generated document.
                 </Typography>
@@ -532,7 +532,7 @@ function AchieverStorySubmissionForm({
                 />
               ) : (
                 <Box>
-                  <Button component="label" variant="outlined" sx={{ fontWeight: 900 }}>
+                  <Button component="label" variant="outlined" sx={{ fontWeight: 600 }}>
                     {videoFile ? "Choose a different video" : "Choose video"}
                     <input
                       hidden
@@ -551,7 +551,7 @@ function AchieverStorySubmissionForm({
 
           {storyType === "document" && (
             <Box>
-              <Button component="label" variant="outlined" sx={{ fontWeight: 900 }}>
+              <Button component="label" variant="outlined" sx={{ fontWeight: 600 }}>
                 {documentFile ? "Choose a different document" : "Choose PDF or Word document"}
                 <input
                   hidden
@@ -574,7 +574,7 @@ function AchieverStorySubmissionForm({
               onClick={submit}
               disabled={submitting}
               variant="contained"
-              sx={{ background: color_secondary, fontWeight: 900, "&:hover": { background: color_secondary_dark } }}
+              sx={{ background: color_secondary, fontWeight: 600, "&:hover": { background: color_secondary_dark } }}
             >
               {submitting ? "Submitting..." : "Submit for approval"}
             </Button>
@@ -946,16 +946,16 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
   };
 
   const approveBtnSx = {
-    fontWeight: 900,
-    textTransform: "uppercase",
+    fontWeight: 600,
+    textTransform: "none",
     background: color_secondary,
     "&:hover": { background: color_secondary_dark },
     "&.Mui-disabled": { background: color_secondary, color: color_white, opacity: 0.7 },
   } as const;
 
   const rejectBtnSx = {
-    fontWeight: 900,
-    textTransform: "uppercase",
+    fontWeight: 600,
+    textTransform: "none",
     background: color_primary,
     "&:hover": { background: color_primary_dark },
     "&.Mui-disabled": { background: color_primary, color: color_white, opacity: 0.7 },
@@ -1017,8 +1017,8 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
               variant="contained"
               data-testid="add-achiever-story"
               sx={{
-                fontWeight: 900,
-                textTransform: "uppercase",
+                fontWeight: 600,
+                textTransform: "none",
                 px: 2,
                 background: color_primary,
                 "&:hover": { background: color_primary_dark },
@@ -1037,8 +1037,8 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
               data-testid="top-open"
               aria-label="top-open"
               sx={{
-                fontWeight: 900,
-                textTransform: "uppercase",
+                fontWeight: 600,
+                textTransform: "none",
                 borderWidth: 2,
                 color: color_white,
                 background: color_secondary,
@@ -1064,8 +1064,8 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
               data-testid="top-download"
               aria-label="top-download"
               sx={{
-                fontWeight: 900,
-                textTransform: "uppercase",
+                fontWeight: 600,
+                textTransform: "none",
                 px: 2,
                 background: color_secondary,
                 "&:hover": { background: color_secondary_dark },
@@ -1083,8 +1083,8 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
             data-testid="top-close"
             aria-label="top-close"
             sx={{
-              fontWeight: 900,
-              textTransform: "uppercase",
+              fontWeight: 600,
+              textTransform: "none",
               borderWidth: 2,
               color: color_text_primary,
               backgroundColor: color_white,
@@ -1103,7 +1103,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
           py: 1,
           background: color_text_primary,
           color: color_white,
-          fontWeight: 700,
+          fontWeight: 600,
           fontSize: 13,
         }}
         data-testid="viewer-tip"
@@ -1147,7 +1147,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
               border: `1px solid ${color_border}`,
               background: color_white,
               overflow: "hidden",
-              boxShadow: "0 8px 30px rgba(0,0,0,0.12)",
+              boxShadow: "none",
               position: "relative",
             }}
             data-testid="viewer-preview-shell"
@@ -1155,7 +1155,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
             {!hasInlineStoryContent && fileBlobLoading && (
               <Box sx={{ p: 3, display: "flex", alignItems: "center", gap: 2 }} data-testid="viewer-loading">
                 <CircularProgress size={24} />
-                <Typography sx={{ fontWeight: 700, color: color_text_primary }}>
+                <Typography sx={{ fontWeight: 600, color: color_text_primary }}>
                   {DOCUMENT_LOADING_TEXT}
                 </Typography>
               </Box>
@@ -1163,7 +1163,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
 
             {!hasInlineStoryContent && !fileBlobLoading && fileBlobError && (
               <Box sx={{ p: 3 }} data-testid="viewer-error">
-                <Typography sx={{ fontWeight: 900, mb: 1, color: color_text_primary }}>
+                <Typography sx={{ fontWeight: 600, mb: 1, color: color_text_primary }}>
                   {DOCUMENT_LOAD_ERROR_TITLE}
                 </Typography>
                 <Typography sx={{ color: color_text_light }}>{String(fileBlobError)}</Typography>
@@ -1308,7 +1308,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
                     }}
                     data-testid="viewer-docx-error"
                   >
-                    <Typography sx={{ fontWeight: 900, color: color_text_primary, mb: 0.5 }}>
+                    <Typography sx={{ fontWeight: 600, color: color_text_primary, mb: 0.5 }}>
                       {DOCUMENT_PREVIEW_NOT_AVAILABLE}
                     </Typography>
                     <Typography sx={{ color: color_text_light, mb: 2 }}>
@@ -1321,7 +1321,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
                       startIcon={<OpenInNewIcon />}
                       data-testid="viewer-docx-open"
                       sx={{
-                        fontWeight: 900,
+                        fontWeight: 600,
                         background: color_secondary,
                         "&:hover": { background: color_secondary_dark },
                       }}
@@ -1344,7 +1344,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
                     }}
                     data-testid="viewer-unsupported-preview"
                   >
-                    <Typography sx={{ fontWeight: 900, color: color_text_primary, mb: 0.5 }}>
+                    <Typography sx={{ fontWeight: 600, color: color_text_primary, mb: 0.5 }}>
                       {DOCUMENT_UNSUPPORTED_PREVIEW_PREFIX}{" "}
                       {isLegacyWordMime(activeDocMime) ? "DOC" : "Excel"}{" "}
                       {DOCUMENT_UNSUPPORTED_PREVIEW_SUFFIX}
@@ -1359,7 +1359,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
                       startIcon={<OpenInNewIcon />}
                       data-testid="viewer-unsupported-open"
                       sx={{
-                        fontWeight: 900,
+                        fontWeight: 600,
                         background: color_secondary,
                         "&:hover": { background: color_secondary_dark },
                       }}
@@ -1413,7 +1413,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
                       }}
                       data-testid="viewer-unknown-preview"
                     >
-                      <Typography sx={{ fontWeight: 900, color: color_text_primary, mb: 0.5 }}>
+                      <Typography sx={{ fontWeight: 600, color: color_text_primary, mb: 0.5 }}>
                         {DOCUMENT_PREVIEW_NOT_AVAILABLE}
                       </Typography>
                       <Typography sx={{ color: color_text_light, mb: 2 }}>
@@ -1426,7 +1426,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
                         startIcon={<OpenInNewIcon />}
                         data-testid="viewer-unknown-open"
                         sx={{
-                          fontWeight: 900,
+                          fontWeight: 600,
                           background: color_secondary,
                           "&:hover": { background: color_secondary_dark },
                         }}
@@ -1449,7 +1449,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
                 }}
                 data-testid="viewer-empty"
               >
-                <Typography sx={{ color: color_text_light, fontWeight: 700 }}>
+                <Typography sx={{ color: color_text_light, fontWeight: 400 }}>
                   {DOCUMENT_EMPTY_TEXT}
                 </Typography>
               </Box>
@@ -1466,7 +1466,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
                 }}
                 data-testid="viewer-not-loaded"
               >
-                <Typography sx={{ color: color_text_light, fontWeight: 700 }}>
+                <Typography sx={{ color: color_text_light, fontWeight: 400 }}>
                   {DOCUMENT_NOT_LOADED_TEXT}
                 </Typography>
               </Box>
@@ -1498,7 +1498,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
               ].map(([label, value]) =>
                 value ? (
                   <Box key={label}>
-                    <Typography variant="caption" sx={{ display: "block", fontWeight: 800, color: color_text_primary }}>
+                    <Typography variant="caption" sx={{ display: "block", fontWeight: 600, color: color_text_primary }}>
                       {label}
                     </Typography>
                     <Typography variant="body2" sx={{ whiteSpace: "pre-wrap", color: color_text_light }}>
@@ -1509,7 +1509,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
               )}
               {!!currentDoc.derivation_sources?.length && (
                 <Box>
-                  <Typography variant="caption" sx={{ display: "block", fontWeight: 800, color: color_text_primary }}>
+                  <Typography variant="caption" sx={{ display: "block", fontWeight: 600, color: color_text_primary }}>
                     Sources used
                   </Typography>
                   <Typography variant="body2" sx={{ color: color_text_light }}>
@@ -1580,7 +1580,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
               borderRadius: 999,
               px: 1.25,
               py: 1,
-              boxShadow: "0 12px 28px rgba(0,0,0,0.15)",
+              boxShadow: "none",
               backdropFilter: "blur(8px)",
               maxWidth: "calc(100vw - 24px)",
               overflowX: "auto",

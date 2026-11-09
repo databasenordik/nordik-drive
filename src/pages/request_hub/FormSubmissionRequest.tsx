@@ -16,7 +16,6 @@ import {
   color_white_smoke,
   color_text_primary,
   color_text_secondary,
-  color_background,
 } from "../../constants/colors";
 import {
   FORM_SUBMISSION_STATUS_VALUES,
@@ -190,14 +189,12 @@ export default function FormSubmissionRequests() {
       <Box
         sx={{
           height: "100%",
-          p: { xs: 1, md: 1.25 },
           boxSizing: "border-box",
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
           minHeight: 0,
           gap: 1,
-          background: color_background,
         }}
       >
         <Box
@@ -220,7 +217,7 @@ export default function FormSubmissionRequests() {
               label={`Total Requests: ${totalItems}`}
               size="small"
               sx={{
-                fontWeight: 900,
+                fontWeight: 600,
                 borderRadius: "10px",
                 background: color_white,
                 border: `1px solid ${color_border}`,
@@ -232,7 +229,7 @@ export default function FormSubmissionRequests() {
               label={`Page ${currentPage} of ${totalPages}`}
               size="small"
               sx={{
-                fontWeight: 800,
+                fontWeight: 400,
                 borderRadius: "10px",
                 background: color_white,
                 border: `1px solid ${color_border}`,
@@ -247,7 +244,7 @@ export default function FormSubmissionRequests() {
             onClick={() => fetchPage(currentPage)}
             sx={{
               textTransform: "none",
-              fontWeight: 900,
+              fontWeight: 600,
               borderRadius: "10px",
               background: color_secondary,
               "&:hover": { background: color_secondary_dark },

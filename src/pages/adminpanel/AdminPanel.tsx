@@ -11,7 +11,15 @@ import useFetch from "../../hooks/useFetch";
 import Loader from "../../components/Loader";
 import FileUploader from "../../components/FileUploader";
 import UploadedFiles from "../../components/UploadedFiles";
-import { color_primary, header_height, header_mobile_height } from "../../constants/colors";
+import {
+  color_primary,
+  color_dv_border,
+  color_dv_divider,
+  color_dv_page,
+  color_dv_text_muted,
+  header_height,
+  header_mobile_height,
+} from "../../constants/colors";
 import { apiUrl } from "../../config/api";
 
 //  Keep your wrapper if you already use it elsewhere; otherwise remove
@@ -69,7 +77,7 @@ const AdminPanel = () => {
             px: { xs: 1.25, md: 3 },
             py: { xs: 1.25, md: 2 },
             boxSizing: "border-box",
-            background: "#f6f7fb", //  portal-like page background
+            background: color_dv_page, // page background (navy design)
           }}
         >
           <Box
@@ -88,9 +96,9 @@ const AdminPanel = () => {
               sx={{
                 height: "100%",
                 minHeight: 0,
-                borderRadius: 2,
+                borderRadius: "12px",
                 overflow: "hidden",
-                border: "1px solid rgba(0,0,0,0.08)",
+                border: `1px solid ${color_dv_border}`,
                 background: "#fff",
                 display: "flex",
                 flexDirection: "column",
@@ -103,8 +111,8 @@ const AdminPanel = () => {
               <Box
                 sx={{
                   flexShrink: 0,
-                  borderBottom: "1px solid rgba(0,0,0,0.08)",
-                  background: "#fbfcfe",
+                  borderBottom: `1px solid ${color_dv_divider}`,
+                  background: "#fff",
                   px: { xs: 1.5, md: 2.5 },
                 }}
               >
@@ -112,17 +120,17 @@ const AdminPanel = () => {
                   value={tab}
                   onChange={(_, v) => setTab(v)}
                   sx={{
-                    minHeight: 44,
+                    minHeight: 52,
                     "& .MuiTab-root": {
-                      minHeight: 44,
-                      fontWeight: 800,
-                      textTransform: "uppercase",
+                      minHeight: 52,
+                      fontWeight: 500,
+                      textTransform: "none",
                       px: 2,
-                      letterSpacing: "0.02em",
-                      color: "rgba(36, 66, 95, 0.90)",
-                      fontSize: "0.82rem",
+                      letterSpacing: 0,
+                      color: color_dv_text_muted,
+                      fontSize: 15,
                     },
-                    "& .Mui-selected": { color: color_primary },
+                    "& .Mui-selected": { color: color_primary, fontWeight: 600 },
                     "& .MuiTabs-indicator": {
                       backgroundColor: color_primary,
                       height: 3,

@@ -8,7 +8,6 @@ import PersonSearchOutlinedIcon from "@mui/icons-material/PersonSearchOutlined";
 import {
   color_secondary,
   color_text_light,
-  color_text_primary,
   color_white,
 } from "../../../constants/colors";
 
@@ -36,7 +35,7 @@ const AssignAccessSection: React.FC<Props> = ({
     <Box sx={{ px: 3, pt: 2.25, pb: 2 }}>
       <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
         <PersonSearchOutlinedIcon sx={{ fontSize: 18, color: `${color_secondary}` }} />
-        <Typography sx={{ fontWeight: 800, fontSize: 12, color: `${color_secondary}`, letterSpacing: "0.06em" }}>
+        <Typography sx={{ fontWeight: 600, fontSize: 12, color: `${color_secondary}`, letterSpacing: "0.06em" }}>
           ASSIGN ACCESS
         </Typography>
       </Stack>
@@ -75,7 +74,7 @@ const AssignAccessSection: React.FC<Props> = ({
           >
             <Checkbox icon={icon} checkedIcon={checkedIcon} checked={selected} sx={{ p: 0.5 }} />
             <div>
-              <div style={{ fontWeight: 800, fontSize: 13 }}>
+              <div style={{ fontWeight: 600, fontSize: 13 }}>
                 {option.firstname} {option.lastname}
               </div>
               <div style={{ fontSize: 11.5, color: `${color_text_light}` }}>{option.email}</div>
@@ -93,7 +92,7 @@ const AssignAccessSection: React.FC<Props> = ({
                 borderRadius: 2,
                 bgcolor: "rgba(29,78,216,0.10)",
                 color: `${color_secondary}`,
-                fontWeight: 700,
+                fontWeight: 600,
               }}
             />
           ))
@@ -122,9 +121,9 @@ const AssignAccessSection: React.FC<Props> = ({
           borderRadius: 2,
           px: 2,
           py: 1,
-          fontWeight: 800,
+          fontWeight: 600,
           letterSpacing: "0.04em",
-          textTransform: "uppercase",
+          textTransform: "none",
           fontSize: 12,
           boxShadow: "none",
           color: `${color_white}`,

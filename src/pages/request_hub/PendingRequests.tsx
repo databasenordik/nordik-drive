@@ -22,7 +22,6 @@ import {
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import SearchIcon from "@mui/icons-material/Search";
 import {
-  color_secondary,
   color_border,
   color_background,
   color_text_primary,
@@ -31,6 +30,16 @@ import {
 } from "../../constants/colors";
 import useFetch from "../../hooks/useFetch";
 import Loader from "../../components/Loader";
+import {
+  UI_COUNT_CHIP_SX,
+  UI_LIST_CARD_SX,
+  UI_LIST_TITLE_SX,
+  UI_LIST_TOOLBAR_SX,
+  UI_ROW_ICON_BUTTON_SX,
+  UI_SEARCH_FIELD_SX,
+  UI_TABLE_BODY_CELL_SX,
+  UI_TABLE_HEAD_CELL_SX,
+} from "../../theme/ui";
 import RequestDetailsModal from "./RequestDetailsModal";
 import { apiUrl } from "../../config/api";
 
@@ -72,33 +81,14 @@ const PendingRequests: React.FC = () => {
     });
   }, [requests, searchText, storyRequestsOnly]);
 
-  const headCellSx = {
-    fontWeight: 800,
-    fontSize: "0.65rem",
-    textTransform: "uppercase" as const,
-    letterSpacing: "0.03em",
-    color: color_text_light,
-    backgroundColor: color_background,
-    borderBottom: `1px solid ${color_border}`,
-    py: 1,
-    px: 1.5,
-    whiteSpace: "nowrap" as const,
-  };
+  const headCellSx = UI_TABLE_HEAD_CELL_SX as Record<string, unknown>;
 
-  const bodyCellSx = {
-    fontSize: "0.78rem",
-    color: color_text_primary,
-    borderBottom: `1px solid ${color_border}`,
-    py: 1.1,
-    px: 1.5,
-    whiteSpace: "nowrap" as const,
-    verticalAlign: "middle" as const,
-    backgroundColor: color_white,
-  };
+  const bodyCellSx = { ...(UI_TABLE_BODY_CELL_SX as Record<string, unknown>), whiteSpace: "nowrap" as const };
 
   const fileCellSx = {
     ...bodyCellSx,
     whiteSpace: "normal" as const,
+    minWidth: 220,
     maxWidth: 520,
     wordBreak: "break-word" as const,
   };
@@ -108,10 +98,8 @@ const PendingRequests: React.FC = () => {
       sx={{
         height: "100%",
         minHeight: 0,
-        p: { xs: 1, md: 1.25 },
         boxSizing: "border-box",
         overflow: "hidden",
-        backgroundColor: color_background,
         display: "flex",
         flexDirection: "column",
       }}
@@ -119,38 +107,12 @@ const PendingRequests: React.FC = () => {
       <Loader loading={loading} />
 
       <Paper
-        elevation={3}
-        sx={{
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          minHeight: 0,
-          borderRadius: "12px",
-          border: `1px solid ${color_border}`,
-          overflow: "hidden",
-          backgroundColor: color_white,
-        }}
+        elevation={0}
+        sx={UI_LIST_CARD_SX}
       >
-        <Box
-          sx={{
-            px: { xs: 1.75, md: 2.25 },
-            py: 1.5,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 2,
-            borderBottom: `1px solid ${color_border}`,
-            backgroundColor: color_white,
-            flexShrink: 0,
-          }}
+        <Box sx={UI_LIST_TOOLBAR_SX}
         >
-          <Typography
-            sx={{
-              fontWeight: 800,
-              color: color_secondary,
-              fontSize: "0.95rem",
-            }}
-          >
+          <Typography sx={UI_LIST_TITLE_SX}>
             Pending Requests
           </Typography>
 
@@ -159,33 +121,11 @@ const PendingRequests: React.FC = () => {
             placeholder="Search by user/file..."
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            sx={{
-              width: { xs: 210, sm: 280 },
-              "& .MuiOutlinedInput-root": {
-                height: 34,
-                borderRadius: "8px",
-                backgroundColor: color_background,
-                fontSize: "0.78rem",
-                color: color_text_primary,
-              },
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: color_border,
-              },
-              "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: color_border,
-              },
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: color_secondary,
-              },
-              "& input::placeholder": {
-                color: color_text_light,
-                opacity: 1,
-              },
-            }}
+            sx={UI_SEARCH_FIELD_SX}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <SearchIcon sx={{ fontSize: 18, color: color_text_light }} />
+                  <SearchIcon sx={{ fontSize: 20, color: color_text_light }} />
                 </InputAdornment>
               ),
             }}
@@ -203,7 +143,7 @@ const PendingRequests: React.FC = () => {
             sx={{
               ml: 0,
               color: color_text_primary,
-              "& .MuiFormControlLabel-label": { fontWeight: 800, fontSize: "0.78rem" },
+              "& .MuiFormControlLabel-label": { fontWeight: 500, fontSize: 15 },
             }}
           />
         </Box>
@@ -213,10 +153,10 @@ const PendingRequests: React.FC = () => {
             flex: 1,
             minHeight: 0,
             overflow: "auto",
-            backgroundColor: color_background,
+            backgroundColor: color_white,
           }}
         >
-          <Table stickyHeader size="small" sx={{ minWidth: 900 }}>
+          <Table stickyHeader size="small" sx={{ minWidth: 860 }}>
             <TableHead>
               <TableRow>
                 <TableCell sx={headCellSx}>User Name</TableCell>
@@ -237,11 +177,11 @@ const PendingRequests: React.FC = () => {
                     colSpan={6}
                     align="center"
                     sx={{
-                      py: 3,
+                      py: 4,
                       color: color_text_light,
-                      backgroundColor: color_background,
+                      backgroundColor: color_white,
                       borderBottom: `1px solid ${color_border}`,
-                      fontSize: "0.85rem",
+                      fontSize: 15,
                     }}
                   >
                     No pending requests
@@ -274,14 +214,7 @@ const PendingRequests: React.FC = () => {
                           ? `${req.stories?.length || 0} ${(req.stories?.length || 0) === 1 ? "story" : "stories"}`
                           : `${req.details?.length || 0} changes`}
                         size="small"
-                        sx={{
-                          height: 18,
-                          fontSize: "0.65rem",
-                          fontWeight: 800,
-                          borderRadius: "999px",
-                          backgroundColor: color_secondary,
-                          color: color_white,
-                        }}
+                        sx={UI_COUNT_CHIP_SX}
                       />
                     </TableCell>
 
@@ -292,14 +225,9 @@ const PendingRequests: React.FC = () => {
                         <IconButton
                           onClick={() => setSelectedRequest(req)}
                           size="small"
-                          sx={{
-                            color: color_text_light,
-                            "&:hover": {
-                              backgroundColor: color_background,
-                            },
-                          }}
+                          sx={UI_ROW_ICON_BUTTON_SX}
                         >
-                          <VisibilityIcon sx={{ fontSize: 18 }} />
+                          <VisibilityIcon sx={{ fontSize: 20 }} />
                         </IconButton>
                       </Tooltip>
                     </TableCell>
@@ -314,7 +242,7 @@ const PendingRequests: React.FC = () => {
                     sx={{
                       height: 14,
                       borderBottom: "none",
-                      backgroundColor: color_background,
+                      backgroundColor: color_white,
                     }}
                   />
                 </TableRow>

@@ -18,7 +18,8 @@ const iconSx = { fontSize: 18 };
 function HeaderNav({ onLinkClick }: HeaderNavProps) {
   const { user } = useSelector((state: any) => state.auth);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  // Below md the links only render inside the menu drawer, so stack them there.
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
     <NavWrapper aria-label="Main">
@@ -27,6 +28,7 @@ function HeaderNav({ onLinkClick }: HeaderNavProps) {
         spacing={isMobile ? 1 : 0.5}
         alignItems={isMobile ? "stretch" : "center"}
         flexWrap={isMobile ? "nowrap" : "wrap"}
+        sx={{ width: isMobile ? "100%" : "auto" }}
         useFlexGap
       >
         <HeaderLink to="/files" onClick={onLinkClick}>

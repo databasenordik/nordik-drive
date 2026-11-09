@@ -247,7 +247,7 @@ export default function FileActivityVisualization({
           >
             <Box sx={{ textAlign: "center" }}>
               <InsertChartOutlinedIcon sx={{ fontSize: 54, color: "#cbd5e1" }} />
-              <Typography sx={{ mt: 1, fontWeight: 900, color: color_text_secondary }}>
+              <Typography sx={{ mt: 1, fontWeight: 400, color: color_text_secondary }}>
                 {FILE_ACTIVITY_PLACEHOLDER_TEXT}
               </Typography>
             </Box>
@@ -341,7 +341,7 @@ export default function FileActivityVisualization({
                       title={item.label}
                       data-testid={`file-viz-row-label-${index}`}
                       sx={{
-                        fontWeight: 800,
+                        fontWeight: 600,
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",
@@ -363,7 +363,7 @@ export default function FileActivityVisualization({
                       size="small"
                       data-testid={`file-viz-row-metric-${index}`}
                       sx={{
-                        fontWeight: 900,
+                        fontWeight: 600,
                         flexShrink: 0,
                         borderRadius: "10px",
                         background: color_white_smoke,

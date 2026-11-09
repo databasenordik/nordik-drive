@@ -14,8 +14,6 @@ import { useNavigate } from "react-router-dom";
 
 import {
   color_white,
-  color_light_gray,
-  color_white_smoke,
   color_secondary,
   color_secondary_dark,
   color_border,
@@ -23,6 +21,8 @@ import {
   color_black_light,
   header_height,
   header_mobile_height,
+  color_dv_page,
+  color_dv_border,
 } from "../../constants/colors";
 
 const Acknowledgement = () => {
@@ -31,7 +31,7 @@ const Acknowledgement = () => {
   const palette = useMemo(() => {
     if (!highContrast) {
       return {
-        pageBg: `linear-gradient(180deg, ${color_white_smoke} 0%, ${color_light_gray} 100%)`,
+        pageBg: color_dv_page,
         cardBg: color_white,
         title: color_secondary_dark,
         body: color_text_secondary,
@@ -78,10 +78,10 @@ const Acknowledgement = () => {
           sx={{
             width: "100%",
             maxWidth: 860,
-            borderRadius: 2,
+            borderRadius: "12px",
             background: palette.cardBg,
-            border: `1px solid rgba(0,0,0,0.04)`,
-            boxShadow: "0 18px 34px rgba(0,0,0,0.12)",
+            border: `1px solid ${color_dv_border}`,
+            boxShadow: "none",
           }}
         >
           <CardContent sx={{ px: { xs: 3, md: 5 }, py: { xs: 3.5, md: 4.5 } }}>
@@ -89,7 +89,7 @@ const Acknowledgement = () => {
               <Typography
                 sx={{
                   fontSize: { xs: 26, md: 30 },
-                  fontWeight: 900,
+                  fontWeight: 600,
                   color: palette.title,
                   mb: 1,
                 }}
@@ -115,7 +115,7 @@ const Acknowledgement = () => {
                   fontSize: { xs: 16.2, md: 16.8 },
                   lineHeight: 1.8,
                   color: palette.body,
-                  fontWeight: 700,
+                  fontWeight: 500,
                 }}
               >
                 The Children of Shingwauk Alumni Association’s (CSAA) mission is to provide for the
@@ -128,12 +128,12 @@ const Acknowledgement = () => {
                   fontSize: { xs: 16.2, md: 16.8 },
                   lineHeight: 1.8,
                   color: palette.body,
-                  fontWeight: 700,
+                  fontWeight: 500,
                 }}
               >
                 The CSAA facilitates the ongoing development of a partnership with Algoma University and
                 the other partners in fulfilling Chief Shingwauk’s vision of{" "}
-                <Box component="span" sx={{ fontWeight: 900 }}>
+                <Box component="span" sx={{ fontWeight: 600 }}>
                   “Sharing, Healing and Learning.”
                 </Box>
               </Typography>
@@ -143,7 +143,7 @@ const Acknowledgement = () => {
                   fontSize: { xs: 16.2, md: 16.8 },
                   lineHeight: 1.8,
                   color: palette.body,
-                  fontWeight: 700,
+                  fontWeight: 500,
                 }}
               >
                 The CSAA provides: A non-political voice for survivors’ concerns and interests to support,

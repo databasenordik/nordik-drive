@@ -41,7 +41,6 @@ import {
 
 import {
   color_border,
-  color_secondary_dark,
   color_text_primary,
   color_text_secondary,
   color_white,
@@ -354,7 +353,7 @@ export default function FileActivitiesFilters({
             icon={<TuneIcon />}
             label={`Search (${filterSummary[0]})`}
             size="small"
-            sx={{ fontWeight: 900, borderRadius: "10px", background: color_white, border: `1px solid ${color_border}`, color: color_text_primary }}
+            sx={{ fontWeight: 600, borderRadius: "10px", background: color_white, border: `1px solid ${color_border}`, color: color_text_primary }}
           />
 
           {chipModels.slice(0, 2).map(({ clause, label }) => (
@@ -370,7 +369,7 @@ export default function FileActivitiesFilters({
               deleteIcon={<DeleteIcon />}
               size="small"
               sx={{
-                fontWeight: 800,
+                fontWeight: 600,
                 borderRadius: "10px",
                 background: color_white,
                 border: `1px solid ${color_border}`,
@@ -384,7 +383,7 @@ export default function FileActivitiesFilters({
             <Chip
               label={`+${chipModels.length - 2} more`}
               size="small"
-              sx={{ fontWeight: 800, borderRadius: "10px", background: color_white, border: `1px solid ${color_border}`, color: color_text_secondary }}
+              sx={{ fontWeight: 400, borderRadius: "10px", background: color_white, border: `1px solid ${color_border}`, color: color_text_secondary }}
             />
           )}
         </Box>
@@ -427,7 +426,7 @@ export default function FileActivitiesFilters({
           icon={<TuneIcon />}
           label={filterSummary[0]}
           size="small"
-          sx={{ fontWeight: 900, borderRadius: "10px", background: color_white, border: `1px solid ${color_border}`, color: color_text_primary }}
+          sx={{ fontWeight: 600, borderRadius: "10px", background: color_white, border: `1px solid ${color_border}`, color: color_text_primary }}
         />
 
         {chipModels.slice(0, 5).map(({ clause, label }) => (
@@ -442,7 +441,7 @@ export default function FileActivitiesFilters({
             deleteIcon={<DeleteIcon />}
             size="small"
             sx={{
-              fontWeight: 800,
+              fontWeight: 600,
               borderRadius: "10px",
               background: color_white,
               border: `1px solid ${color_border}`,
@@ -456,7 +455,7 @@ export default function FileActivitiesFilters({
           <Chip
             label={`+${chipModels.length - 5} more`}
             size="small"
-            sx={{ fontWeight: 800, borderRadius: "10px", background: color_white, border: `1px solid ${color_border}`, color: color_text_secondary }}
+            sx={{ fontWeight: 400, borderRadius: "10px", background: color_white, border: `1px solid ${color_border}`, color: color_text_secondary }}
           />
         )}
       </Box>
@@ -465,7 +464,7 @@ export default function FileActivitiesFilters({
 
       {/* Joiner */}
       {clauses.length > 0 && !editingId && (
-        <FormControl size="small" sx={{ minWidth: 110 }}>
+        <FormControl size="small" sx={{ minWidth: { xs: "100%", sm: 110 } }}>
           <InputLabel>Join</InputLabel>
           <Select label="Join" value={nextJoiner} onChange={(e) => setNextJoiner(e.target.value as Joiner)}>
             <MenuItem value="AND">AND</MenuItem>
@@ -475,7 +474,7 @@ export default function FileActivitiesFilters({
       )}
 
       {/* Field */}
-      <FormControl size="small" sx={{ minWidth: 220 }}>
+      <FormControl size="small" sx={{ minWidth: { xs: "100%", sm: 220 } }}>
         <InputLabel>Field</InputLabel>
         <Select label="Field" value={builderField} onChange={(e) => setBuilderField(String(e.target.value))}>
           <MenuItem value="">Select field</MenuItem>
@@ -488,7 +487,7 @@ export default function FileActivitiesFilters({
       </FormControl>
 
       {/* Op */}
-      <FormControl size="small" sx={{ minWidth: 190 }} disabled={!selectedField}>
+      <FormControl size="small" sx={{ minWidth: { xs: "100%", sm: 190 } }} disabled={!selectedField}>
         <InputLabel>Op</InputLabel>
         <Select label="Op" value={builderOp} onChange={(e) => setBuilderOp(e.target.value as Operation)}>
           {opOptions.map((o) => (
@@ -521,7 +520,7 @@ export default function FileActivitiesFilters({
             <Chip
               label="No date input needed"
               size="small"
-              sx={{ fontWeight: 900, borderRadius: "10px", background: color_white, border: `1px solid ${color_border}`, color: color_text_secondary }}
+              sx={{ fontWeight: 400, borderRadius: "10px", background: color_white, border: `1px solid ${color_border}`, color: color_text_secondary }}
             />
           )
         ) : selectedField.type === "select" ? (
@@ -538,7 +537,7 @@ export default function FileActivitiesFilters({
               disableCloseOnSelect
               filterSelectedOptions
               ListboxProps={{ style: { maxHeight: 320, overflow: "auto" } }}
-              renderInput={(params) => <TextField {...params} size="small" label="Values" sx={{ minWidth: 320 }} />}
+              renderInput={(params) => <TextField {...params} size="small" label="Values" sx={{ minWidth: { xs: "100%", sm: 320 } }} />}
             />
           ) : (
             <Autocomplete
@@ -550,14 +549,14 @@ export default function FileActivitiesFilters({
               }
               onChange={(_, val: any) => setBuilderValue(val ? (typeof val === "string" ? val : val.value) : "")}
               ListboxProps={{ style: { maxHeight: 320, overflow: "auto" } }}
-              renderInput={(params) => <TextField {...params} size="small" label="Value" sx={{ minWidth: 320 }} />}
+              renderInput={(params) => <TextField {...params} size="small" label="Value" sx={{ minWidth: { xs: "100%", sm: 320 } }} />}
             />
           )
         ) : (
-          <TextField size="small" label="Value" value={builderValue} onChange={(e) => setBuilderValue(e.target.value)} sx={{ minWidth: 260 }} />
+          <TextField size="small" label="Value" value={builderValue} onChange={(e) => setBuilderValue(e.target.value)} sx={{ minWidth: { xs: "100%", sm: 260 } }} />
         )
       ) : (
-        <TextField size="small" label="Value" value={builderValue} disabled sx={{ minWidth: 260 }} />
+        <TextField size="small" label="Value" value={builderValue} disabled sx={{ minWidth: { xs: "100%", sm: 260 } }} />
       )}
 
       {/* Add / Update */}

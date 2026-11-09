@@ -35,7 +35,7 @@ const AccessModalHeader: React.FC<Props> = ({ fileName, onClose }) => {
           </Box>
 
           <Box>
-            <Typography sx={{ fontWeight: 800, fontSize: 16.5, color: `${color_text_primary}` }}>
+            <Typography sx={{ fontWeight: 600, fontSize: 16.5, color: `${color_text_primary}` }}>
               Manage File Access
             </Typography>
             <Typography sx={{ fontWeight: 500, fontSize: 12.5, color: `${color_text_light}` }}>

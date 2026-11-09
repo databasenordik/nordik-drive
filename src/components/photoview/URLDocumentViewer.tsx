@@ -205,7 +205,7 @@ export default function DocumentUrlViewerModal({
         <Box sx={{ minWidth: 0, flex: 1 }}>
           <Typography
             sx={{
-              fontWeight: 900,
+              fontWeight: 600,
               color: color_text_primary,
               fontSize: 16,
               lineHeight: 1.2,
@@ -239,8 +239,8 @@ export default function DocumentUrlViewerModal({
             variant="outlined"
             startIcon={<OpenInNewIcon />}
             sx={{
-              fontWeight: 900,
-              textTransform: "uppercase",
+              fontWeight: 600,
+              textTransform: "none",
               borderWidth: 2,
               color: color_white,
               background: color_secondary,
@@ -256,8 +256,8 @@ export default function DocumentUrlViewerModal({
             variant="contained"
             startIcon={<DownloadIcon />}
             sx={{
-              fontWeight: 900,
-              textTransform: "uppercase",
+              fontWeight: 600,
+              textTransform: "none",
               px: 2,
               background: color_secondary,
             }}
@@ -270,8 +270,8 @@ export default function DocumentUrlViewerModal({
             variant="outlined"
             startIcon={<CloseIcon />}
             sx={{
-              fontWeight: 900,
-              textTransform: "uppercase",
+              fontWeight: 600,
+              textTransform: "none",
               borderWidth: 2,
               color: color_text_primary,
               backgroundColor: color_white,
@@ -290,7 +290,7 @@ export default function DocumentUrlViewerModal({
           py: 1,
           background: color_text_primary,
           color: color_white,
-          fontWeight: 700,
+          fontWeight: 600,
           fontSize: 13,
         }}
       >
@@ -329,7 +329,7 @@ export default function DocumentUrlViewerModal({
                 textAlign: "center",
               }}
             >
-              <Typography sx={{ fontWeight: 900, color: color_text_primary, mb: 0.5 }}>
+              <Typography sx={{ fontWeight: 600, color: color_text_primary, mb: 0.5 }}>
                 No document URL provided.
               </Typography>
               <Typography sx={{ color: color_text_light }}>
@@ -427,7 +427,7 @@ export default function DocumentUrlViewerModal({
                   </span>
                 </Tooltip>
 
-                <Typography sx={{ fontWeight: 900, color: color_text_primary, ml: 0.5, fontSize: 12 }}>
+                <Typography sx={{ fontWeight: 600, color: color_text_primary, ml: 0.5, fontSize: 12 }}>
                   {Math.round(zoom * 100)}%
                 </Typography>
               </Box>
@@ -469,7 +469,7 @@ export default function DocumentUrlViewerModal({
                   }}
                   data-testid="url-docx-loading"
                 >
-                  <Typography sx={{ fontWeight: 900, color: color_text_primary, mb: 0.5 }}>
+                  <Typography sx={{ fontWeight: 600, color: color_text_primary, mb: 0.5 }}>
                     Loading document...
                   </Typography>
                   <Typography sx={{ color: color_text_light }}>
@@ -496,7 +496,7 @@ export default function DocumentUrlViewerModal({
                 textAlign: "center",
               }}
             >
-              <Typography sx={{ fontWeight: 900, color: color_text_primary, mb: 0.5 }}>
+              <Typography sx={{ fontWeight: 600, color: color_text_primary, mb: 0.5 }}>
                 Preview not available for this file type.
               </Typography>
               <Typography sx={{ color: color_text_light, mb: 2 }}>
@@ -508,7 +508,7 @@ export default function DocumentUrlViewerModal({
                   variant="outlined"
                   startIcon={<OpenInNewIcon />}
                   sx={{
-                    fontWeight: 900,
+                    fontWeight: 600,
                     borderWidth: 2,
                     color: color_white,
                     background: color_secondary,
@@ -521,7 +521,7 @@ export default function DocumentUrlViewerModal({
                   variant="contained"
                   startIcon={<DownloadIcon />}
                   sx={{
-                    fontWeight: 900,
+                    fontWeight: 600,
                     background: color_secondary,
                     "&:hover": { background: color_secondary_dark },
                   }}
