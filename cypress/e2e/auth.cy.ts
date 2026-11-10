@@ -2,7 +2,7 @@ describe("Auth integration", () => {
     const baseUrl = "http://localhost:3000";
     const verificationToken = "synthetic-signup-verification-token-for-cypress";
 
-    const verifySignupEmail = (email: string) => {
+    const requestSignupCode = (email: string) => {
         cy.intercept("POST", "**/api/user/signup/otp/request", (req) => {
             expect(req.body).to.deep.equal({ email });
             expect(req.headers["idempotency-key"]).to.be.a("string").and.not.be.empty;
@@ -28,14 +28,12 @@ describe("Auth integration", () => {
             });
         }).as("verifySignupCode");
 
-        cy.contains("button", /^sign up$/i).should("be.disabled");
-        cy.contains("button", /^send verification code$/i).click();
+        cy.contains("button", /^sign up$/i).should("be.enabled").click();
         cy.wait("@requestSignupCode");
-        cy.get('input[autocomplete="one-time-code"]').type("012345");
-        cy.contains("button", /^verify email$/i).click();
-        cy.wait("@verifySignupCode");
-        cy.contains('[role="status"]', /^email verified$/i).should("be.visible");
-        cy.contains("button", /^sign up$/i).should("be.enabled");
+        cy.contains("Verify your email").should("be.visible");
+        cy.get('input[name="firstname"]').should("not.exist");
+        cy.contains("button", /^edit details$/i).should("have.css", "background-color", "rgb(255, 255, 255)");
+        cy.contains("button", /^edit details$/i).should("have.css", "color", "rgb(31, 58, 110)");
     };
 
     beforeEach(() => {
@@ -149,27 +147,20 @@ describe("Auth integration", () => {
         cy.contains("label", "First name").should("exist");
     });
 
-    it("Signup: validates required fields and requires email verification", () => {
-        cy.intercept("GET", "**/api/communities", {
-            statusCode: 200,
-            body: { communities: [] },
-        }).as("communities");
-
+    it("Signup: keeps the submit button enabled and validates details before sending a code", () => {
+        let requests = 0;
+        cy.intercept("POST", "**/api/user/signup/otp/request", () => { requests += 1; });
         cy.visit(`${baseUrl}/signup`);
         cy.wait("@communities");
-
-        cy.contains("button", /^sign up$/i).should("be.disabled");
-        cy.contains("button", /^send verification code$/i).click();
-        cy.contains("Email is required").should("be.visible");
-
-        cy.get('input[name="email"]').type("athul@test.com");
-        verifySignupEmail("athul@test.com");
+        cy.contains("button", /^sign up$/i).should("be.enabled").and("have.css", "color", "rgb(255, 255, 255)");
         cy.contains("button", /^sign up$/i).click();
-
         cy.contains("First name is required").should("be.visible");
         cy.contains("Last name is required").should("be.visible");
+        cy.contains("Email is required").should("be.visible");
         cy.contains("Password is required").should("be.visible");
         cy.contains("Confirm Password is required").should("be.visible");
+        cy.then(() => expect(requests).to.equal(0));
+        cy.get('input[autocomplete="one-time-code"]').should("not.exist");
     });
 
     it("Signup: adds missing community then submits signup and navigates to /", () => {
@@ -208,11 +199,11 @@ describe("Auth integration", () => {
         cy.get('input[name="email"]').type("athul@test.com");
         cy.get('input[name="password"]').type("secret12");
         cy.get('input[name="confirmPassword"]').type("secret12");
-        verifySignupEmail("athul@test.com");
-
         cy.get('input[placeholder="Search or type a community"]').first().type("NewComm{enter}");
-
-        cy.contains("button", /^sign up$/i).click();
+        requestSignupCode("athul@test.com");
+        cy.get('input[autocomplete="one-time-code"]').type("012345");
+        cy.contains("button", /^verify and sign up$/i).should("be.enabled").click();
+        cy.wait("@verifySignupCode");
 
         cy.wait("@addCommunity");
         cy.wait("@communities");
@@ -222,18 +213,22 @@ describe("Auth integration", () => {
     });
 
 
-    it("Signup: changing a verified email disables signup", () => {
+    it("Signup: returns to saved details and requests a new code after changing the email", () => {
         cy.visit(`${baseUrl}/signup`);
         cy.wait("@communities");
-
+        cy.get('input[name="firstname"]').type("Athul");
+        cy.get('input[name="lastname"]').type("N");
         cy.get('input[name="email"]').type("athul@test.com");
-        verifySignupEmail("athul@test.com");
-
+        cy.get('input[name="password"]').type("secret12");
+        cy.get('input[name="confirmPassword"]').type("secret12");
+        requestSignupCode("athul@test.com");
+        cy.contains("button", /^edit details$/i).click();
+        cy.get('input[name="firstname"]').should("have.value", "Athul");
+        cy.get('input[name="password"]').should("have.value", "secret12");
         cy.get('input[name="email"]').clear().type("other@test.com");
-
-        cy.contains("button", /^sign up$/i).should("be.disabled");
-        cy.contains('[role="status"]', /^email verified$/i).should("not.exist");
-        cy.contains("button", /^send verification code$/i).should("be.enabled");
+        requestSignupCode("other@test.com");
+        cy.contains("Enter the six-digit code sent to other@test.com.").should("be.visible");
+        cy.contains("button", /^verify and sign up$/i).should("be.enabled");
     });
 
     it("AuthShared: OR divider is visible on login page", () => {
