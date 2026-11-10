@@ -16,7 +16,9 @@ test("requests only an email and preserves leading zeroes during verification", 
   expect(post.mock.calls[0][1]).toEqual({ email: "person@example.test" });
   expect(post.mock.calls[0][2].headers["Idempotency-Key"].length).toBeGreaterThanOrEqual(16);
   act(() => result.current.setCode("012345"));
-  await act(async () => { await result.current.verifyCode(); });
+  let verified;
+  await act(async () => { verified = await result.current.verifyCode(); });
+  expect(verified).toEqual(expect.objectContaining({ token: expect.any(String), email: "person@example.test" }));
   expect(post.mock.calls[1][1]).toEqual({ email: "person@example.test", challenge_id: "challenge-1", otp: "012345" });
   expect(result.current.verified).toBe(true);
   act(() => jest.advanceTimersByTime(601000));
@@ -50,7 +52,7 @@ test("ignores responses from a request for an earlier email", async () => {
   let resolve: (value: any) => void = () => {};
   post.mockImplementationOnce(() => new Promise((done) => { resolve = done; }));
   const { result, rerender } = renderHook(({ email }) => useSignupVerification(email), { initialProps: { email: "person@example.test" } });
-  let pending: Promise<void> = Promise.resolve();
+  let pending: Promise<unknown> = Promise.resolve();
   act(() => { pending = result.current.requestCode(); });
   rerender({ email: "other@example.test" });
   await act(async () => { resolve(challenge()); await pending; });

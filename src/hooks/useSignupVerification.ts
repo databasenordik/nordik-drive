@@ -62,6 +62,7 @@ export default function useSignupVerification(email: string) {
     const abort = new AbortController(); controller.current = abort;
     if (operation === "request") setProof(null);
     try {
+      let result: true | Proof;
       if (!pending.current || pending.current.fingerprint !== fingerprint) pending.current = { fingerprint, key: signupRequestKey() };
       const response = await axios.post(apiUrl(`user/signup/otp/${operation}`), body, {
         withCredentials: true, timeout: 15000, signal: abort.signal,
@@ -76,11 +77,14 @@ export default function useSignupVerification(email: string) {
         if (typeof data.challenge_id !== "string" || !Number.isFinite(resendAfter)) throw new Error("Invalid challenge response");
         setChallenge({ id: data.challenge_id, email: normalized, expiresAt, resendAfter });
         setCodeValue(""); pendingVerify.current = null;
+        result = true;
       } else {
         if (typeof data.signup_verification_token !== "string" || data.signup_verification_token.length < 32) throw new Error("Invalid proof response");
-        setProof({ token: data.signup_verification_token, email: normalized, expiresAt });
+        result = { token: data.signup_verification_token, email: normalized, expiresAt };
+        setProof(result);
       }
       pending.current = null; setNow(Date.now());
+      return result;
     } catch (failure: any) {
       if (epoch.current !== generation || abort.signal.aborted) return;
       // Retain the request key after an uncertain network/5xx result. A retry
@@ -104,6 +108,10 @@ export default function useSignupVerification(email: string) {
     codeExpired: Boolean(challenge && challenge.expiresAt <= now),
     secondsUntilResend: Math.max(0, Math.ceil((Math.max(blockedUntil, challenge?.resendAfter || 0) - now) / 1000)),
     setCode: (value: string) => setCodeValue(value.replace(/\D/g, "").slice(0, 6)),
-    requestCode: () => run("request"), verifyCode: () => run("verify"),
+    requestCode: async () => (await run("request")) === true,
+    verifyCode: async () => {
+      const result = await run("verify");
+      return result && result !== true ? result : undefined;
+    },
   };
 }
