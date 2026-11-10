@@ -32,6 +32,8 @@ describe("Auth integration", () => {
         cy.wait("@requestSignupCode");
         cy.contains("Verify your email").should("be.visible");
         cy.get('input[name="firstname"]').should("not.exist");
+        cy.contains("button", /^edit details$/i).should("have.css", "background-color", "rgb(255, 255, 255)");
+        cy.contains("button", /^edit details$/i).should("have.css", "color", "rgb(31, 58, 110)");
     };
 
     beforeEach(() => {

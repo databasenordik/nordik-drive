@@ -30,6 +30,7 @@ import {
   AuthControlledTextField,
   AuthPasswordField,
   AuthPrimaryButton,
+  AuthSecondaryButton,
   OrDivider,
 } from "./AuthShared";
 import { AppDispatch, RootState } from "../../store/store";
@@ -425,14 +426,16 @@ function Signup() {
             <AuthPrimaryButton type="submit" disabled={busy} sx={{ mt: 2, mb: 1.25 }}>
               Verify and sign up
             </AuthPrimaryButton>
-            <Button type="button" disabled={busy || verification.secondsUntilResend > 0}
-              onClick={() => verification.requestCode()} sx={{ color: color_secondary, textTransform: "none" }}>
-              {verification.secondsUntilResend > 0 ? `Resend in ${verification.secondsUntilResend}s` : "Resend code"}
-            </Button>
-            <Button type="button" disabled={busy} sx={{ color: color_secondary, textTransform: "none" }}
-              onClick={() => { setStep("details"); verification.setCode(""); }}>
-              Edit details
-            </Button>
+            <Box sx={{ display: "flex", gap: 1, width: "100%", flexWrap: "wrap" }}>
+              <AuthSecondaryButton type="button" disabled={busy || verification.secondsUntilResend > 0}
+                onClick={() => verification.requestCode()} sx={{ flex: 1, minWidth: 150 }}>
+                {verification.secondsUntilResend > 0 ? `Resend in ${verification.secondsUntilResend}s` : "Resend code"}
+              </AuthSecondaryButton>
+              <AuthSecondaryButton type="button" disabled={busy} sx={{ flex: 1, minWidth: 150 }}
+                onClick={() => { setStep("details"); verification.setCode(""); }}>
+                Edit details
+              </AuthSecondaryButton>
+            </Box>
           </>}
           {verification.error ? <Typography role="alert" color="error">{verification.error}</Typography> : null}
 
