@@ -77,6 +77,7 @@ const useFetch = <T,>(url: string, method: FetchMethod, autoFetch: boolean = fal
         responseType, //  only set when provided; existing calls unchanged
       };
 
+      if (param && typeof param === "object" && param.headers) config.headers = param.headers;
       if (body) config.data = body;
 
       try {

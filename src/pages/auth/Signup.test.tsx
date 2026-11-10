@@ -4,6 +4,12 @@ import userEvent from "@testing-library/user-event";
 import useFetch from "../../hooks/useFetch";
 import toast from "react-hot-toast";
 
+let mockVerification: any;
+jest.mock("../../hooks/useSignupVerification", () => ({
+  __esModule: true, default: () => mockVerification,
+  signupRequestKey: () => "synthetic-idempotency-key-for-signup",
+}));
+
 const mockNavigate = jest.fn();
 const mockDispatch = jest.fn();
 
@@ -141,7 +147,9 @@ function setupUseFetchForSignup(opts: {
 
 describe("Signup", () => {
   beforeEach(() => {
+    jest.useRealTimers();
     jest.clearAllMocks();
+    mockVerification = { verified: true, token: "synthetic-signup-proof", expiresAt: Date.now() + 600000, loading: false, error: null, challenge: null, secondsUntilResend: 0, code: "", setCode: jest.fn(), requestCode: jest.fn(), verifyCode: jest.fn() };
     mockNavigate.mockClear();
     mockDispatch.mockClear();
 
@@ -175,6 +183,21 @@ describe("Signup", () => {
         })
       );
     });
+  });
+
+  test("blocks account and community creation until the email is verified", async () => {
+    const { signupFetch, addCommunity } = setupUseFetchForSignup({ communitiesData: { communities: [] } });
+    mockVerification = { ...mockVerification, verified: false, token: null, expiresAt: 0 };
+    const { container } = render(<Signup />);
+    for (const [label, value] of [[/first name/i, "New"], [/last name/i, "User"], [/email address/i, "new@example.test"], [/^password$/i, "secret12"], [/confirm password/i, "secret12"]] as const) {
+      fireEvent.change(screen.getByLabelText(label), { target: { value } });
+    }
+    fireEvent.change(screen.getByPlaceholderText(/search or type a community/i), { target: { value: "New community" } });
+    fireEvent.keyDown(screen.getByPlaceholderText(/search or type a community/i), { key: "Enter", code: "Enter" });
+    fireEvent.submit(container.querySelector("form")!);
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Verify your email address before signing up."));
+    expect(addCommunity).not.toHaveBeenCalled();
+    expect(signupFetch).not.toHaveBeenCalled();
   });
 
   test("shows validation errors when submitting empty form", async () => {
@@ -250,7 +273,8 @@ describe("Signup", () => {
     expect(signupFetch).toHaveBeenCalledWith(
       expect.objectContaining({ email: "athul@test.com", community: [] }),
       null,
-      true
+      true,
+      expect.objectContaining({ headers: expect.objectContaining({ "Idempotency-Key": expect.any(String) }) })
     );
   });
 
@@ -296,7 +320,8 @@ describe("Signup", () => {
     expect(signupFetch).toHaveBeenCalledWith(
       expect.objectContaining({ email: "athul@test.com", community: ["NewComm"] }),
       null,
-      true
+      true,
+      expect.objectContaining({ headers: expect.objectContaining({ "Idempotency-Key": expect.any(String) }) })
     );
   });
 
