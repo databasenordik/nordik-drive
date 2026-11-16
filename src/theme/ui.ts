@@ -21,6 +21,8 @@ type Sx = SxProps<Theme>;
 
 export const ui_page_bg = color_dv_page;
 
+export const UI_NIA_Z_INDEX = { panel: 10000, menu: 10001 } as const;
+
 export const UI_CARD_SX: Sx = {
   background: color_dv_surface,
   border: `1px solid ${color_dv_border}`,

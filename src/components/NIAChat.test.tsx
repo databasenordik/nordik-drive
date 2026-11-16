@@ -587,6 +587,10 @@ describe("NIAChat + NIAChatTrigger", () => {
     renderWithStore(<NIAChat open={true} setOpen={jest.fn()} />);
     const selector = await screen.findByRole("combobox", { name: "Comparison engine" });
     fireEvent.mouseDown(selector);
+    const option = screen.getByRole("option", { name: "API-based NIA" });
+    const menu = option.closest(".MuiModal-root") as HTMLElement;
+    const panel = screen.getByRole("dialog", { name: "NIA records assistant", hidden: true });
+    expect(Number(window.getComputedStyle(menu).zIndex)).toBeGreaterThan(Number(window.getComputedStyle(panel).zIndex));
     fireEvent.click(screen.getByRole("option", { name: "API-based NIA" }));
     sendViaButton("How many students?");
     await waitFor(() => expect(apiRequestMock).toHaveBeenCalled());
