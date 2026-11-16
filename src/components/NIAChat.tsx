@@ -4,7 +4,8 @@ import React, { useState, useRef, useEffect, useMemo, useCallback } from "react"
 import { ArrowRight, ChevronUp, Maximize2, Mic, Minimize2, Minus, SlidersHorizontal, X } from "lucide-react";
 import NiaMark from "./nia/NiaMark";
 import { useDispatch, useSelector } from "react-redux";
-import useFetch from "../hooks/useFetch";
+import useFetch, { apiRequest } from "../hooks/useFetch";
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -31,6 +32,8 @@ import {
 } from "../constants/colors";
 import { apiUrl } from "../config/api";
 import {
+  configureComparison,
+  setComparisonEngine,
   markThreadRead,
   selectHasAnyPendingNia,
   selectNiaThreadByFileName,
@@ -207,6 +210,25 @@ export default function NIAChat({ open, setOpen }: NIAChatProps) {
   const hasPendingExchange = useSelector((state: RootState) => selectHasAnyPendingNia(state));
   const authIdentity = useSelector((state: RootState) => state.auth.user?.id ?? state.auth.token);
 
+  const comparisonToken = useSelector((state: RootState) => state.auth.token);
+  const comparisonEngine = useSelector((state: RootState) => state.niaChat.comparisonEngine);
+  const comparisonUntil = useSelector((state: RootState) => state.niaChat.comparisonUntil);
+  useEffect(() => {
+    if (!open || !authIdentity) return;
+    let active = true;
+    apiRequest<{ enabled: boolean; expires_at?: string }>(apiUrl("chat/comparison"), "GET", undefined, {}, comparisonToken || undefined)
+      .then(result => { if (active) dispatch(configureComparison(result)); })
+      .catch(() => { if (active) dispatch(configureComparison({ enabled: false })); });
+    return () => { active = false; };
+  }, [open, authIdentity, comparisonToken, dispatch]);
+  useEffect(() => {
+    if (!comparisonUntil) return;
+    const remaining = Date.parse(comparisonUntil) - Date.now();
+    const expire = () => dispatch(configureComparison({ enabled: false }));
+    if (remaining <= 0) { expire(); return; }
+    const timer = window.setTimeout(expire, remaining);
+    return () => window.clearTimeout(timer);
+  }, [comparisonUntil, dispatch]);
   const exchanges = currentThread?.exchanges || [];
   const unreadCount = currentThread?.unreadCount || 0;
   const currentFileName = String(selectedFile?.filename || "").trim();
@@ -229,7 +251,7 @@ export default function NIAChat({ open, setOpen }: NIAChatProps) {
     if (open && currentFileName && authIdentity) {
       dispatch(loadNiaHistory(currentFileName));
     }
-  }, [open, currentFileName, authIdentity, dispatch]);
+  }, [open, currentFileName, authIdentity, comparisonEngine, dispatch]);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768);
@@ -249,11 +271,13 @@ export default function NIAChat({ open, setOpen }: NIAChatProps) {
 
   useEffect(() => {
     const fileName = currentFileName;
+    const engine = comparisonEngine || "nia";
     if (!fileName || !open) return;
 
     dispatch(
       setThreadVisibility({
         fileName,
+        engine,
         isOpen: open,
         isMinimized: open ? minimized : false,
       })
@@ -264,17 +288,18 @@ export default function NIAChat({ open, setOpen }: NIAChatProps) {
       dispatch(
         setThreadVisibility({
           fileName,
+          engine,
           isOpen: false,
           isMinimized: false,
         })
       );
     };
-  }, [currentFileName, dispatch, minimized, open, authIdentity]);
+  }, [currentFileName, dispatch, minimized, open, authIdentity, comparisonEngine]);
 
   useEffect(() => {
     if (!open || minimized || !currentFileName || unreadCount === 0) return;
-    dispatch(markThreadRead({ fileName: currentFileName }));
-  }, [currentFileName, dispatch, minimized, open, unreadCount]);
+    dispatch(markThreadRead({ fileName: currentFileName, engine: comparisonEngine || "nia" }));
+  }, [currentFileName, dispatch, minimized, open, unreadCount, comparisonEngine]);
 
   useEffect(() => {
     if (!open || minimized || !messagesContainerRef.current) return;
@@ -639,6 +664,16 @@ export default function NIAChat({ open, setOpen }: NIAChatProps) {
           <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 2 }}>
             <h2 style={{ margin: 0, fontSize: minimized ? 16 : 18, fontWeight: 600 }}>NIA</h2>
             {!minimized && <span style={{ fontSize: 13, color: color_dv_text_muted }}>Records assistant</span>}
+            {!minimized && comparisonUntil && (
+              <FormControl size="small" sx={{ minWidth: 155, ml: 1 }}>
+                <InputLabel id="nia-comparison-label">Comparison engine</InputLabel>
+                <Select labelId="nia-comparison-label" label="Comparison engine" value={comparisonEngine || "nia"}
+                  disabled={hasPendingExchange} onChange={event => dispatch(setComparisonEngine(event.target.value as "api" | "nia"))}>
+                  <MenuItem value="nia">NIA API</MenuItem>
+                  <MenuItem value="api">API-based NIA</MenuItem>
+                </Select>
+              </FormControl>
+            )}
           </div>
 
           {!isMobile && !minimized && (
