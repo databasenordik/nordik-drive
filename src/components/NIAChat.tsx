@@ -31,6 +31,7 @@ import {
   color_dv_text_muted,
 } from "../constants/colors";
 import { apiUrl } from "../config/api";
+import { UI_NIA_Z_INDEX } from "../theme/ui";
 import {
   configureComparison,
   setComparisonEngine,
@@ -645,7 +646,7 @@ export default function NIAChat({ open, setOpen }: NIAChatProps) {
           border: `1px solid ${color_dv_border}`,
           display: "flex",
           flexDirection: "column",
-          zIndex: 10000,
+          zIndex: UI_NIA_Z_INDEX.panel,
           overflow: "hidden",
           boxShadow: "0 24px 60px rgba(16, 24, 40, 0.18)",
         }}
@@ -668,6 +669,7 @@ export default function NIAChat({ open, setOpen }: NIAChatProps) {
               <FormControl size="small" sx={{ minWidth: 155, ml: 1 }}>
                 <InputLabel id="nia-comparison-label">Comparison engine</InputLabel>
                 <Select labelId="nia-comparison-label" label="Comparison engine" value={comparisonEngine || "nia"}
+                  MenuProps={{ sx: { zIndex: UI_NIA_Z_INDEX.menu } }}
                   disabled={hasPendingExchange} onChange={event => dispatch(setComparisonEngine(event.target.value as "api" | "nia"))}>
                   <MenuItem value="nia">NIA API</MenuItem>
                   <MenuItem value="api">API-based NIA</MenuItem>
