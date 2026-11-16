@@ -4,11 +4,14 @@ import { apiUrl } from "../config/api";
 import { apiRequest } from "../hooks/useFetch";
 import { setAuth, clearAuth } from "./auth/authSlics";
 
+export type ComparisonEngine = "api" | "nia";
+
 export type NiaChatExchangeStatus = "pending" | "completed" | "error";
 
 export interface NiaChatExchange {
   id: string;
   fileName: string;
+  engine?: ComparisonEngine;
   question: string;
   answer: string;
   status: NiaChatExchangeStatus;
@@ -22,6 +25,7 @@ export interface NiaChatExchange {
 export interface NiaChatThread {
   fileKey: string;
   fileName: string;
+  engine?: ComparisonEngine;
   unreadCount: number;
   lastCompletedExchangeId: string | null;
   isOpen: boolean;
@@ -38,6 +42,8 @@ export interface NiaChatThread {
 export interface NiaChatState {
   threads: Record<string, NiaChatThread>;
   ownerKey?: string | null;
+  comparisonEngine?: ComparisonEngine;
+  comparisonUntil?: string;
 }
 
 type NiaChatSelectorState = {
@@ -79,9 +85,14 @@ export const getNiaThreadKey = (fileName?: string | null) =>
     .trim()
     .toLowerCase();
 
-const ensureThread = (state: NiaChatState, fileName: string) => {
+const ensureThread = (
+  state: NiaChatState,
+  fileName: string,
+  engine = state.comparisonEngine,
+) => {
   const normalizedFileName = String(fileName || "").trim();
-  const fileKey = getNiaThreadKey(normalizedFileName);
+  const fileKey =
+    getNiaThreadKey(normalizedFileName) + (engine === "api" ? "::api" : "");
 
   if (!fileKey) return null;
 
@@ -112,15 +123,42 @@ const niaChatSlice = createSlice({
   name: "niaChat",
   initialState,
   reducers: {
+    configureComparison: (
+      state,
+      action: PayloadAction<{ enabled: boolean; expires_at?: string }>,
+    ) => {
+      state.comparisonUntil = action.payload.enabled
+        ? action.payload.expires_at
+        : undefined;
+      if (!action.payload.enabled) state.comparisonEngine = undefined;
+    },
+    setComparisonEngine: (state, action: PayloadAction<ComparisonEngine>) => {
+      if (
+        !state.comparisonUntil ||
+        Date.parse(state.comparisonUntil) <= Date.now()
+      )
+        return;
+      if (
+        Object.values(state.threads).some((thread) =>
+          thread.exchanges.some((exchange) => exchange.status === "pending"),
+        )
+      )
+        return;
+      state.comparisonEngine = action.payload;
+    },
     setChatOwner: (state, action: PayloadAction<string>) => {
       if (state.ownerKey !== action.payload) state.threads = {};
       state.ownerKey = action.payload;
     },
     historyStarted: (
       state,
-      action: PayloadAction<{ fileName: string; requestId: string }>,
+      action: PayloadAction<{ fileName: string; requestId: string; engine?: ComparisonEngine }>,
     ) => {
-      const thread = ensureThread(state, action.payload.fileName);
+      const thread = ensureThread(
+        state,
+        action.payload.fileName,
+        action.payload.engine,
+      );
       if (!thread) return;
       thread.historyStatus = "loading";
       thread.historyError = null;
@@ -130,12 +168,17 @@ const niaChatSlice = createSlice({
       state,
       action: PayloadAction<{
         fileName: string;
+        engine?: ComparisonEngine;
         requestId: string;
         startedAt: string;
         history: HistoryResponse;
       }>,
     ) => {
-      const thread = ensureThread(state, action.payload.fileName);
+      const thread = ensureThread(
+        state,
+        action.payload.fileName,
+        action.payload.engine,
+      );
       if (!thread || thread.historyRequestId !== action.payload.requestId)
         return;
       const { history, startedAt } = action.payload;
@@ -173,9 +216,13 @@ const niaChatSlice = createSlice({
     },
     historyFailed: (
       state,
-      action: PayloadAction<{ fileName: string; requestId: string }>,
+      action: PayloadAction<{ fileName: string; requestId: string; engine?: ComparisonEngine }>,
     ) => {
-      const thread = ensureThread(state, action.payload.fileName);
+      const thread = ensureThread(
+        state,
+        action.payload.fileName,
+        action.payload.engine,
+      );
       if (!thread || thread.historyRequestId !== action.payload.requestId)
         return;
       thread.historyStatus = "error";
@@ -186,12 +233,17 @@ const niaChatSlice = createSlice({
       action: PayloadAction<{
         id: string;
         fileName: string;
+        engine?: ComparisonEngine;
         question: string;
         askedAt: string;
         selectedCommunitiesSnapshot: string[];
       }>,
     ) => {
-      const thread = ensureThread(state, action.payload.fileName);
+      const thread = ensureThread(
+        state,
+        action.payload.fileName,
+        action.payload.engine,
+      );
       if (!thread) return;
 
       thread.exchanges.push({
@@ -210,6 +262,7 @@ const niaChatSlice = createSlice({
       state,
       action: PayloadAction<{
         fileName: string;
+        engine?: ComparisonEngine;
         exchangeId: string;
         answer: string;
         answeredAt: string;
@@ -217,7 +270,11 @@ const niaChatSlice = createSlice({
         serverExchangeId?: string | null;
       }>,
     ) => {
-      const thread = ensureThread(state, action.payload.fileName);
+      const thread = ensureThread(
+        state,
+        action.payload.fileName,
+        action.payload.engine,
+      );
       if (!thread) return;
 
       const exchange = thread.exchanges.find(
@@ -243,12 +300,17 @@ const niaChatSlice = createSlice({
       state,
       action: PayloadAction<{
         fileName: string;
+        engine?: ComparisonEngine;
         exchangeId: string;
         errorMessage: string;
         answeredAt: string;
       }>,
     ) => {
-      const thread = ensureThread(state, action.payload.fileName);
+      const thread = ensureThread(
+        state,
+        action.payload.fileName,
+        action.payload.engine,
+      );
       if (!thread) return;
 
       const exchange = thread.exchanges.find(
@@ -260,8 +322,15 @@ const niaChatSlice = createSlice({
       exchange.answeredAt = action.payload.answeredAt;
       exchange.errorMessage = action.payload.errorMessage;
     },
-    markThreadRead: (state, action: PayloadAction<{ fileName: string }>) => {
-      const thread = ensureThread(state, action.payload.fileName);
+    markThreadRead: (
+      state,
+      action: PayloadAction<{ fileName: string; engine?: ComparisonEngine }>,
+    ) => {
+      const thread = ensureThread(
+        state,
+        action.payload.fileName,
+        action.payload.engine,
+      );
       if (!thread) return;
 
       thread.unreadCount = 0;
@@ -270,11 +339,16 @@ const niaChatSlice = createSlice({
       state,
       action: PayloadAction<{
         fileName: string;
+        engine?: ComparisonEngine;
         isOpen: boolean;
         isMinimized: boolean;
       }>,
     ) => {
-      const thread = ensureThread(state, action.payload.fileName);
+      const thread = ensureThread(
+        state,
+        action.payload.fileName,
+        action.payload.engine,
+      );
       if (!thread) return;
 
       thread.isOpen = action.payload.isOpen;
@@ -295,6 +369,8 @@ const niaChatSlice = createSlice({
 });
 
 export const {
+  configureComparison,
+  setComparisonEngine,
   addPendingExchange,
   resolveExchange,
   failExchange,
@@ -311,7 +387,10 @@ export const selectNiaThreadByFileName = (
   fileName?: string | null,
 ): NiaChatThread | null =>
   belongsToCurrentUser(state)
-    ? state?.niaChat?.threads?.[getNiaThreadKey(fileName)] || null
+    ? state?.niaChat?.threads?.[
+        getNiaThreadKey(fileName) +
+          (state.niaChat?.comparisonEngine === "api" ? "::api" : "")
+      ] || null
     : null;
 
 export const selectNiaUnreadCountForFileName = (
@@ -342,6 +421,7 @@ export const submitNiaQuestion =
     communityFilter,
   }: {
     fileName: string;
+    engine?: ComparisonEngine;
     question: string;
     selectedCommunitiesSnapshot: string[];
     communityFilter: boolean;
@@ -360,6 +440,8 @@ export const submitNiaQuestion =
       return null;
     }
 
+    const engine: ComparisonEngine =
+      getState().niaChat?.comparisonEngine || "nia";
     const exchangeId = nanoid();
     const askedAt = new Date().toISOString();
 
@@ -367,6 +449,7 @@ export const submitNiaQuestion =
       addPendingExchange({
         id: exchangeId,
         fileName: trimmedFileName,
+        engine,
         question: trimmedQuestion,
         askedAt,
         selectedCommunitiesSnapshot: selectedCommunitiesSnapshot || [],
@@ -374,6 +457,8 @@ export const submitNiaQuestion =
     );
 
     const body = new FormData();
+    if (getState().niaChat?.comparisonUntil)
+      body.append("engine", getState().niaChat.comparisonEngine || "nia");
     body.append("filename", trimmedFileName);
     body.append("question", trimmedQuestion);
     const conversationId = selectNiaThreadByFileName(
@@ -402,6 +487,7 @@ export const submitNiaQuestion =
       dispatch(
         resolveExchange({
           fileName: trimmedFileName,
+          engine,
           exchangeId,
           answer: String(response?.answer || ""),
           answeredAt: new Date().toISOString(),
@@ -424,6 +510,7 @@ export const submitNiaQuestion =
       dispatch(
         failExchange({
           fileName: trimmedFileName,
+          engine,
           exchangeId,
           errorMessage:
             err?.message || "Something went wrong. Please try again later!",
@@ -438,9 +525,11 @@ export const submitNiaQuestion =
 export const loadNiaHistory =
   (fileName: string, limit = 10) =>
   async (dispatch: any, getState: () => any) => {
-    if (!fileName.trim()) return;
+    if (!fileName.trim() || getState().niaChat?.comparisonEngine === "api")
+      return;
     const ownerKey = ownerKeyFor(getState());
     dispatch(setChatOwner(ownerKey));
+    const engine = getState().niaChat?.comparisonEngine;
     const requestId = nanoid();
     const startedAt = new Date().toISOString();
     dispatch(historyStarted({ fileName, requestId }));
@@ -461,6 +550,7 @@ export const loadNiaHistory =
         getState().niaChat?.ownerKey !== ownerKey
       )
         return;
+      if (getState().niaChat?.comparisonEngine !== engine) return;
       if (!history || !Array.isArray(history.entries))
         throw new Error("Invalid history response");
       dispatch(historyLoaded({ fileName, requestId, startedAt, history }));
@@ -470,7 +560,8 @@ export const loadNiaHistory =
         getState().niaChat?.ownerKey !== ownerKey
       )
         return;
-      dispatch(historyFailed({ fileName, requestId }));
+      if (getState().niaChat?.comparisonEngine === engine)
+        dispatch(historyFailed({ fileName, requestId }));
     }
   };
 
