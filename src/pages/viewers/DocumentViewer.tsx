@@ -1076,7 +1076,6 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
                 textTransform: "none",
                 color: color_white,
                 background: color_secondary,
-                px: 2,
                 ...iconOnlyOnMobileSx,
                 "&:hover": { background: color_secondary_dark },
                 ...disabledActionSx,
@@ -1097,7 +1096,6 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
               sx={{
                 fontWeight: 600,
                 textTransform: "none",
-                px: 2,
                 ...iconOnlyOnMobileSx,
                 background: color_secondary,
                 "&:hover": { background: color_secondary_dark },
@@ -1120,7 +1118,6 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
               borderWidth: 2,
               color: color_text_primary,
               backgroundColor: color_white,
-              px: 2,
               ...iconOnlyOnMobileSx,
               "&:hover": { borderWidth: 2, backgroundColor: color_background },
             }}
