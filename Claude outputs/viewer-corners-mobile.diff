@@ -1,0 +1,214 @@
+diff --git a/src/pages/viewers/DocumentViewer.tsx b/src/pages/viewers/DocumentViewer.tsx
+index e3dad76..e40a90f 100644
+--- a/src/pages/viewers/DocumentViewer.tsx
++++ b/src/pages/viewers/DocumentViewer.tsx
+@@ -961,12 +961,20 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
+     "&.Mui-disabled": { background: color_primary, color: color_white, opacity: 0.7 },
+   } as const;
+ 
++  // On phones, these buttons show only their icon so each toolbar fits on one row.
++  const iconOnlyOnMobileSx = {
++    minWidth: { xs: 44, sm: 64 },
++    px: { xs: 1.25, sm: 2 },
++    "& .MuiButton-startIcon": { ml: { xs: 0, sm: -0.5 }, mr: { xs: 0, sm: 1 } },
++  } as const;
++  const hideOnMobileSx = { display: { xs: "none", sm: "inline" } } as const;
++
+   return (
+     <Dialog
+       open={open}
+       onClose={closeAndCleanup}
+       fullScreen
+-      PaperProps={{ sx: { background: color_white } }}
++      PaperProps={{ sx: { background: color_white, borderRadius: 0, boxShadow: "none" } }}
+       data-testid="document-viewer-modal"
+     >
+       <Box
+@@ -976,11 +984,13 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
+           background: color_white,
+           borderBottom: `1px solid ${color_border}`,
+           display: "flex",
++          flexWrap: "wrap",
+           alignItems: "center",
+-          gap: 1.5,
++          gap: 1,
++          columnGap: 1.5,
+         }}
+       >
+-        <Box sx={{ minWidth: 0, flex: 1 }}>
++        <Box sx={{ minWidth: 0, flex: { xs: "1 1 100%", sm: "1 1 0" } }}>
+           <Typography
+             sx={{
+               ...VIEWER_TITLE_SX,
+@@ -989,7 +999,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
+               overflow: "hidden",
+               textOverflow: "ellipsis",
+               whiteSpace: "nowrap",
+-              maxWidth: "70vw",
++              maxWidth: "100%",
+             }}
+             title={currentDoc?.file_name}
+             data-testid="viewer-filename"
+@@ -1010,7 +1020,16 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
+           </Typography>
+         </Box>
+ 
+-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
++        <Box
++          sx={{
++            display: "flex",
++            alignItems: "center",
++            flexWrap: "wrap",
++            justifyContent: { xs: "flex-start", sm: "flex-end" },
++            gap: 1,
++            "& .MuiButton-root": { whiteSpace: "nowrap", flexShrink: 0 },
++          }}
++        >
+           {storySubmission && (
+             <Button
+               onClick={() => setSubmissionOpen((current) => !current)}
+@@ -1035,7 +1054,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
+               startIcon={<OpenInNewIcon />}
+               disabled={!canUseCurrentDoc}
+               data-testid="top-open"
+-              aria-label="top-open"
++              aria-label={VIEWER_OPEN_LABEL}
+               sx={{
+                 fontWeight: 600,
+                 textTransform: "none",
+@@ -1043,6 +1062,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
+                 color: color_white,
+                 background: color_secondary,
+                 px: 2,
++                ...iconOnlyOnMobileSx,
+                 "&:hover": { background: color_secondary_dark, borderWidth: 2 },
+                 "&.Mui-disabled": {
+                   opacity: 0.6,
+@@ -1051,7 +1071,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
+                 },
+               }}
+             >
+-              {VIEWER_OPEN_LABEL}
++              <Box component="span" sx={hideOnMobileSx}>{VIEWER_OPEN_LABEL}</Box>
+             </Button>
+           )}
+ 
+@@ -1062,17 +1082,18 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
+               startIcon={<DownloadIcon />}
+               disabled={!canUseCurrentDoc}
+               data-testid="top-download"
+-              aria-label="top-download"
++              aria-label={VIEWER_DOWNLOAD_LABEL}
+               sx={{
+                 fontWeight: 600,
+                 textTransform: "none",
+                 px: 2,
++                ...iconOnlyOnMobileSx,
+                 background: color_secondary,
+                 "&:hover": { background: color_secondary_dark },
+                 "&.Mui-disabled": { opacity: 0.6, background: color_secondary },
+               }}
+             >
+-              {VIEWER_DOWNLOAD_LABEL}
++              <Box component="span" sx={hideOnMobileSx}>{VIEWER_DOWNLOAD_LABEL}</Box>
+             </Button>
+           )}
+ 
+@@ -1081,7 +1102,7 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
+             variant="outlined"
+             startIcon={<CloseIcon />}
+             data-testid="top-close"
+-            aria-label="top-close"
++            aria-label={VIEWER_CLOSE_LABEL}
+             sx={{
+               fontWeight: 600,
+               textTransform: "none",
+@@ -1089,10 +1110,11 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
+               color: color_text_primary,
+               backgroundColor: color_white,
+               px: 2,
++              ...iconOnlyOnMobileSx,
+               "&:hover": { borderWidth: 2, backgroundColor: color_background },
+             }}
+           >
+-            {VIEWER_CLOSE_LABEL}
++            <Box component="span" sx={hideOnMobileSx}>{VIEWER_CLOSE_LABEL}</Box>
+           </Button>
+         </Box>
+       </Box>
+@@ -1118,7 +1140,11 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
+       <DialogContent
+         sx={{
+           p: { xs: 1.25, sm: 2 },
+-          height: "calc(100vh - 112px)",
++          flex: 1,
++          minHeight: 0,
++          display: "flex",
++          flexDirection: "column",
++          gap: { xs: 1.25, sm: 1.5 },
+           boxSizing: "border-box",
+           background: color_white,
+         }}
+@@ -1135,7 +1161,8 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
+             display: "flex",
+             flexDirection: { xs: "column", md: "row" },
+             gap: 2,
+-            height: "100%",
++            flex: 1,
++            minHeight: 0,
+           }}
+         >
+           <Box
+@@ -1567,11 +1594,8 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
+         {showBottomBar && !submissionOpen && (
+           <Box
+             sx={{
+-              position: "fixed",
+-              bottom: 18,
+-              left: "50%",
+-              transform: "translateX(-50%)",
+-              zIndex: 1400,
++              alignSelf: "center",
++              flexShrink: 0,
+               display: "flex",
+               alignItems: "center",
+               gap: 1,
+@@ -1582,7 +1606,9 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
+               py: 1,
+               boxShadow: "none",
+               backdropFilter: "blur(8px)",
+-              maxWidth: "calc(100vw - 24px)",
++              maxWidth: "100%",
++              boxSizing: "border-box",
++              "& .MuiButton-root": { whiteSpace: "nowrap", flexShrink: 0 },
+               overflowX: "auto",
+               WebkitOverflowScrolling: "touch",
+               width: "max-content",
+@@ -1631,10 +1657,11 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
+                 onClick={openInNewTab}
+                 disabled={!canUseCurrentDoc}
+                 startIcon={<OpenInNewIcon />}
+-                sx={approveBtnSx}
++                aria-label={bottomOpenLabel}
++                sx={{ ...approveBtnSx, ...iconOnlyOnMobileSx }}
+                 data-testid="bottom-open"
+               >
+-                {bottomOpenLabel}
++                <Box component="span" sx={hideOnMobileSx}>{bottomOpenLabel}</Box>
+               </Button>
+             )}
+ 
+@@ -1661,10 +1688,11 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({
+                 )
+               }
+               disabled={!canDownloadAll || zipLoading}
+-              sx={approveBtnSx}
++              aria-label={VIEWER_DOWNLOAD_ALL_LABEL}
++              sx={{ ...approveBtnSx, ...iconOnlyOnMobileSx }}
+               data-testid="download-all"
+             >
+-              {VIEWER_DOWNLOAD_ALL_LABEL}
++              <Box component="span" sx={hideOnMobileSx}>{VIEWER_DOWNLOAD_ALL_LABEL}</Box>
+             </Button>
+           </Box>
+         )}
