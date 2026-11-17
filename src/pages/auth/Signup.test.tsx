@@ -4,6 +4,12 @@ import userEvent from "@testing-library/user-event";
 import useFetch from "../../hooks/useFetch";
 import toast from "react-hot-toast";
 
+let mockVerification: any;
+jest.mock("../../hooks/useSignupVerification", () => ({
+  __esModule: true, default: () => mockVerification,
+  signupRequestKey: () => "synthetic-idempotency-key-for-signup",
+}));
+
 const mockNavigate = jest.fn();
 const mockDispatch = jest.fn();
 
@@ -141,7 +147,9 @@ function setupUseFetchForSignup(opts: {
 
 describe("Signup", () => {
   beforeEach(() => {
+    jest.useRealTimers();
     jest.clearAllMocks();
+    mockVerification = { verified: false, token: null, expiresAt: 0, loading: false, error: null, challenge: null, codeExpired: false, secondsUntilResend: 0, code: "", setCode: jest.fn(), requestCode: jest.fn().mockResolvedValue(true), verifyCode: jest.fn().mockResolvedValue({ token: "synthetic-signup-proof", expiresAt: Date.now() + 600000 }) };
     mockNavigate.mockClear();
     mockDispatch.mockClear();
 
@@ -177,11 +185,33 @@ describe("Signup", () => {
     });
   });
 
+  test("submits details first and creates nothing until code verification succeeds", async () => {
+    const { signupFetch, addCommunity } = setupUseFetchForSignup({ communitiesData: { communities: [] } });
+    mockVerification.verifyCode.mockResolvedValueOnce(undefined);
+    const { container } = render(<Signup />);
+    for (const [label, value] of [[/first name/i, "New"], [/last name/i, "User"], [/email address/i, "new@example.test"], [/^password$/i, "secret12"], [/confirm password/i, "secret12"]] as const) {
+      fireEvent.change(screen.getByLabelText(label), { target: { value } });
+    }
+    fireEvent.change(screen.getByPlaceholderText(/search or type a community/i), { target: { value: "New community" } });
+    fireEvent.keyDown(screen.getByPlaceholderText(/search or type a community/i), { key: "Enter", code: "Enter" });
+    fireEvent.submit(container.querySelector("form")!);
+    await screen.findByText("Verify your email");
+    expect(mockVerification.requestCode).toHaveBeenCalledTimes(1);
+    expect(screen.queryByLabelText(/first name/i)).not.toBeInTheDocument();
+    expect(addCommunity).not.toHaveBeenCalled();
+    expect(signupFetch).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: /verify and sign up/i }));
+    await waitFor(() => expect(mockVerification.verifyCode).toHaveBeenCalledTimes(1));
+    expect(addCommunity).not.toHaveBeenCalled();
+    expect(signupFetch).not.toHaveBeenCalled();
+  });
+
   test("shows validation errors when submitting empty form", async () => {
     const user = userEvent.setup();
     setupUseFetchForSignup({ communitiesData: { communities: [] } });
 
     render(<Signup />);
+    expect(screen.getByRole("button", { name: /^sign up$/i })).toBeEnabled();
     await user.click(screen.getByRole("button", { name: /sign up/i }));
 
     expect(await screen.findByText("First name is required")).toBeInTheDocument();
@@ -242,7 +272,9 @@ describe("Signup", () => {
     await user.type(screen.getByLabelText(/^password$/i), "secret12");
     await user.type(screen.getByLabelText(/confirm password/i), "secret12");
 
-    await user.click(screen.getByRole("button", { name: /sign up/i }));
+    await user.click(screen.getByRole("button", { name: /^sign up$/i }));
+    expect(signupFetch).not.toHaveBeenCalled();
+    await user.click(await screen.findByRole("button", { name: /verify and sign up/i }));
 
     await waitFor(() => expect(signupFetch).toHaveBeenCalledTimes(1));
 
@@ -250,7 +282,8 @@ describe("Signup", () => {
     expect(signupFetch).toHaveBeenCalledWith(
       expect.objectContaining({ email: "athul@test.com", community: [] }),
       null,
-      true
+      true,
+      expect.objectContaining({ headers: expect.objectContaining({ "Idempotency-Key": expect.any(String) }) })
     );
   });
 
@@ -283,7 +316,11 @@ describe("Signup", () => {
     fireEvent.keyDown(inputs2[1], { key: "Enter", code: "Enter" });
 
     // Submit (clicking submit button is enough because your FormWrapper mock renders a real <form>)
-    fireEvent.click(screen.getByRole("button", { name: /sign up/i }));
+    fireEvent.click(screen.getByRole("button", { name: /^sign up$/i }));
+    await screen.findByText("Verify your email");
+    expect(addCommunity).not.toHaveBeenCalled();
+    expect(signupFetch).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: /verify and sign up/i }));
 
     // Wait for calls (real completion signals)
     await waitFor(() => expect(addCommunity).toHaveBeenCalledTimes(1));
@@ -296,8 +333,43 @@ describe("Signup", () => {
     expect(signupFetch).toHaveBeenCalledWith(
       expect.objectContaining({ email: "athul@test.com", community: ["NewComm"] }),
       null,
-      true
+      true,
+      expect.objectContaining({ headers: expect.objectContaining({ "Idempotency-Key": expect.any(String) }) })
     );
+  });
+
+  test("keeps details on the first screen when sending a code fails", async () => {
+    const { signupFetch } = setupUseFetchForSignup({ communitiesData: { communities: [] } });
+    mockVerification.requestCode.mockResolvedValue(false);
+    render(<Signup />);
+    for (const [label, value] of [[/first name/i, "New"], [/last name/i, "User"], [/email address/i, "new@example.test"], [/^password$/i, "secret12"], [/confirm password/i, "secret12"]] as const) {
+      fireEvent.change(screen.getByLabelText(label), { target: { value } });
+    }
+    fireEvent.click(screen.getByRole("button", { name: /^sign up$/i }));
+    await waitFor(() => expect(mockVerification.requestCode).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(screen.getByRole("button", { name: /^sign up$/i })).toBeEnabled());
+    expect(screen.getByLabelText(/email address/i)).toHaveValue("new@example.test");
+    expect(screen.queryByLabelText(/verification code/i)).not.toBeInTheDocument();
+    expect(signupFetch).not.toHaveBeenCalled();
+  });
+
+  test("Edit details restores the entered form before requesting a code for a changed email", async () => {
+    const { signupFetch } = setupUseFetchForSignup({ communitiesData: { communities: [] } });
+    render(<Signup />);
+    for (const [label, value] of [[/first name/i, "New"], [/last name/i, "User"], [/email address/i, "new@example.test"], [/^password$/i, "secret12"], [/confirm password/i, "secret12"]] as const) {
+      fireEvent.change(screen.getByLabelText(label), { target: { value } });
+    }
+    fireEvent.click(screen.getByRole("button", { name: /^sign up$/i }));
+    fireEvent.click(await screen.findByRole("button", { name: /edit details/i }));
+    expect(screen.getByLabelText(/first name/i)).toHaveValue("New");
+    expect(screen.getByLabelText(/email address/i)).toHaveValue("new@example.test");
+    expect(screen.getByLabelText(/^password$/i)).toHaveValue("secret12");
+    fireEvent.change(screen.getByLabelText(/email address/i), { target: { value: "other@example.test" } });
+    fireEvent.click(screen.getByRole("button", { name: /^sign up$/i }));
+    await screen.findByText("Enter the six-digit code sent to other@example.test.");
+    expect(mockVerification.requestCode).toHaveBeenCalledTimes(2);
+    expect(signupFetch).not.toHaveBeenCalled();
+    expect(screen.getByRole("button", { name: /verify and sign up/i })).toBeEnabled();
   });
 
   test("shows toast success and navigates to '/' when signup returns data", async () => {

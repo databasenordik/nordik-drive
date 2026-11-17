@@ -243,6 +243,7 @@ describe("NIAChat + NIAChatTrigger", () => {
     apiRequestMock.mockReset();
     historyRequestMock.mockReset().mockRejectedValue(new Error("History is unavailable"));
     (apiRequest as jest.Mock).mockImplementation((...args: any[]) =>
+      String(args[0]).endsWith("chat/comparison") ? Promise.resolve({ enabled: false }) :
       (args[1] === "GET" ? historyRequestMock : apiRequestMock)(...args)
     );
     global.FormData = MockFormData as any;
@@ -576,4 +577,27 @@ describe("NIAChat + NIAChatTrigger", () => {
     expect(setOpen).toHaveBeenCalledWith(true);
     expect(screen.getByLabelText("3 unread NIA answers")).toBeInTheDocument();
   });
+  test("temporary engine selector sends API questions separately and locks while pending", async () => {
+    (apiRequest as jest.Mock).mockImplementation((...args: any[]) =>
+      String(args[0]).endsWith("chat/comparison")
+        ? Promise.resolve({ enabled: true, expires_at: new Date(Date.now() + 3600000).toISOString() })
+        : (args[1] === "GET" ? historyRequestMock : apiRequestMock)(...args)
+    );
+    apiRequestMock.mockReturnValue(new Promise(() => {}));
+    renderWithStore(<NIAChat open={true} setOpen={jest.fn()} />);
+    const selector = await screen.findByRole("combobox", { name: "Comparison engine" });
+    fireEvent.mouseDown(selector);
+    const option = screen.getByRole("option", { name: "API-based NIA" });
+    const menu = option.closest(".MuiModal-root") as HTMLElement;
+    const panel = screen.getByRole("dialog", { name: "NIA records assistant", hidden: true });
+    expect(Number(window.getComputedStyle(menu).zIndex)).toBeGreaterThan(Number(window.getComputedStyle(panel).zIndex));
+    fireEvent.click(screen.getByRole("option", { name: "API-based NIA" }));
+    sendViaButton("How many students?");
+    await waitFor(() => expect(apiRequestMock).toHaveBeenCalled());
+    const body = apiRequestMock.mock.calls[0][2] as MockFormData;
+    expect(body.entries).toContainEqual(["engine", "api"]);
+    expect(body.entries.some(([key]) => key === "conversation_id")).toBe(false);
+    expect(selector).toHaveAttribute("aria-disabled", "true");
+  });
+
 });

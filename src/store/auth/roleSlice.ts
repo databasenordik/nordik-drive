@@ -24,8 +24,8 @@ const roleSlice = createSlice({
   initialState,
   reducers: {
     setRoles: (state, action: PayloadAction<{ roles: UserRole[] }>) => {
-      const adminRoles = action.payload.roles.filter(role=> role.role == "Admin")
-      const managerRoles = action.payload.roles.filter(role=> role.role == "Manager")
+      const adminRoles = action.payload.roles.filter(role=> role.role === "Admin")
+      const managerRoles = action.payload.roles.filter(role=> role.role === "Manager")
       state.userRoles = action.payload.roles
       state.isAdmin = adminRoles.length > 0
       state.isManager = managerRoles.length > 0

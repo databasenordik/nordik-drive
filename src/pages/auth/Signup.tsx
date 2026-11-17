@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import useSignupVerification, { signupRequestKey } from "../../hooks/useSignupVerification";
 import { useForm, Controller, type SubmitHandler } from "react-hook-form";
 import { Button, TextField, Box, Typography } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -21,7 +22,6 @@ import {
   color_text_secondary,
   color_white,
   color_border,
-  color_background,
 } from "../../constants/colors";
 
 import {
@@ -30,6 +30,7 @@ import {
   AuthControlledTextField,
   AuthPasswordField,
   AuthPrimaryButton,
+  AuthSecondaryButton,
   OrDivider,
 } from "./AuthShared";
 import { AppDispatch, RootState } from "../../store/store";
@@ -69,6 +70,7 @@ function Signup() {
   const {
     handleSubmit,
     control,
+    watch,
     formState: { errors },
   } = useForm<SignupFormValues>({
     resolver: yupResolver(schema),
@@ -88,6 +90,13 @@ function Signup() {
     false
   );
 
+  const verification = useSignupVerification(watch("email"));
+  const [step, setStep] = useState<"details" | "verification">("details");
+  const [pendingDetails, setPendingDetails] = useState<SignupFormValues | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const submissionActive = useRef(false);
+  const busy = loading || verification.loading || submitting;
+  const signupAttempt = useRef<{ fingerprint: string; key: string } | null>(null);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -117,6 +126,24 @@ function Signup() {
   (communityOptions || []).some((o: string) => o.trim().toLowerCase() === name.trim().toLowerCase());
 
   const onSubmit: SubmitHandler<SignupFormValues> = async (formData) => {
+    if (submissionActive.current) return;
+    submissionActive.current = true;
+    setSubmitting(true);
+    try {
+      const details = { ...formData, email: normalizeEmail(formData.email), community: [...formData.community] };
+      setPendingDetails(details);
+      if (verification.challenge?.email === details.email && !verification.codeExpired) {
+        setStep("verification");
+      } else if (await verification.requestCode()) {
+        setStep("verification");
+      }
+    } finally {
+      submissionActive.current = false;
+      setSubmitting(false);
+    }
+  };
+
+  const createAccount = async (formData: SignupFormValues, proof: string) => {
     const cleaned = (formData.community || [])
       .map((x) => (x || "").trim())
       .filter((x) => x.length > 0);
@@ -143,7 +170,26 @@ function Signup() {
     );
     }
 
-    fetchData({ ...formData, email: normalizeEmail(formData.email), community: unique }, null, true);
+    const payload = { ...formData, email: normalizeEmail(formData.email), community: unique, signup_verification_token: proof };
+    const fingerprint = JSON.stringify(payload);
+    if (!signupAttempt.current || signupAttempt.current.fingerprint !== fingerprint) signupAttempt.current = { fingerprint, key: signupRequestKey() };
+    await fetchData(payload, null, true, { headers: { "Idempotency-Key": signupAttempt.current.key } });
+  };
+
+  const finishSignup = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (submissionActive.current || !pendingDetails) return;
+    submissionActive.current = true;
+    setSubmitting(true);
+    try {
+      const proof = verification.verified && verification.token && verification.expiresAt > Date.now()
+        ? verification.token
+        : (await verification.verifyCode())?.token;
+      if (proof) await createAccount(pendingDetails, proof);
+    } finally {
+      submissionActive.current = false;
+      setSubmitting(false);
+    }
   };
 
   useEffect(() => {
@@ -151,7 +197,7 @@ function Signup() {
       toast.success(SIGNUP_SUCCESS_MESSAGE);
       navigate("/");
     }
-  }, [data]);
+  }, [data, navigate]);
 
   useEffect(() => {
     if (error) toast.error(error);
@@ -159,16 +205,17 @@ function Signup() {
 
   return (
     <AuthContainer>
-      <Loader loading={loading} />
+      <Loader loading={busy} />
 
       <AuthWrapper>
         <AuthLogosHeader mb={1.25} />
 
         <AuthTitle fontSize={22} mb={1.5}>
-          Create a new account
+          {step === "details" ? "Create a new account" : "Verify your email"}
         </AuthTitle>
 
-        <FormWrapper onSubmit={handleSubmit(onSubmit)}>
+        <FormWrapper onSubmit={step === "details" ? handleSubmit(onSubmit) : finishSignup} noValidate>
+          {step === "details" ? <>
           <TextGroup>
             <AuthControlledTextField
               name="firstname"
@@ -193,7 +240,6 @@ function Signup() {
             label="Email address"
             errorMessage={errors.email?.message}
           />
-
           <TextGroup>
             <AuthPasswordField
               name="password"
@@ -354,9 +400,44 @@ function Signup() {
             }}
           />
 
-          <AuthPrimaryButton type="submit" sx={{ mt: 2, mb: 1.25 }}>
+          <AuthPrimaryButton type="submit" disabled={busy} sx={{ mt: 2, mb: 1.25 }}>
             Sign up
           </AuthPrimaryButton>
+          </> : <>
+            <Typography sx={{ color: color_text_secondary, textAlign: "center", mb: 1 }}>
+              Enter the six-digit code sent to {pendingDetails?.email}.
+            </Typography>
+            <TextField
+              label="Verification code"
+              value={verification.code}
+              onChange={(event) => verification.setCode(event.target.value)}
+              autoComplete="one-time-code"
+              autoFocus
+              fullWidth
+              margin="normal"
+              inputProps={{ inputMode: "numeric", maxLength: 6 }}
+              disabled={busy}
+              error={Boolean(verification.error)}
+              sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2, backgroundColor: color_white } }}
+            />
+            {verification.codeExpired ? <Typography role="status" color="error">
+              Your code expired. Request a new code.
+            </Typography> : null}
+            <AuthPrimaryButton type="submit" disabled={busy} sx={{ mt: 2, mb: 1.25 }}>
+              Verify and sign up
+            </AuthPrimaryButton>
+            <Box sx={{ display: "flex", gap: 1, width: "100%", flexWrap: "wrap" }}>
+              <AuthSecondaryButton type="button" disabled={busy || verification.secondsUntilResend > 0}
+                onClick={() => verification.requestCode()} sx={{ flex: 1, minWidth: 150 }}>
+                {verification.secondsUntilResend > 0 ? `Resend in ${verification.secondsUntilResend}s` : "Resend code"}
+              </AuthSecondaryButton>
+              <AuthSecondaryButton type="button" disabled={busy} sx={{ flex: 1, minWidth: 150 }}
+                onClick={() => { setStep("details"); verification.setCode(""); }}>
+                Edit details
+              </AuthSecondaryButton>
+            </Box>
+          </>}
+          {verification.error ? <Typography role="alert" color="error">{verification.error}</Typography> : null}
 
           <OrDivider my={1.75} dividerColor={color_border} textColor={color_text_secondary} />
 

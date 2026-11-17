@@ -130,6 +130,8 @@ export function AuthPrimaryButton({
         textTransform: "none",
         boxShadow: "none",
         backgroundColor: `${color_secondary} !important`,
+        color: `${color_white} !important`,
+        "&.Mui-disabled": { color: `${color_white} !important`, opacity: 0.65 },
         "&:hover": { backgroundColor: `${color_secondary_dark} !important`, boxShadow: "none" },
         "&:focus-visible": { outline: `3px solid ${color_secondary}`, outlineOffset: "2px" },
         ...sx,
