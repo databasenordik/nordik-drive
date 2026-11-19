@@ -41,7 +41,7 @@ export function AuthLogosHeader({ mb = 3 }: { mb?: number }) {
         mb,
       }}
     >
-      <Box sx={{ height: "120px", maxWidth: "200px" }}>
+      <Box sx={{ height: "100px", maxWidth: "170px" }}>
         <img
           src="/logo-1.png"
           alt="Children of Shingwauk Alumni Association"
