@@ -1095,23 +1095,6 @@ export default function DataGrid({ rowData }: DataGridProps) {
         <DataTableWrapper className="dv-shell">
           {!editMode && (
             <>
-              {!communityFilterEnabled && (
-                selectedFile?.filename && (
-                  <div className="dv-page-title">
-                    <h1>{selectedFile.filename}</h1>
-                    <p>
-                      {new Intl.NumberFormat().format(rowData.length)}{" "}
-                      {rowData.length === 1 ? "record" : "records"}
-                      {sourceFilterEnabled && availableSources.length > 0
-                        ? sourceFilter
-                          ? ` · showing ${getSourceDisplayName(sourceFilter)} only`
-                          : ` from ${availableSources.length} ${availableSources.length === 1 ? "source" : "sources"}`
-                        : ""}
-                    </p>
-                  </div>
-                )
-              )}
-
               <div ref={topControlsRef}>
                 <TopControlsBar
                   isMobile={isMobile}
