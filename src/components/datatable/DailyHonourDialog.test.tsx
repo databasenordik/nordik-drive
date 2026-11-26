@@ -22,7 +22,7 @@ describe("DailyHonourDialog", () => {
       />
     );
 
-    expect(screen.getByRole("dialog", { name: "Today's honour" })).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Today, We Honour!" })).toBeInTheDocument();
     expect(screen.getByTestId("daily-honour-date")).toHaveTextContent("Thursday, October 15, 2026");
     expect(screen.getByText("First paragraph.")).toHaveStyle("font-style: normal");
     expect(screen.getByText("We remember them today.")).toHaveStyle("font-style: italic");
