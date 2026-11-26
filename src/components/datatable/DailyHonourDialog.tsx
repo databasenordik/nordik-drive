@@ -100,7 +100,7 @@ export default function DailyHonourDialog({ open, loading, honourText, date, onC
               color: color_dv_banner_title,
             }}
           >
-            Today's honour
+            Today, We Honour!
           </Typography>
           <Typography component="span" sx={{ fontSize: 15, color: color_dv_text_muted }}>
             Shared with respect
