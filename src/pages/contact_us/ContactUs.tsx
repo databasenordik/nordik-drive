@@ -204,9 +204,6 @@ const ContactUs = () => {
                     <Typography sx={{ fontSize: 12.8, fontWeight: 400, color: color_text_secondary }}>
                       {CONTACT_INFO.street}
                     </Typography>
-                    <Typography sx={{ fontSize: 12.8, fontWeight: 400, color: color_text_secondary }}>
-                      Sault Ste. Marie P6A 2G4
-                    </Typography>
                   </Box>
                 </Box>
 
